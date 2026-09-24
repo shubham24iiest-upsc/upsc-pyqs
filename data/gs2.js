@@ -8,6 +8,7 @@ window.PYQ = window.PYQ || {};
 window.PYQ.gs2 = {
   code: "GS2",
   name: "General Studies II",
+  pdfPrefix: "GS2",   // PDFs live at papers/GS2-YEAR.pdf (case-sensitive)
   roman: "II",
   blurb: "Polity, Governance, Social Justice and International Relations are pulled apart so you can drill straight into what you're revising.",
   topics: [

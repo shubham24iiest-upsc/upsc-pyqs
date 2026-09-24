@@ -8,6 +8,7 @@ window.PYQ = window.PYQ || {};
 window.PYQ.gs4 = {
   code: "GS4",
   name: "General Studies IV",
+  pdfPrefix: "GS4",   // PDFs live at papers/GS4-YEAR.pdf (case-sensitive)
   roman: "IV",
   blurb: "Theory questions are grouped by syllabus area, and Section B case studies sit in their own block since they read differently.",
   topics: [

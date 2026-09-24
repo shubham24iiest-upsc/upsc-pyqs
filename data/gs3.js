@@ -8,6 +8,7 @@ window.PYQ = window.PYQ || {};
 window.PYQ.gs3 = {
   code: "GS3",
   name: "General Studies III",
+  pdfPrefix: "GS3",   // PDFs live at papers/GS3-YEAR.pdf (case-sensitive)
   roman: "III",
   blurb: "Economy, Agriculture, Science & Tech, Environment and Security are pulled apart so you can drill straight into what you're revising.",
   topics: [
