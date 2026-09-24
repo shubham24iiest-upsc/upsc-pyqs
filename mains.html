@@ -193,8 +193,7 @@ function renderDownload(){
   document.getElementById('downloadLabel').textContent = `GS Paper ${p.roman} · ${currentYear}`;
   document.getElementById('downloadFmt').textContent = d.fmt || '';
   const btn = document.getElementById('downloadBtn');
-  // pdfPrefix in the data file sets the file name, e.g. "GS2" → papers/GS2-2025.pdf
-  btn.href = `papers/${p.pdfPrefix || currentPaper}-${currentYear}.pdf`;
+  btn.href = `papers/${currentPaper}-${currentYear}.pdf`;
   btn.setAttribute('download', `${p.code}-${currentYear}.pdf`);
 }
 

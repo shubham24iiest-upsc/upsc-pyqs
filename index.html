@@ -88,7 +88,7 @@
       <h1>Every question<br>UPSC has <em>ever</em> asked.</h1>
       <p class="hero-sub">A searchable ledger of Mains questions, sorted by GS paper, year and syllabus topic — straight from the official papers, downloadable as PDF.</p>
       <div class="cta-row">
-        <a href="mains.html" class="btn-primary">Browse GS Paper I →</a>
+        <a href="mains.html" class="btn-primary">Browse the Mains archive →</a>
       </div>
     </div>
     <div class="stamp-zone">
@@ -103,34 +103,32 @@
       <div class="section-title">Mains — General Studies</div>
       <div class="section-note">Topic-wise, year-wise, paper-wise</div>
     </div>
-    <div class="status-grid">
-      <a href="mains.html" class="status-card ready">
-        <div class="status-index">01</div>
-        <div class="status-name">GS Paper I</div>
-        <div class="status-count">13 years loaded · ready</div>
-      </a>
-      <div class="status-card">
-        <div class="status-index">02</div>
-        <div class="status-name">GS Paper II</div>
-        <div class="status-count">coming soon</div>
-      </div>
-      <div class="status-card">
-        <div class="status-index">03</div>
-        <div class="status-name">GS Paper III</div>
-        <div class="status-count">coming soon</div>
-      </div>
-      <div class="status-card">
-        <div class="status-index">04</div>
-        <div class="status-name">GS Paper IV</div>
-        <div class="status-count">coming soon</div>
-      </div>
+    <div class="status-grid" id="statusGrid">
+      <a href="mains.html#gs1" class="status-card"><div class="status-index">01</div><div class="status-name">GS Paper I</div><div class="status-count">coming soon</div></a>
+      <a href="mains.html#gs2" class="status-card"><div class="status-index">02</div><div class="status-name">GS Paper II</div><div class="status-count">coming soon</div></a>
+      <a href="mains.html#gs3" class="status-card"><div class="status-index">03</div><div class="status-name">GS Paper III</div><div class="status-count">coming soon</div></a>
+      <a href="mains.html#gs4" class="status-card"><div class="status-index">04</div><div class="status-name">GS Paper IV</div><div class="status-count">coming soon</div></a>
     </div>
   </section>
 
   <footer>
     <div>PYQ Ledger — built for aspirants, not algorithms.</div>
-    <div class="mono">v0.2</div>
+    <div class="mono">v0.3</div>
   </footer>
 </div>
+<script src="data/gs1.js"></script>
+<script src="data/gs2.js"></script>
+<script src="data/gs3.js"></script>
+<script src="data/gs4.js"></script>
+<script>
+['gs1','gs2','gs3','gs4'].forEach((k, i) => {
+  const p = (window.PYQ || {})[k];
+  const n = p ? Object.keys(p.data).length : 0;
+  if (!n) return;
+  const card = document.querySelectorAll('#statusGrid .status-card')[i];
+  card.classList.add('ready');
+  card.querySelector('.status-count').textContent = `${n} year${n>1?'s':''} loaded · ready`;
+});
+</script>
 </body>
 </html>
