@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GS1 Mains Archive — PYQ Ledger</title>
+<title>Mains Archive — PYQ Ledger</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -84,6 +84,12 @@
 
   .empty-note{ border: 1px dashed var(--rule); border-radius: 6px; padding: 26px 24px; text-align:center; color: var(--charcoal-soft); font-size: 13.5px; background: var(--paper-raised); }
   .empty-note b{ color: var(--ink); }
+
+  .gs-tab{ font: inherit; border-top:none; border-bottom:none; border-left:none; }
+  .gs-tab:focus-visible, .year-chip:focus-visible, .download-btn:focus-visible{ outline: 2px solid var(--gold); outline-offset: 2px; }
+  .gs-tab.disabled:hover{ background: var(--paper-raised); }
+  .year-chip{ background: transparent; font-family:'IBM Plex Mono', monospace; }
+  .download-btn.off{ opacity: 0.45; pointer-events: none; }
 </style>
 </head>
 <body>
@@ -94,377 +100,117 @@
         <div class="brand-mark">P</div>
         <div class="brand-name">PYQ <span>Ledger</span></div>
       </a>
-      <div class="crumb"><a href="index.html">Home</a> / Mains / <b>GS Paper I</b></div>
+      <div class="crumb"><a href="index.html">Home</a> / Mains / <b id="crumbPaper">GS Paper I</b></div>
     </div>
   </header>
 
-  <div class="page-title">GS Paper I — Previous Year Questions</div>
-  <div class="page-sub">All 13 years, arranged by syllabus topic within each year. History, Culture, Society, Geography, and World History are pulled apart so you can drill straight into what you're revising.</div>
+  <div class="page-title" id="pageTitle">GS Paper I — Previous Year Questions</div>
+  <div class="page-sub" id="pageSub"></div>
 
-  <div class="notice"><b>Note:</b> GS Paper I downloads are live and point to the official papers hosted alongside this site. GS2–4 will link the same way once those papers are loaded.</div>
+  <div class="gs-tabs" id="gsTabs" role="tablist"></div>
 
-  <div class="gs-tabs">
-    <div class="gs-tab active"><div class="gs-code">GS1</div><div class="gs-label">General Studies I</div><div class="gs-tag">13 years loaded</div></div>
-    <div class="gs-tab disabled"><div class="gs-code">GS2</div><div class="gs-label">General Studies II</div><div class="gs-tag">awaiting PDFs</div></div>
-    <div class="gs-tab disabled"><div class="gs-code">GS3</div><div class="gs-label">General Studies III</div><div class="gs-tag">awaiting PDFs</div></div>
-    <div class="gs-tab disabled"><div class="gs-code">GS4</div><div class="gs-label">General Studies IV</div><div class="gs-tag">awaiting PDFs</div></div>
+  <div id="paperBody">
+    <div class="year-strip"><div class="year-row" id="yearRow"></div></div>
+
+    <div class="download-bar">
+      <div class="download-info">Official paper — <b id="downloadLabel"></b><span class="fmt mono" id="downloadFmt"></span></div>
+      <a class="download-btn" id="downloadBtn" href="#" download>↓ Download official PDF</a>
+    </div>
+
+    <div class="topic-nav" id="topicNav"></div>
+    <div id="topicArea"></div>
   </div>
-
-  <div class="year-strip"><div class="year-row" id="yearRow"></div></div>
-
-  <div class="download-bar">
-    <div class="download-info">Official paper — <b id="downloadLabel">GS Paper I · 2025</b><span class="fmt mono" id="downloadFmt"></span></div>
-    <a class="download-btn" id="downloadBtn" href="#" download>↓ Download official PDF</a>
-  </div>
-
-  <div class="topic-nav" id="topicNav"></div>
-  <div id="topicArea"></div>
 </div>
 
+<script src="data/gs1.js"></script>
+<script src="data/gs2.js"></script>
+<script src="data/gs3.js"></script>
+<script src="data/gs4.js"></script>
 <script>
-const TOPIC_ORDER = [
-  "Indian Culture & Heritage",
-  "Modern Indian History",
-  "Freedom Struggle",
-  "Post-Independence Consolidation",
-  "World History",
-  "Indian Society",
-  "Women, Population & Urbanization",
-  "Globalization, Communalism & Secularism",
-  "Geography — Physical, Resources & Phenomena"
-];
+const PAPER_KEYS = ['gs1','gs2','gs3','gs4'];
+const PAPERS = window.PYQ || {};
 
-// ---- Full GS1 dataset, 2013–2025 ----
-const DATA = {
-2025: { fmt: "150 words (Q1–10, 10 marks) · 250 words (Q11–20, 15 marks)", questions: [
-  {n:1, t:"Indian Culture & Heritage", q:"Discuss the salient features of the Harappan architecture.", m:"10"},
-  {n:2, t:"Modern Indian History", q:"Examine the main aspects of Akbar's religious syncretism.", m:"10"},
-  {n:3, t:"Indian Culture & Heritage", q:"'The sculptors filled the Chandella artform with resilient vigor and breadth of life.' Elucidate.", m:"10"},
-  {n:4, t:"Geography — Physical, Resources & Phenomena", q:"How are climate change and the sea level rise affecting the very existence of many island nations? Discuss with examples.", m:"10"},
-  {n:5, t:"Geography — Physical, Resources & Phenomena", q:"What are non-farm primary activities? How are these activities related to physiographic features in India? Discuss with suitable examples.", m:"10"},
-  {n:6, t:"Geography — Physical, Resources & Phenomena", q:"Explain briefly the ecological and economic benefits of solar energy generation in India with suitable examples.", m:"10"},
-  {n:7, t:"Geography — Physical, Resources & Phenomena", q:"What are Tsunamis? How and where are they formed? What are their consequences? Explain with examples.", m:"10"},
-  {n:8, t:"Indian Society", q:"How does smart city in India address the issues of urban poverty and distributive justice?", m:"10"},
-  {n:9, t:"Post-Independence Consolidation", q:"The ethos of civil service in India stand for the combination of professionalism with nationalistic consciousness — Elucidate.", m:"10"},
-  {n:10, t:"Globalization, Communalism & Secularism", q:"Do you think that globalization results in only an aggressive consumer culture? Justify your answer.", m:"10"},
-  {n:11, t:"Modern Indian History", q:"Mahatma Jotirao Phule's writings and efforts of social reforms touched issues of almost all subaltern classes. Discuss.", m:"15"},
-  {n:12, t:"Post-Independence Consolidation", q:"Trace India's consolidation process during early phase of independence in terms of polity, economy, education and international relations.", m:"15"},
-  {n:13, t:"World History", q:"The French Revolution has enduring relevance to the contemporary world. Explain.", m:"15"},
-  {n:14, t:"Geography — Physical, Resources & Phenomena", q:"Give a geographical explanation of the distribution of off-shore oil reserves of the world. How are they different from the on-shore occurrences of oil reserves?", m:"15"},
-  {n:15, t:"Geography — Physical, Resources & Phenomena", q:"How can Artificial Intelligence (AI) and drones be effectively used along with GIS and RS techniques in locational and areal planning?", m:"15"},
-  {n:16, t:"Geography — Physical, Resources & Phenomena", q:"Discuss how the changes in shape and sizes of continents and ocean basins take place due to tectonic movements of the crustal masses.", m:"15"},
-  {n:17, t:"Geography — Physical, Resources & Phenomena", q:"Discuss the distribution and density of population in the Ganga River Basin with special reference to land, soil and water resources.", m:"15"},
-  {n:18, t:"Indian Society", q:"How do you account for the growing fast food industries given that there are increased health concerns in modern society? Illustrate your answer with the Indian experience.", m:"15"},
-  {n:19, t:"Geography — Physical, Resources & Phenomena", q:"Achieving sustainable growth with emphasis on environmental protection could come into conflict with poor people's needs in a country like India — Comment.", m:"15"},
-  {n:20, t:"Indian Society", q:"Does tribal development in India centre around two axes, those of displacement and of rehabilitation? Give your opinion.", m:"15"}
-]},
-2024: { fmt: "150 words (Q1–10, 10 marks) · 250 words (Q11–20, 15 marks)", questions: [
-  {n:1, t:"Indian Culture & Heritage", q:"Underline the changes in the field of society and economy from the Rig Vedic to the later Vedic period.", m:"10"},
-  {n:2, t:"Indian Culture & Heritage", q:"Estimate the contribution of Pallavas of Kanchi for the development of art and literature of South India.", m:"10"},
-  {n:3, t:"Freedom Struggle", q:"What were the events that led to the Quit India Movement? Point out its results.", m:"10"},
-  {n:4, t:"Geography — Physical, Resources & Phenomena", q:"What is sea surface temperature rise? How does it affect the formation of tropical cyclones?", m:"10"},
-  {n:5, t:"Indian Society", q:"Why do large cities tend to attract more migrants than smaller towns? Discuss in the light of conditions in developing countries.", m:"10"},
-  {n:6, t:"Geography — Physical, Resources & Phenomena", q:"What is the phenomenon of 'cloudbursts'? Explain.", m:"10"},
-  {n:7, t:"Women, Population & Urbanization", q:"What is the concept of a 'demographic winter'? Is the world moving towards such a situation?", m:"10"},
-  {n:8, t:"Women, Population & Urbanization", q:"Distinguish between gender equality, gender equity and women's empowerment. Why is it important to take gender concerns into account in programme design and implementation?", m:"10"},
-  {n:9, t:"Indian Society", q:"Intercaste marriages between castes which have socio-economic parity have increased, to some extent, but this is less true of interreligious marriages. Discuss.", m:"10"},
-  {n:10, t:"Indian Society", q:"In dealing with socio-economic issues of development, what kind of collaboration between government, NGOs and private sector would be most productive?", m:"10"},
-  {n:11, t:"Indian Culture & Heritage", q:"'Though the great Cholas are no more yet their name is still remembered with great pride because of their highest achievements in the domain of art and architecture.' Comment.", m:"15"},
-  {n:12, t:"World History", q:"How far is it correct to say that the First World War was fought essentially for the preservation of balance of power?", m:"15"},
-  {n:13, t:"Modern Indian History", q:"How far was the Industrial Revolution in England responsible for the decline of handicrafts and cottage industries in India?", m:"15"},
-  {n:14, t:"Geography — Physical, Resources & Phenomena", q:"The groundwater potential of the gangetic valley is on a serious decline. How may it affect the food security of India?", m:"15"},
-  {n:15, t:"Geography — Physical, Resources & Phenomena", q:"What are aurora australis and aurora borealis? How are these triggered?", m:"15"},
-  {n:16, t:"Geography — Physical, Resources & Phenomena", q:"What is a twister? Why are the majority of twisters observed in areas around the Gulf of Mexico?", m:"15"},
-  {n:17, t:"Indian Society", q:"What is regional disparity? How does it differ from diversity? How serious is the issue of regional disparity in India?", m:"15"},
-  {n:18, t:"Post-Independence Consolidation", q:"Despite comprehensive policies for equity and social justice, underprivileged sections are not yet getting the full benefits of affirmative action envisaged by the Constitution. Comment.", m:"15"},
-  {n:19, t:"Women, Population & Urbanization", q:"Globalization has increased urban migration by skilled, young, unmarried women from various classes. How has this trend impacted upon their personal freedom and relationship with family?", m:"15"},
-  {n:20, t:"Indian Society", q:"Critically analyse the proposition that there is a high correlation between India's cultural diversities and socio-economic marginalities.", m:"15"}
-]},
-2023: { fmt: "150 words (Q1–10, 10 marks) · 250 words (Q11–20, 15 marks)", questions: [
-  {n:1, t:"Geography — Physical, Resources & Phenomena", q:"Explain the role of geographical factors towards the development of Ancient India.", m:"10"},
-  {n:2, t:"Modern Indian History", q:"What was the difference between Mahatma Gandhi and Rabindranath Tagore in their approach towards education and nationalism?", m:"10"},
-  {n:3, t:"World History", q:"Bring out the socio-economic effects of the introduction of railways in different countries of the world.", m:"10"},
-  {n:4, t:"Geography — Physical, Resources & Phenomena", q:"Discuss the consequences of climate change on the food security in tropical countries.", m:"10"},
-  {n:5, t:"Geography — Physical, Resources & Phenomena", q:"Why is the world today confronted with a crisis of availability of and access to freshwater resources?", m:"10"},
-  {n:6, t:"Geography — Physical, Resources & Phenomena", q:"How are the fjords formed? Why do they constitute some of the most picturesque areas of the world?", m:"10"},
-  {n:7, t:"Geography — Physical, Resources & Phenomena", q:"Why is the South-West Monsoon called 'Purvaiya' (easterly) in Bhojpur Region? How has this directional seasonal wind system influenced the cultural ethos of the region?", m:"10"},
-  {n:8, t:"Indian Society", q:"Do you think marriage as a sacrament is loosing its value in Modern India?", m:"10"},
-  {n:9, t:"Indian Society", q:"Explain why suicide among young women is increasing in Indian society.", m:"10"},
-  {n:10, t:"Indian Society", q:"Child cuddling is now being replaced by mobile phones. Discuss its impact on the socialization of children.", m:"10"},
-  {n:11, t:"Indian Culture & Heritage", q:"What are the main features of Vedic society and religion? Do you think some of the features are still prevailing in Indian society?", m:"15"},
-  {n:12, t:"Modern Indian History", q:"What were the major technological changes introduced during the Sultanate period? How did those technological changes influence the Indian society?", m:"15"},
-  {n:13, t:"Modern Indian History", q:"How did the colonial rule affect the tribals in India and what was the tribal response to the colonial oppression?", m:"15"},
-  {n:14, t:"Geography — Physical, Resources & Phenomena", q:"Comment on the resource potentials of the long coastline of India and highlight the status of natural hazard preparedness in these areas.", m:"15"},
-  {n:15, t:"Geography — Physical, Resources & Phenomena", q:"Identify and discuss the factors responsible for diversity of natural vegetation in India. Assess the significance of wildlife sanctuaries in rain forest regions of India.", m:"15"},
-  {n:16, t:"Indian Society", q:"Why did human development fail to keep pace with economic development in India?", m:"15"},
-  {n:17, t:"Geography — Physical, Resources & Phenomena", q:"From being net food importer in 1960s, India has emerged as a net food exporter to the world. Provide reasons.", m:"15"},
-  {n:18, t:"Indian Society", q:"Does urbanization lead to more segregation and/or marginalization of the poor in Indian metropolises?", m:"15"},
-  {n:19, t:"Indian Society", q:"Why is caste identity in India both fluid and static?", m:"15"},
-  {n:20, t:"Globalization, Communalism & Secularism", q:"Discuss the impact of post-liberal economy on ethnic identity and communalism.", m:"15"}
-]},
-2022: { fmt: "150 words (Q1–10, 10 marks) · 250 words (Q11–20, 15 marks)", questions: [
-  {n:1, t:"Indian Culture & Heritage", q:"How will you explain that medieval Indian temple sculptures represent the social life of those days?", m:"10"},
-  {n:2, t:"Modern Indian History", q:"Why did the armies of the British East India Company — mostly comprising of Indian soldiers — win consistently against the more numerous and better equipped armies of the then Indian rulers? Give reasons.", m:"10"},
-  {n:3, t:"Modern Indian History", q:"Why was there a sudden spurt in famines in colonial India since the mid-eighteenth century? Give reasons.", m:"10"},
-  {n:4, t:"Geography — Physical, Resources & Phenomena", q:"Describe the characteristics and types of primary rocks.", m:"10"},
-  {n:5, t:"Geography — Physical, Resources & Phenomena", q:"Discuss the meaning of colour-coded weather warnings for cyclone prone areas given by India Meteorological Department.", m:"10"},
-  {n:6, t:"Geography — Physical, Resources & Phenomena", q:"Discuss the natural resource potentials of 'Deccan Trap'.", m:"10"},
-  {n:7, t:"Geography — Physical, Resources & Phenomena", q:"Examine the potential of wind energy in India and explain the reasons for their limited spatial spread.", m:"10"},
-  {n:8, t:"Indian Society", q:"Explore and evaluate the impact of 'Work From Home' on family relationships.", m:"10"},
-  {n:9, t:"Women, Population & Urbanization", q:"How is the growth of Tier 2 cities related to the rise of a new middle class with an emphasis on the culture of consumption?", m:"10"},
-  {n:10, t:"Indian Society", q:"Given the diversities among tribal communities in India, in which specific contexts should they be considered as a single category?", m:"10"},
-  {n:11, t:"Post-Independence Consolidation", q:"The political and administrative reorganization of states and territories has been a continuous ongoing process since the mid-nineteenth century. Discuss with examples.", m:"15"},
-  {n:12, t:"Indian Culture & Heritage", q:"Discuss the main contributions of Gupta period and Chola period to Indian heritage and culture.", m:"15"},
-  {n:13, t:"Indian Culture & Heritage", q:"Discuss the significance of the lion and bull figures in Indian mythology, art and architecture.", m:"15"},
-  {n:14, t:"Geography — Physical, Resources & Phenomena", q:"What are the forces that influence ocean currents? Describe their role in fishing industry of the world.", m:"15"},
-  {n:15, t:"Geography — Physical, Resources & Phenomena", q:"Describing the distribution of rubber producing countries, indicate the major environmental issues faced by them.", m:"15"},
-  {n:16, t:"Geography — Physical, Resources & Phenomena", q:"Mention the significance of straits and isthmus in international trade.", m:"15"},
-  {n:17, t:"Geography — Physical, Resources & Phenomena", q:"Troposphere is a very significant atmospheric layer that determines weather processes. How?", m:"15"},
-  {n:18, t:"Indian Society", q:"Analyse the salience of 'sect' in Indian society vis-a-vis caste, region and religion.", m:"15"},
-  {n:19, t:"Globalization, Communalism & Secularism", q:"Are tolerance, assimilation and pluralism the key elements in the making of an Indian form of secularism? Justify your answer.", m:"15"},
-  {n:20, t:"Globalization, Communalism & Secularism", q:"Elucidate the relationship between globalization and new technology in a world of scarce resources, with special reference to India.", m:"15"}
-]},
-2021: { fmt: "150 words (Q1–10, 10 marks) · 250 words (Q11–20, 15 marks)", questions: [
-  {n:1, t:"Indian Culture & Heritage", q:"Evaluate the nature of the Bhakti literature and its contribution to Indian culture.", m:"10"},
-  {n:2, t:"Modern Indian History", q:"Trace the rise and growth of socio-religious reform movements with special reference to Young Bengal and Brahmo Samaj.", m:"10"},
-  {n:3, t:"Post-Independence Consolidation", q:"Assess the main administrative issues and socio-cultural problems in the integration process of Indian Princely States.", m:"10"},
-  {n:4, t:"Geography — Physical, Resources & Phenomena", q:"Differentiate the causes of landslides in the Himalayan region and Western Ghats.", m:"10"},
-  {n:5, t:"Geography — Physical, Resources & Phenomena", q:"Despite India being one of the countries of the Gondwanaland, its mining industry contributes much less to its Gross Domestic Product (GDP) in percentage. Discuss.", m:"10"},
-  {n:6, t:"Geography — Physical, Resources & Phenomena", q:"What are the environmental implications of the reclamation of water bodies into urban land use? Explain with examples.", m:"10"},
-  {n:7, t:"Geography — Physical, Resources & Phenomena", q:"Mention the global occurrence of volcanic eruptions in 2021 and their impact on regional environment.", m:"10"},
-  {n:8, t:"Geography — Physical, Resources & Phenomena", q:"Why is India considered as a subcontinent? Elaborate your answer.", m:"10"},
-  {n:9, t:"Indian Society", q:"Examine the uniqueness of tribal knowledge system when compared with mainstream knowledge and cultural systems.", m:"10"},
-  {n:10, t:"Women, Population & Urbanization", q:"Examine the role of 'Gig Economy' in the process of empowerment of women in India.", m:"10"},
-  {n:11, t:"Freedom Struggle", q:"To what extent did the role of the Moderates prepare a base for the wider freedom movement? Comment.", m:"15"},
-  {n:12, t:"Freedom Struggle", q:"Bring out the constructive programmes of Mahatma Gandhi during Non-Cooperation Movement and Civil Disobedience Movement.", m:"15"},
-  {n:13, t:"World History", q:"'There arose a serious challenge to the Democratic State System between the two World Wars.' Evaluate the statement.", m:"15"},
-  {n:14, t:"Geography — Physical, Resources & Phenomena", q:"Briefly mention the alignment of major mountain ranges of the world and explain their impact on local weather conditions, with examples.", m:"15"},
-  {n:15, t:"Geography — Physical, Resources & Phenomena", q:"How do the melting of the Arctic ice and glaciers of the Antarctic differently affect the weather patterns and human activities on the Earth? Explain.", m:"15"},
-  {n:16, t:"Geography — Physical, Resources & Phenomena", q:"Discuss the multi-dimensional implications of uneven distribution of mineral oil in the world.", m:"15"},
-  {n:17, t:"Indian Society", q:"What are the main socio-economic implications arising out of the development of IT industries in major cities of India?", m:"15"},
-  {n:18, t:"Women, Population & Urbanization", q:"Discuss the main objectives of Population Education and point out the measures to achieve them in India in detail.", m:"15"},
-  {n:19, t:"Globalization, Communalism & Secularism", q:"What is Cryptocurrency? How does it affect global society? Has it been affecting Indian society also?", m:"15"},
-  {n:20, t:"Indian Society", q:"How does Indian society maintain continuity in traditional social values? Enumerate the changes taking place in it.", m:"15"}
-]},
-2020: { fmt: "150 words (Q1–10, 10 marks) · 250 words (Q11–20, 15 marks)", questions: [
-  {n:1, t:"Indian Culture & Heritage", q:"The rock-cut architecture represents one of the most important sources of our knowledge of early Indian art and history. Discuss.", m:"10"},
-  {n:2, t:"Indian Culture & Heritage", q:"Pala period is the most significant phase in the history of Buddhism in India. Enumerate.", m:"10"},
-  {n:3, t:"Modern Indian History", q:"Evaluate the policies of Lord Curzon and their long term implications on the national movement.", m:"10"},
-  {n:4, t:"Geography — Physical, Resources & Phenomena", q:"Discuss the geophysical characteristics of Circum-Pacific Zone.", m:"10"},
-  {n:5, t:"Geography — Physical, Resources & Phenomena", q:"The process of desertification does not have climatic boundaries. Justify with examples.", m:"10"},
-  {n:6, t:"Geography — Physical, Resources & Phenomena", q:"How will the melting of Himalayan glaciers have a far-reaching impact on the water resources of India?", m:"10"},
-  {n:7, t:"Geography — Physical, Resources & Phenomena", q:"Account for the present location of iron and steel industries away from the source of raw material, by giving examples.", m:"10"},
-  {n:8, t:"Indian Society", q:"Has caste lost its relevance in understanding the multi-cultural Indian Society? Elaborate your answer with illustrations.", m:"10"},
-  {n:9, t:"Indian Society", q:"COVID-19 pandemic accelerated class inequalities and poverty in India. Comment.", m:"10"},
-  {n:10, t:"Globalization, Communalism & Secularism", q:"Do you agree that in India regionalism appears to be a consequence of rising cultural assertiveness? Argue.", m:"10"},
-  {n:11, t:"Indian Culture & Heritage", q:"Indian philosophy and tradition played a significant role in conceiving and shaping the monuments and their art in India. Discuss.", m:"15"},
-  {n:12, t:"Indian Culture & Heritage", q:"Persian literary sources of medieval India reflect the spirit of the age. Comment.", m:"15"},
-  {n:13, t:"Freedom Struggle", q:"Since the decade of the 1920s, the national movement acquired various ideological strands and thereby expanded its social base. Discuss.", m:"15"},
-  {n:14, t:"Geography — Physical, Resources & Phenomena", q:"The interlinking of rivers can provide viable solutions to the multi-dimensional inter-related problems of droughts, floods and interrupted navigation. Critically examine.", m:"15"},
-  {n:15, t:"Geography — Physical, Resources & Phenomena", q:"Account for the huge flooding of million cities in India including the smart ones like Hyderabad and Pune. Suggest lasting remedial measures.", m:"15"},
-  {n:16, t:"Geography — Physical, Resources & Phenomena", q:"India has immense potential of solar energy though there are regional variations in its development. Elaborate.", m:"15"},
-  {n:17, t:"Geography — Physical, Resources & Phenomena", q:"Examine the status of forest resources of India and its resultant impact on climate change.", m:"15"},
-  {n:18, t:"Globalization, Communalism & Secularism", q:"Is diversity and pluralism in India under threat due to globalisation? Justify your answer.", m:"15"},
-  {n:19, t:"Indian Society", q:"Customs and traditions suppress reason leading to obscurantism. Do you agree?", m:"15"},
-  {n:20, t:"Globalization, Communalism & Secularism", q:"How have digital initiatives in India contributed to the functioning of the education system in the country? Elaborate your answer.", m:"15"}
-]},
-2019: { fmt: "150 words (Q1–10, 10 marks) · 250 words (Q11–20, 15 marks)", questions: [
-  {n:1, t:"Indian Culture & Heritage", q:"Highlight the Central Asian and Greco-Bactrian elements in the Gandhara art.", m:"10"},
-  {n:2, t:"Modern Indian History", q:"The 1857 Uprising was the culmination of the recurrent big and small local rebellions that had occurred in the preceding hundred years of British rule. Elucidate.", m:"10"},
-  {n:3, t:"Modern Indian History", q:"Examine the linkages between the nineteenth century's 'Indian Renaissance' and the emergence of national identity.", m:"10"},
-  {n:4, t:"Geography — Physical, Resources & Phenomena", q:"Assess the impact of global warming on the coral life system with examples.", m:"10"},
-  {n:5, t:"Geography — Physical, Resources & Phenomena", q:"Discuss the causes of depletion of mangroves and explain their importance in maintaining coastal ecology.", m:"10"},
-  {n:6, t:"Geography — Physical, Resources & Phenomena", q:"Can the strategy of regional resource-based manufacturing help in promoting employment in India?", m:"10"},
-  {n:7, t:"Geography — Physical, Resources & Phenomena", q:"Discuss the factors for localisation of agro-based food processing industries of North-West India.", m:"10"},
-  {n:8, t:"Indian Society", q:"What makes the Indian society unique in sustaining its culture? Discuss.", m:"10"},
-  {n:9, t:"Women, Population & Urbanization", q:"'Empowering women is the key to control population growth.' Discuss.", m:"10"},
-  {n:10, t:"Globalization, Communalism & Secularism", q:"What are the challenges to our cultural practices in the name of secularism?", m:"10"},
-  {n:11, t:"Freedom Struggle", q:"Many voices had strengthened and enriched the nationalist movement during the Gandhian phase. Elaborate.", m:"15"},
-  {n:12, t:"Modern Indian History", q:"Assess the role of British imperial power in complicating the process of transfer of power during the 1940s.", m:"15"},
-  {n:13, t:"World History", q:"Explain how the foundations of the modern world were laid by the American and French Revolutions.", m:"15"},
-  {n:14, t:"Geography — Physical, Resources & Phenomena", q:"What is water stress? How and why does it differ regionally in India?", m:"15"},
-  {n:15, t:"Geography — Physical, Resources & Phenomena", q:"How can the mountain ecosystem be restored from the negative impact of development initiatives and tourism?", m:"15"},
-  {n:16, t:"Geography — Physical, Resources & Phenomena", q:"How is efficient and affordable urban mass transport key to the rapid economic development of India?", m:"15"},
-  {n:17, t:"Geography — Physical, Resources & Phenomena", q:"How do ocean currents and water masses differ in their impacts on marine life and coastal environment? Give suitable examples.", m:"15"},
-  {n:18, t:"Indian Society", q:"Do we have cultural pockets of small India all over the nation? Elaborate with examples.", m:"15"},
-  {n:19, t:"Women, Population & Urbanization", q:"What are the continued challenges for women in India against time and space?", m:"15"},
-  {n:20, t:"Globalization, Communalism & Secularism", q:"Are we losing our local identity for the global identity? Discuss.", m:"15"}
-]},
-2018: { fmt: "150 words (Q1–10, 10 marks) · 250 words (Q11–20, 15 marks)", questions: [
-  {n:1, t:"Indian Culture & Heritage", q:"Safeguarding the Indian art heritage is the need of the moment. Discuss.", m:"10"},
-  {n:2, t:"Modern Indian History", q:"Assess the importance of the accounts of the Chinese and Arab travellers in the reconstruction of the history of India.", m:"10"},
-  {n:3, t:"Freedom Struggle", q:"Throw light on the significance of the thoughts of Mahatma Gandhi in the present times.", m:"10"},
-  {n:4, t:"Geography — Physical, Resources & Phenomena", q:"Why is Indian Regional Navigational Satellite System (IRNSS) needed? How does it help in navigation?", m:"10"},
-  {n:5, t:"Geography — Physical, Resources & Phenomena", q:"Why is India taking keen interest in resources of Arctic Region?", m:"10"},
-  {n:6, t:"Geography — Physical, Resources & Phenomena", q:"Define mantle plume and explain its role in plate tectonics.", m:"10"},
-  {n:7, t:"Geography — Physical, Resources & Phenomena", q:"What are the consequences of spreading of 'Dead Zones' on marine ecosystem?", m:"10"},
-  {n:8, t:"Indian Society", q:"'Caste system is assuming new identities and associational forms. Hence, caste system cannot be eradicated in India.' Comment.", m:"10"},
-  {n:9, t:"Indian Society", q:"'Despite implementation of various programmes for eradication of poverty by the government in India, poverty is still existing.' Explain by giving reasons.", m:"10"},
-  {n:10, t:"Globalization, Communalism & Secularism", q:"How the Indian concept of secularism is different from the western model of secularism? Discuss.", m:"10"},
-  {n:11, t:"Indian Culture & Heritage", q:"The Bhakti movement received a remarkable re-orientation with the advent of Sri Chaitanya Mahaprabhu. Discuss.", m:"15"},
-  {n:12, t:"Post-Independence Consolidation", q:"Discuss whether formation of new states in recent times is beneficial or not for the economy of India.", m:"15"},
-  {n:13, t:"Modern Indian History", q:"Why indentured labour was taken by the British from India to other colonies? Have they been able to preserve their cultural identity over there?", m:"15"},
-  {n:14, t:"Geography — Physical, Resources & Phenomena", q:"'The ideal solution of depleting ground water resources in India is water harvesting system.' How can it be made effective in urban areas?", m:"15"},
-  {n:15, t:"Geography — Physical, Resources & Phenomena", q:"Defining blue revolution, explain the problems and strategies for pisciculture development in India.", m:"15"},
-  {n:16, t:"Geography — Physical, Resources & Phenomena", q:"What is the significance of Industrial Corridors in India? Identifying industrial corridors, explain their main characteristics.", m:"15"},
-  {n:17, t:"Post-Independence Consolidation", q:"Mention core strategies for the transformation of aspirational districts in India and explain the nature of convergence, collaboration and competition for its success.", m:"15"},
-  {n:18, t:"Women, Population & Urbanization", q:"'Women's movement in India has not addressed the issues of women of lower social strata.' Substantiate your view.", m:"15"},
-  {n:19, t:"Globalization, Communalism & Secularism", q:"'Globalization is generally said to promote cultural homogenization but due to this cultural specificities appear to be strengthened in the Indian Society.' Elucidate.", m:"15"},
-  {n:20, t:"Globalization, Communalism & Secularism", q:"'Communalism arises either due to power struggle or relative deprivation.' Argue by giving suitable illustrations.", m:"15"}
-]},
-2017: { fmt: "150 words (Q1–10, 10 marks) · 250 words (Q11–20, 15 marks)", questions: [
-  {n:1, t:"Indian Culture & Heritage", q:"How do you justify the view that the level of excellence of the Gupta numismatic art is not at all noticeable in later times?", m:"10"},
-  {n:2, t:"Modern Indian History", q:"Clarify how mid-eighteenth century India was beset with the spectre of a fragmented polity.", m:"10"},
-  {n:3, t:"Freedom Struggle", q:"Why did the 'Moderates' fail to carry conviction with the nation about their proclaimed ideology and political goals by the end of the nineteenth century?", m:"10"},
-  {n:4, t:"World History", q:"What problems were germane to the decolonization process in the Malay Peninsula?", m:"10"},
-  {n:5, t:"Geography — Physical, Resources & Phenomena", q:"How does the Juno Mission of NASA help to understand the origin and evolution of the Earth?", m:"10"},
-  {n:6, t:"Geography — Physical, Resources & Phenomena", q:"'In spite of adverse environmental impact, coal mining is still inevitable for development.' Discuss.", m:"10"},
-  {n:7, t:"Geography — Physical, Resources & Phenomena", q:"Mention the advantages of the cultivation of pulses because of which the year 2016 was declared as the International Year of Pulses by the United Nations.", m:"10"},
-  {n:8, t:"Geography — Physical, Resources & Phenomena", q:"How does the cryosphere affect global climate?", m:"10"},
-  {n:9, t:"Indian Society", q:"In the context of the diversity of India, can it be said that the regions form cultural units rather than the States? Give reasons with examples for your viewpoint.", m:"10"},
-  {n:10, t:"Post-Independence Consolidation", q:"What are the two major legal initiatives by the State since Independence, addressing discrimination against Scheduled Tribes (STs)?", m:"10"},
-  {n:11, t:"Indian Society", q:"The spirit of tolerance and love is not only an interesting feature of Indian society from very early times, but it is also playing an important part at the present. Elaborate.", m:"15"},
-  {n:12, t:"Modern Indian History", q:"Examine how the decline of traditional artisanal industry in colonial India crippled the rural economy.", m:"15"},
-  {n:13, t:"Freedom Struggle", q:"Highlight the importance of the new objectives that got added to the vision of Indian independence since the twenties of the last century.", m:"15"},
-  {n:14, t:"Geography — Physical, Resources & Phenomena", q:"Account for variations in oceanic salinity and discuss its multi-dimensional effects.", m:"15"},
-  {n:15, t:"Geography — Physical, Resources & Phenomena", q:"Petroleum refineries are not necessarily located nearer to crude oil producing areas, particularly in many of the developing countries. Explain its implications.", m:"15"},
-  {n:16, t:"Geography — Physical, Resources & Phenomena", q:"In what way can floods be converted into a sustainable source of irrigation and all-weather inland navigation in India?", m:"15"},
-  {n:17, t:"Geography — Physical, Resources & Phenomena", q:"What characteristics can be assigned to monsoon climate that succeeds in feeding more than 50 percent of the world population residing in Monsoon Asia?", m:"15"},
-  {n:18, t:"Women, Population & Urbanization", q:"The women's questions arose in modern India as a part of the 19th century social reform movement. What were the major issues and debates concerning women in that period?", m:"15"},
-  {n:19, t:"Globalization, Communalism & Secularism", q:"Distinguish between religiousness/religiosity and communalism giving one example of how the former has got transformed into the latter in independent India.", m:"15"},
-  {n:20, t:"Indian Society", q:"'The growth of cities as I.T. hubs has opened up new avenues of employment, but has also created new problems.' Substantiate this statement with examples.", m:"15"}
-]},
-2016: { fmt: "200 words each · 12.5 marks each", questions: [
-  {n:1, t:"Indian Culture & Heritage", q:"Early Buddhist Stupa-art, while depicting folk motifs and narratives successfully expounds Buddhist ideals. Elucidate.", m:"12.5"},
-  {n:2, t:"Indian Culture & Heritage", q:"Krishnadeva Raya, the King of Vijayanagar, was not only an accomplished scholar himself but was also a great patron of learning and literature. Discuss.", m:"12.5"},
-  {n:3, t:"Modern Indian History", q:"Explain how the Uprising of 1857 constitutes an important watershed in the evolution of British policies towards colonial India.", m:"12.5"},
-  {n:4, t:"Freedom Struggle", q:"Discuss the role of women in the freedom struggle especially during the Gandhian phase.", m:"12.5"},
-  {n:5, t:"Freedom Struggle", q:"Highlight the differences in the approach of Subhash Chandra Bose and Mahatma Gandhi in the struggle for freedom.", m:"12.5"},
-  {n:6, t:"Post-Independence Consolidation", q:"Has the formation of linguistic States strengthened the cause of Indian Unity?", m:"12.5"},
-  {n:7, t:"World History", q:"The anti-colonial struggles in West Africa were led by the new elite of Western-educated Africans. Examine.", m:"12.5"},
-  {n:8, t:"Globalization, Communalism & Secularism", q:"To what extent globalization has influenced the core of cultural diversity in India? Explain.", m:"12.5"},
-  {n:9, t:"Indian Society", q:"'An essential condition to eradicate poverty is to liberate the poor from the process of deprivation.' Substantiate this statement with suitable examples.", m:"12.5"},
-  {n:10, t:"Indian Society", q:"Why are the tribals in India referred to as 'the Scheduled Tribes'? Indicate the major provisions enshrined in the Constitution of India for their upliftment.", m:"12.5"},
-  {n:11, t:"Indian Society", q:"With a brief background of quality of urban life in India, introduce the objectives and strategy of the 'Smart City Programme'.", m:"12.5"},
-  {n:12, t:"Globalization, Communalism & Secularism", q:"What is the basis of regionalism? Is it that unequal distribution of benefits of development on regional basis eventually promotes regionalism? Substantiate your answer.", m:"12.5"},
-  {n:13, t:"Geography — Physical, Resources & Phenomena", q:"Discuss the concept of air mass and explain its role in macro-climatic changes.", m:"12.5"},
-  {n:14, t:"Geography — Physical, Resources & Phenomena", q:"'The Himalayas are highly prone to landslides.' Discuss the causes and suggest suitable measures of mitigation.", m:"12.5"},
-  {n:15, t:"Geography — Physical, Resources & Phenomena", q:"The effective management of land and water resources will drastically reduce the human miseries. Explain.", m:"12.5"},
-  {n:16, t:"Geography — Physical, Resources & Phenomena", q:"South China Sea has assumed great geopolitical significance in the present context. Comment.", m:"12.5"},
-  {n:17, t:"Geography — Physical, Resources & Phenomena", q:"Major cities of India are becoming more unsafe from flood conditions. Discuss.", m:"12.5"},
-  {n:18, t:"Geography — Physical, Resources & Phenomena", q:"Present an account of the Indus Water Treaty and examine its ecological, economic and political implications in the context of changing bilateral relations.", m:"12.5"},
-  {n:19, t:"Geography — Physical, Resources & Phenomena", q:"Enumerate the problems and prospects of inland water transport in India.", m:"12.5"},
-  {n:20, t:"Geography — Physical, Resources & Phenomena", q:"In what way micro-watershed development projects help in water conservation in drought-prone and semi-arid regions of India?", m:"12.5"}
-]},
-2015: { fmt: "200 words each · 12.5 marks each", questions: [
-  {n:1, t:"Indian Culture & Heritage", q:"The ancient civilization in Indian sub-continent differed from those of Egypt, Mesopotamia and Greece in that its culture and traditions have been preserved without a breakdown to the present day. Comment.", m:"12.5"},
-  {n:2, t:"Indian Culture & Heritage", q:"Mesolithic rock cut architecture of India not only reflects the cultural life of the times but also a fine aesthetic sense comparable to modern painting. Critically evaluate this comment.", m:"12.5"},
-  {n:3, t:"Freedom Struggle", q:"How different would have been the achievement of Indian independence without Mahatma Gandhi? Discuss.", m:"12.5"},
-  {n:4, t:"Freedom Struggle", q:"Mahatma Gandhi and Dr. B.R. Ambedkar, despite having divergent approaches and strategies, had a common goal of amelioration of the downtrodden. Elucidate.", m:"12.5"},
-  {n:5, t:"Post-Independence Consolidation", q:"It would have been difficult for the Constituent Assembly to complete its historic task of drafting the Constitution for Independent India in just three years but for the experience gained with the Government of India Act, 1935. Discuss.", m:"12.5"},
-  {n:6, t:"World History", q:"Why did the industrial revolution first occur in England? Discuss the quality of life of the people there during the industrialization. How does it compare with that in India at present?", m:"12.5"},
-  {n:7, t:"World History", q:"To what extent can Germany be held responsible for causing the two World Wars? Discuss critically.", m:"12.5"},
-  {n:8, t:"Indian Society", q:"Describe any four cultural elements of diversity in India and rate their relative significance in building a national identity.", m:"12.5"},
-  {n:9, t:"Indian Society", q:"Critically examine whether growing population is the cause of poverty OR poverty is the main cause of population increase in India.", m:"12.5"},
-  {n:10, t:"Women, Population & Urbanization", q:"How do you explain the statistics that show that the sex ratio in Tribes in India is more favourable to women than the sex ratio among Scheduled Castes?", m:"12.5"},
-  {n:11, t:"Women, Population & Urbanization", q:"Discuss the changes in the trends of labour migration within and outside India in the last four decades.", m:"12.5"},
-  {n:12, t:"Women, Population & Urbanization", q:"Discuss the positive and negative effects of globalization on women in India.", m:"12.5"},
-  {n:13, t:"Indian Society", q:"Debate the issue of whether and how contemporary movements for assertion of Dalit identity work towards annihilation of caste.", m:"12.5"},
-  {n:14, t:"Geography — Physical, Resources & Phenomena", q:"Explain the factors responsible for the origin of ocean currents. How do they influence regional climates, fishing and navigation?", m:"12.5"},
-  {n:15, t:"Geography — Physical, Resources & Phenomena", q:"Mumbai, Delhi and Kolkata are the three mega cities of the country but the air pollution is much more serious problem in Delhi as compared to the other two. Why is this so?", m:"12.5"},
-  {n:16, t:"Geography — Physical, Resources & Phenomena", q:"India is well endowed with fresh water resources. Critically examine why it still suffers from water scarcity.", m:"12.5"},
-  {n:17, t:"Geography — Physical, Resources & Phenomena", q:"The states of Jammu and Kashmir, Himachal Pradesh and Uttarakhand are reaching the limits of their ecological carrying capacity due to tourism. Critically evaluate.", m:"12.5"},
-  {n:18, t:"Geography — Physical, Resources & Phenomena", q:"How far do you agree that the behaviour of the Indian monsoon has been changing due to humanizing landscapes? Discuss.", m:"12.5"},
-  {n:19, t:"Women, Population & Urbanization", q:"Smart cities in India cannot sustain without smart villages. Discuss this statement in the backdrop of rural urban integration.", m:"12.5"},
-  {n:20, t:"Geography — Physical, Resources & Phenomena", q:"What are the economic significances of discovery of oil in Arctic Sea and its possible environmental consequences?", m:"12.5"}
-]},
-2014: { fmt: "150 words each · 10 marks each · 25 questions", questions: [
-  {n:1, t:"Indian Culture & Heritage", q:"To what extent has the urban planning and culture of the Indus Valley Civilization provided inputs to the present day urbanization? Discuss.", m:"10"},
-  {n:2, t:"Indian Culture & Heritage", q:"Gandhara sculpture owed as much to the Romans as to the Greeks. Explain.", m:"10"},
-  {n:3, t:"Indian Culture & Heritage", q:"Taxila university was one of the oldest universities of the world with which were associated a number of renowned learned personalities of different disciplines. Its strategic location caused its fame to flourish, but unlike Nalanda, it is not considered as a university in the modern sense. Discuss.", m:"10"},
-  {n:4, t:"Modern Indian History", q:"The third battle of Panipat was fought in 1761. Why were so many empire-shaking battles fought at Panipat?", m:"10"},
-  {n:5, t:"Indian Culture & Heritage", q:"Sufis and medieval mystic saints failed to modify either the religious ideas and practices or the outward structure of Hindu/Muslim societies to any appreciable extent. Comment.", m:"10"},
-  {n:6, t:"Modern Indian History", q:"Examine critically the various facets of economic policies of the British in India from mid-eighteenth century till independence.", m:"10"},
-  {n:7, t:"Freedom Struggle", q:"In what ways did the naval mutiny prove to be the last nail in the coffin of British colonial aspirations in India?", m:"10"},
-  {n:8, t:"World History", q:"What were the major political, economic and social developments in the world which motivated the anti-colonial struggle in India?", m:"10"},
-  {n:9, t:"World History", q:"What were the events that led to the Suez Crisis in 1956? How did it deal a final blow to Britain's self-image as a world power?", m:"10"},
-  {n:10, t:"World History", q:"The New Economic Policy — 1921 of Lenin had influenced the policies adopted by India soon after independence. Evaluate.", m:"10"},
-  {n:11, t:"Women, Population & Urbanization", q:"How does patriarchy impact the position of a middle class working woman in India?", m:"10"},
-  {n:12, t:"Women, Population & Urbanization", q:"Why do some of the most prosperous regions of India have an adverse sex ratio for women? Give your arguments.", m:"10"},
-  {n:13, t:"Indian Society", q:"The life cycle of a joint family depends on economic factors rather than social values. Discuss.", m:"10"},
-  {n:14, t:"Women, Population & Urbanization", q:"Discuss the various economic and socio-cultural forces that are driving increasing feminization of agriculture in India.", m:"10"},
-  {n:15, t:"Globalization, Communalism & Secularism", q:"How do the Indian debates on secularism differ from the debates in the West?", m:"10"},
-  {n:16, t:"Geography — Physical, Resources & Phenomena", q:"Most of the unusual climatic happenings are explained as an outcome of the El-Nino effect. Do you agree?", m:"10"},
-  {n:17, t:"Geography — Physical, Resources & Phenomena", q:"Why are the world's fold mountain systems located along the margins of continents? Bring out the association between the global distribution of fold mountains and the earthquakes and volcanoes.", m:"10"},
-  {n:18, t:"Geography — Physical, Resources & Phenomena", q:"Explain the formation of thousands of islands in Indonesian and Philippines archipelagos.", m:"10"},
-  {n:19, t:"Geography — Physical, Resources & Phenomena", q:"Tropical cyclones are largely confined to South China Sea, Bay of Bengal and Gulf of Mexico. Why?", m:"10"},
-  {n:20, t:"Geography — Physical, Resources & Phenomena", q:"Bring out the relationship between the shrinking Himalayan glaciers and the symptoms of climate change in the Indian sub-continent.", m:"10"},
-  {n:21, t:"Geography — Physical, Resources & Phenomena", q:"Whereas the British planters had developed tea gardens all along the Shivaliks and Lesser Himalayas from Assam to Himachal Pradesh, in effect they did not succeed beyond the Darjeeling area. Explain.", m:"10"},
-  {n:22, t:"Geography — Physical, Resources & Phenomena", q:"Why did the Green Revolution in India virtually by-pass the eastern region despite fertile soil and good availability of water?", m:"10"},
-  {n:23, t:"Geography — Physical, Resources & Phenomena", q:"Account for the change in the spatial pattern of the Iron and Steel industry in the world.", m:"10"},
-  {n:24, t:"Geography — Physical, Resources & Phenomena", q:"Critically evaluate the various resources of the oceans which can be harnessed to meet the resource crisis in the world.", m:"10"},
-  {n:25, t:"Geography — Physical, Resources & Phenomena", q:"How does India see its place in the economic space of rising natural resource rich Africa?", m:"10"}
-]},
-2013: { fmt: "words as specified per part · 25 questions", questions: [
-  {n:1, t:"Indian Culture & Heritage", q:"Though not very useful from the point of view of a connected political history of South India, the Sangam literature portrays the social and economic conditions of its time with remarkable vividness. Comment.", m:"10"},
-  {n:2, t:"Indian Culture & Heritage", q:"(a) Discuss the 'Tandava' dance as recorded in early Indian inscriptions. (b) Chola architecture represents a high watermark in the evolution of temple architecture. Discuss.", m:"5+5"},
-  {n:3, t:"Freedom Struggle", q:"Defying the barriers of age, gender and religion, the Indian women became the torch-bearer during the struggle for freedom in India. Discuss.", m:"10"},
-  {n:4, t:"Freedom Struggle", q:"Several foreigners made India their homeland and participated in various movements. Analyze their role in the Indian struggle for freedom.", m:"10"},
-  {n:5, t:"Modern Indian History", q:"'In many ways, Lord Dalhousie was the founder of modern India.' Elaborate.", m:"10"},
-  {n:6, t:"Post-Independence Consolidation", q:"Critically discuss the objectives of Bhoodan and Gramdan Movements initiated by Acharya Vinoba Bhave and their success.", m:"10"},
-  {n:7, t:"Post-Independence Consolidation", q:"Write a critical note on the evolution and significance of the slogan, 'Jai Jawan Jai Kisan'.", m:"10"},
-  {n:8, t:"Freedom Struggle", q:"Discuss the contributions of Maulana Abul Kalam Azad to pre- and post-independent India.", m:"10"},
-  {n:9, t:"Post-Independence Consolidation", q:"Analyze the circumstances that led to the Tashkent Agreement in 1966. Discuss the highlights of the Agreement.", m:"10"},
-  {n:10, t:"Post-Independence Consolidation", q:"Critically examine the compulsions which prompted India to play a decisive role in the emergence of Bangladesh.", m:"10"},
-  {n:11, t:"World History", q:"'Latecomer' Industrial Revolution in Japan involved certain factors that were markedly different from what West had experienced. Analyze.", m:"10"},
-  {n:12, t:"World History", q:"'Africa was chopped into States artificially created by accidents of European competition.' Analyze.", m:"10"},
-  {n:13, t:"World History", q:"'American Revolution was an economic revolt against mercantilism.' Substantiate.", m:"10"},
-  {n:14, t:"World History", q:"What policy instruments were deployed to contain the Great Economic Depression?", m:"10"},
-  {n:15, t:"Women, Population & Urbanization", q:"Discuss the various social problems which originated out of the speedy process of urbanization in India.", m:"10"},
-  {n:16, t:"Women, Population & Urbanization", q:"'Male membership needs to be encouraged in order to make women's organization free from gender bias.' Comment.", m:"10"},
-  {n:17, t:"Globalization, Communalism & Secularism", q:"Critically examine the effect of globalization on the aged population in India.", m:"10"},
-  {n:18, t:"Globalization, Communalism & Secularism", q:"Growing feeling of regionalism is an important factor in generation of demand for a separate State. Discuss.", m:"10"},
-  {n:19, t:"Geography — Physical, Resources & Phenomena", q:"(a) What do you understand by the theory of 'continental drift'? Discuss the prominent evidences in its support. (b) The recent cyclone on east coast of India was called 'Phailin'. How are the tropical cyclones named across the world? Elaborate.", m:"5+5"},
-  {n:20, t:"Geography — Physical, Resources & Phenomena", q:"(a) Bring out the causes for the formation of heat islands in the urban habitat of the world. (b) What do you understand by the phenomenon of 'temperature inversion' in meteorology? How does it affect weather and the habitants of the place?", m:"5+5"},
-  {n:21, t:"Geography — Physical, Resources & Phenomena", q:"Major hot deserts in northern hemisphere are located between 20–30 deg N latitudes and on the western side of the continents. Why?", m:"10"},
-  {n:22, t:"Geography — Physical, Resources & Phenomena", q:"(a) Bring out the causes for more frequent occurrence of landslides in the Himalayas than in the Western Ghats. (b) There is no formation of deltas by rivers of the Western Ghats. Why?", m:"5+5"},
-  {n:23, t:"Geography — Physical, Resources & Phenomena", q:"(a) Do you agree that there is a growing trend of opening new sugar mills in southern States of India? Discuss with justification. (b) Analyze the factors for the highly decentralized cotton textile industry in India.", m:"5+5"},
-  {n:24, t:"Geography — Physical, Resources & Phenomena", q:"With growing scarcity of fossil fuels, the atomic energy is gaining more and more significance in India. Discuss the availability of raw material required for the generation of atomic energy in India and in the world.", m:"10"},
-  {n:25, t:"Geography — Physical, Resources & Phenomena", q:"It is said that India has substantial reserves of shale oil and gas, which can feed the needs of the country for quarter century. However, tapping of the resource does not appear to be high on the agenda. Discuss critically the availability and issues involved.", m:"10"}
-]}
-};
+const yearsOf = key => Object.keys((PAPERS[key] && PAPERS[key].data) || {}).map(Number).sort((a,b) => b - a);
+const isLoaded = key => yearsOf(key).length > 0;
 
-const YEARS = Object.keys(DATA).map(Number).sort((a,b) => b - a);
-let currentYear = YEARS[0];
+function initialPaper(){
+  const h = location.hash.replace('#','').toLowerCase();
+  if (PAPER_KEYS.includes(h)) return h;
+  return PAPER_KEYS.find(isLoaded) || 'gs1';
+}
+
+let currentPaper = initialPaper();
+let currentYear = yearsOf(currentPaper)[0];
+
+function renderTabs(){
+  const el = document.getElementById('gsTabs');
+  el.innerHTML = PAPER_KEYS.map(k => {
+    const p = PAPERS[k] || { code: k.toUpperCase(), name: '' };
+    const n = yearsOf(k).length;
+    const tag = n ? `${n} year${n>1?'s':''} loaded` : 'awaiting PDFs';
+    const cls = ['gs-tab', k===currentPaper ? 'active' : '', n ? '' : 'disabled'].join(' ');
+    return `<button class="${cls}" role="tab" aria-selected="${k===currentPaper}" data-paper="${k}">
+      <div class="gs-code">${p.code}</div><div class="gs-label">${p.name}</div><div class="gs-tag">${tag}</div>
+    </button>`;
+  }).join('');
+  el.querySelectorAll('.gs-tab').forEach(t => t.addEventListener('click', () => selectPaper(t.dataset.paper)));
+}
+
+function selectPaper(key){
+  if (key === currentPaper) return;
+  currentPaper = key;
+  const ys = yearsOf(key);
+  // keep the same year when switching papers, if that year exists
+  if (!ys.includes(currentYear)) currentYear = ys[0];
+  history.replaceState(null, '', '#' + key);
+  renderAll();
+}
+
+function renderHeader(){
+  const p = PAPERS[currentPaper];
+  const n = yearsOf(currentPaper).length;
+  const label = `GS Paper ${p.roman}`;
+  document.title = `${p.code} Mains Archive — PYQ Ledger`;
+  document.getElementById('crumbPaper').textContent = label;
+  document.getElementById('pageTitle').textContent = `${label} — Previous Year Questions`;
+  document.getElementById('pageSub').textContent = n
+    ? `All ${n} year${n>1?'s':''}, arranged by syllabus topic within each year. ${p.blurb}`
+    : p.blurb;
+}
 
 function renderYearStrip(){
   const el = document.getElementById('yearRow');
-  el.innerHTML = YEARS.map(y => `<div class="year-chip ${currentYear===y?'active':''}" data-year="${y}">${y}</div>`).join('');
+  el.innerHTML = yearsOf(currentPaper).map(y =>
+    `<button class="year-chip ${currentYear===y?'active':''}" data-year="${y}">${y}</button>`).join('');
   el.querySelectorAll('.year-chip').forEach(c => c.addEventListener('click', () => {
     currentYear = parseInt(c.dataset.year); renderAll();
   }));
 }
 
 function renderDownload(){
-  const d = DATA[currentYear];
-  document.getElementById('downloadLabel').textContent = `GS Paper I · ${currentYear}`;
-  document.getElementById('downloadFmt').textContent = d.fmt;
+  const p = PAPERS[currentPaper];
+  const d = p.data[currentYear];
+  document.getElementById('downloadLabel').textContent = `GS Paper ${p.roman} · ${currentYear}`;
+  document.getElementById('downloadFmt').textContent = d.fmt || '';
   const btn = document.getElementById('downloadBtn');
-  btn.href = `papers/gs1-${currentYear}.pdf`;
-  btn.setAttribute('download', `GS1-${currentYear}.pdf`);
+  // pdfPrefix in the data file sets the file name, e.g. "GS2" → papers/GS2-2025.pdf
+  btn.href = `papers/${p.pdfPrefix || currentPaper}-${currentYear}.pdf`;
+  btn.setAttribute('download', `${p.code}-${currentYear}.pdf`);
 }
 
 function renderTopics(){
-  const d = DATA[currentYear];
+  const p = PAPERS[currentPaper];
+  const d = p.data[currentYear];
   const el = document.getElementById('topicArea');
   const nav = document.getElementById('topicNav');
   const grouped = {};
   d.questions.forEach(q => { (grouped[q.t] = grouped[q.t] || []).push(q); });
 
-  const presentTopics = TOPIC_ORDER.filter(t => grouped[t]);
-  nav.innerHTML = presentTopics.map(t => `<div class="topic-pill"><span class="n">${grouped[t].length}</span>${t}</div>`).join('');
+  // listed topics in syllabus order, then any unlisted topic so no question is silently dropped
+  const order = p.topics.filter(t => grouped[t]).concat(Object.keys(grouped).filter(t => !p.topics.includes(t)));
+  nav.innerHTML = order.map(t => `<div class="topic-pill"><span class="n">${grouped[t].length}</span>${t}</div>`).join('');
 
-  el.innerHTML = presentTopics.map(topic => `
+  el.innerHTML = order.map(topic => `
     <div class="topic-group">
       <div class="topic-head">
         <div class="topic-name">${topic}</div>
@@ -481,11 +227,30 @@ function renderTopics(){
   `).join('');
 }
 
+function renderEmpty(){
+  const p = PAPERS[currentPaper];
+  document.getElementById('paperBody').innerHTML = `
+    <div class="empty-note"><b>GS Paper ${p.roman} is on its way.</b><br>
+    Questions for this paper haven't been added yet. Meanwhile, the other loaded papers are a tab away.</div>`;
+}
+
+let bodyTemplate = null;
 function renderAll(){
+  const body = document.getElementById('paperBody');
+  if (bodyTemplate === null) bodyTemplate = body.innerHTML;
+  renderTabs();
+  renderHeader();
+  if (!isLoaded(currentPaper)) { renderEmpty(); return; }
+  if (!document.getElementById('yearRow')) body.innerHTML = bodyTemplate;
   renderYearStrip();
   renderDownload();
   renderTopics();
 }
+
+window.addEventListener('hashchange', () => {
+  const h = location.hash.replace('#','').toLowerCase();
+  if (PAPER_KEYS.includes(h)) selectPaper(h);
+});
 renderAll();
 </script>
 </body>
