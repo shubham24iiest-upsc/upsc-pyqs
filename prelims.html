@@ -4,23 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Prelims papers and answer keys — PYQ Ledger</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@75..150,500..900&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:#0D1733; --surface:#15224A; --surface-2:#1C2C5C; --rule:#2B3D74;
-  --text:#EDF0FB; --muted:#9AA6CF; --faint:#6A78A8;
-  --marigold:#FFA928; --marigold-soft:rgba(255,169,40,.14);
+  --ink:#000000; --surface:#111111; --surface-2:#1C1C1C; --rule:#2E2A26;
+  --text:#F4EDE4; --muted:#BDAF9E; --faint:#8A7E70;
+  --marigold:#FF8A1F; --marigold-soft:rgba(255,138,31,.16);
   --pink:#FF5C8A; --mint:#4FD1A5;
-  --display:'Anybody', 'Arial Narrow', system-ui, sans-serif;
-  --body:'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --display:Georgia, 'Times New Roman', serif;
+  --body:Georgia, 'Times New Roman', serif;
   --radius:10px;
   color-scheme: dark;
 }
 *{ box-sizing:border-box; margin:0; padding:0; }
 html{ -webkit-text-size-adjust:100%; }
-body{ background:var(--ink); color:var(--text); font-family:var(--body); font-size:16px; line-height:1.55; -webkit-font-smoothing:antialiased; min-height:100vh; }
+body{ background:var(--ink); color:var(--text); font-family:var(--body); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; min-height:100vh; }
 a{ color:inherit; text-decoration:none; }
 button{ font:inherit; color:inherit; background:none; border:none; cursor:pointer; }
 :focus-visible{ outline:2px solid var(--marigold); outline-offset:3px; border-radius:4px; }
@@ -29,15 +26,15 @@ button{ font:inherit; color:inherit; background:none; border:none; cursor:pointe
 /* header */
 .site-head{ position:relative; z-index:5; }
 .head-row{ display:flex; align-items:center; justify-content:space-between; gap:16px; padding:20px 0; }
-.brand{ display:flex; align-items:baseline; gap:10px; font-family:var(--display); font-weight:800; font-stretch:125%; font-size:22px; letter-spacing:-.01em; white-space:nowrap; }
-.brand-dot{ width:12px; height:12px; border-radius:50%; background:var(--marigold); display:inline-block; transform:translateY(1px); box-shadow:0 0 18px rgba(255,169,40,.6); }
+.brand{ display:flex; align-items:baseline; gap:10px; font-family:var(--display); font-weight:700; font-size:22px; letter-spacing:-.01em; white-space:nowrap; }
+.brand-dot{ width:12px; height:12px; border-radius:50%; background:var(--marigold); display:inline-block; transform:translateY(1px); box-shadow:0 0 18px rgba(255,138,31,.7); }
 .brand small{ font-family:var(--body); font-weight:500; font-size:13px; color:var(--muted); letter-spacing:0; }
 .top-nav{ display:flex; gap:4px; background:var(--surface); border:1px solid var(--rule); border-radius:999px; padding:4px; }
 .top-nav a{ padding:7px 16px; border-radius:999px; font-weight:600; font-size:14px; color:var(--muted); }
 .top-nav a:hover{ color:var(--text); }
 .top-nav a.on{ background:var(--marigold); color:var(--ink); }
 
-.display{ font-family:var(--display); font-weight:800; font-stretch:120%; letter-spacing:-.02em; line-height:1.02; }
+.display{ font-family:var(--display); font-weight:700; letter-spacing:-.01em; line-height:1.08; color:var(--marigold); }
 .lede{ color:var(--muted); font-size:17px; max-width:60ch; }
 
 .site-foot{ border-top:1px solid var(--rule); margin-top:72px; padding:28px 0 40px; color:var(--faint); font-size:13.5px; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
@@ -51,23 +48,24 @@ button{ font:inherit; color:inherit; background:none; border:none; cursor:pointe
 .ptabs{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
 .ptab{ text-align:left; background:var(--surface); border:1px solid var(--rule); border-radius:var(--radius); padding:18px 20px; }
 .ptab:hover{ border-color:var(--faint); }
-.ptab .pcode{ font-family:var(--display); font-weight:850; font-stretch:130%; font-size:34px; line-height:1; letter-spacing:-.02em; color:var(--muted); }
+.ptab .pcode{ font-family:var(--display); font-weight:700; font-size:34px; line-height:1; letter-spacing:-.01em; color:var(--marigold); }
 .ptab .plabel{ font-weight:600; margin-top:8px; color:var(--muted); }
 .ptab .ptag{ font-size:13px; color:var(--faint); margin-top:2px; }
 .ptab.on{ background:var(--marigold); border-color:var(--marigold); }
-.ptab.on .pcode, .ptab.on .plabel, .ptab.on .ptag{ color:var(--ink); }
+.ptab.on .pcode, .ptab.on .plabel, .ptab.on .ptag{ color:#000; }
 .paper-note{ font-size:14.5px; color:var(--muted); border-left:3px solid var(--marigold); padding:4px 0 4px 16px; margin:22px 0 26px; max-width:80ch; }
 .paper-note b{ color:var(--text); }
-.year-list{ display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:12px; }
+.year-list{ display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:12px; }
 .yrow{ background:var(--surface); border:1px solid var(--rule); border-radius:var(--radius); padding:18px 18px 16px; display:flex; flex-direction:column; gap:4px; }
-.ynum{ font-family:var(--display); font-weight:850; font-stretch:135%; font-size:44px; line-height:1; letter-spacing:-.03em; }
+.ynum{ font-family:var(--display); font-weight:700; font-size:44px; line-height:1; letter-spacing:-.01em; color:var(--marigold); }
 .ymeta{ font-size:13px; color:var(--faint); margin-bottom:12px; }
 .ybtns{ display:flex; flex-direction:column; gap:8px; margin-top:auto; }
-.dl{ flex:1; display:inline-flex; justify-content:center; align-items:center; padding:10px 12px; border-radius:999px; font-size:13.5px; font-weight:700; border:1px solid var(--rule); white-space:nowrap; }
-.dl.paper{ background:var(--marigold); border-color:var(--marigold); color:var(--ink); }
+.dl{ flex:1; display:inline-flex; justify-content:center; align-items:center; gap:8px; padding:12px 14px; border-radius:999px; font-size:15px; font-weight:700; border:1px solid var(--rule); white-space:nowrap; }
+.dl.paper{ background:var(--marigold); border-color:var(--marigold); color:#000; box-shadow:0 6px 22px -6px rgba(255,138,31,.55); }
+.dl svg{ width:17px; height:17px; flex-shrink:0; }
 .dl.paper:hover{ filter:brightness(1.08); }
-.dl.key{ color:var(--text); }
-.dl.key:hover{ border-color:var(--marigold); color:var(--marigold); }
+.dl.key{ color:var(--marigold); border:2px solid var(--marigold); }
+.dl.key:hover{ background:var(--marigold); color:#000; }
 .dl.off{ color:var(--faint); font-weight:500; border-style:dashed; }
 @media (max-width:520px){ .ptab .pcode{ font-size:28px; } }
 </style>
@@ -152,7 +150,7 @@ function renderTabs(){
 function btn(cls, href, label, ok, offLabel){
   const fname = href.split('/').pop();
   return ok
-    ? `<a class="dl ${cls}" href="${href}" download="${fname}">${label}</a>`
+    ? `<a class="dl ${cls}" href="${href}" download="${fname}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 10.5l5 5 5-5"/><path d="M5 20h14"/></svg>${label}</a>`
     : `<span class="dl off" aria-disabled="true">${offLabel}</span>`;
 }
 
