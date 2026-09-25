@@ -53,6 +53,9 @@ button{ font:inherit; color:inherit; background:none; border:none; cursor:pointe
 .ptab .ptag{ font-size:13px; color:var(--faint); margin-top:2px; }
 .ptab.on{ background:var(--marigold); border-color:var(--marigold); }
 .ptab.on .pcode, .ptab.on .plabel, .ptab.on .ptag{ color:#000; }
+.cta-box{ display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; background:var(--surface); border:1px solid var(--marigold); border-radius:var(--radius); padding:16px 20px; margin-bottom:22px; }
+.cta-box b{ color:var(--marigold); font-size:17px; } .cta-box p{ color:var(--muted); font-size:14.5px; margin-top:2px; }
+.cta-box a{ background:var(--marigold); color:#000; font-weight:700; border-radius:999px; padding:11px 20px; white-space:nowrap; }
 .paper-note{ font-size:14.5px; color:var(--muted); border-left:3px solid var(--marigold); padding:4px 0 4px 16px; margin:22px 0 26px; max-width:80ch; }
 .paper-note b{ color:var(--text); }
 .year-list{ display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:12px; }
@@ -73,13 +76,14 @@ button{ font:inherit; color:inherit; background:none; border:none; cursor:pointe
 <body>
 <header class="site-head"><div class="wrap head-row">
   <a href="index.html" class="brand"><span class="brand-dot"></span>PYQ Ledger <small>UPSC CSE</small></a>
-  <nav class="top-nav" aria-label="Sections"><a href="mains.html">Mains</a><a href="prelims.html" class="on">Prelims</a></nav>
+  <nav class="top-nav" aria-label="Sections"><a href="mains.html">Mains</a><a href="prelims.html" class="on">Prelims</a><a href="practice.html">Practice</a></nav>
 </div></header>
 <main class="wrap">
   <div class="intro">
     <h1 class="display">Prelims papers and answer keys</h1>
     <p class="lede">Official UPSC Civil Services (Preliminary) question papers with their official answer keys. Keys cover every booklet series, so match the key to the series printed on your paper.</p>
   </div>
+  <div class="cta-box"><div><b>Solve these papers online</b><p>Practise GS I questions subject by subject, with instant marking, explanations and topic analysis.</p></div><a href="practice.html">Start practising</a></div>
   <div class="ptabs" id="tabs" role="tablist" aria-label="Prelims papers"></div>
   <p class="paper-note" id="paperNote"></p>
   <div class="year-list" id="yearList"></div>

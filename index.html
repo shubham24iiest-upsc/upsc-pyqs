@@ -70,20 +70,21 @@ button{ font:inherit; color:inherit; background:none; border:none; cursor:pointe
 .tile .tn{ font-family:var(--display); font-weight:700; font-size:42px; line-height:1; letter-spacing:-.01em; color:var(--marigold); }
 .tile .tt{ font-weight:700; }
 .tile .td{ font-size:13.5px; color:var(--muted); }
-.grid2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:20px; }
+.grid3{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:20px; }
 .feat{ display:grid; grid-template-columns:repeat(3,1fr); gap:28px; margin-top:22px; }
 .feat h3{ font-weight:700; font-size:16px; margin-bottom:4px; }
 .feat p{ color:var(--muted); font-size:14.5px; }
 .feat .ic{ width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-bottom:10px; }
 .feat .ic svg{ width:17px; height:17px; }
 @media (max-width:900px){ .hero{ grid-template-columns:1fr; gap:32px; padding-top:28px; } .grid4{ grid-template-columns:1fr 1fr; } .feat{ grid-template-columns:1fr; gap:18px; } }
-@media (max-width:520px){ .grid2{ grid-template-columns:1fr; } .tile .tn{ font-size:34px; } }
+@media (max-width:760px){ .grid3{ grid-template-columns:1fr; } }
+@media (max-width:520px){ .tile .tn{ font-size:34px; } }
 </style>
 </head>
 <body>
 <header class="site-head"><div class="wrap head-row">
   <a href="index.html" class="brand"><span class="brand-dot"></span>PYQ Ledger <small>UPSC CSE</small></a>
-  <nav class="top-nav" aria-label="Sections"><a href="mains.html">Mains</a><a href="prelims.html">Prelims</a></nav>
+  <nav class="top-nav" aria-label="Sections"><a href="mains.html">Mains</a><a href="prelims.html">Prelims</a><a href="practice.html">Practice</a></nav>
 </div></header>
 
 <main class="wrap">
@@ -111,9 +112,10 @@ button{ font:inherit; color:inherit; background:none; border:none; cursor:pointe
   <section class="sec" style="margin-top:44px" aria-labelledby="preH">
     <h2 id="preH">Prelims</h2>
     <p>Official question papers and answer keys for both Prelims papers, year by year.</p>
-    <div class="grid2">
+    <div class="grid3">
       <a class="tile" href="prelims.html#gs1"><span class="tn">GS I</span><span class="tt">General Studies I</span><span class="td">100 questions, decides the cut-off</span></a>
       <a class="tile" href="prelims.html#csat"><span class="tn">CSAT</span><span class="tt">General Studies II</span><span class="td">80 questions, qualifying at 33%</span></a>
+      <a class="tile" href="practice.html"><span class="tn">Practice</span><span class="tt">Solve GS I questions</span><span class="td">By subject and topic, with explanations</span></a>
     </div>
   </section>
 
