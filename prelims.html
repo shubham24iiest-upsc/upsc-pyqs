@@ -145,46 +145,69 @@
 </div>
 
 <script>
-/* ---------- Edit here when you add files ----------
-   Files live in the papers/ folder, named exactly like:
+/* Files live in the papers/ folder, named exactly like:
      papers/PRE-GS1-2025.pdf       papers/PRE-GS1-2025-KEY.pdf
      papers/PRE-CSAT-2025.pdf      papers/PRE-CSAT-2025-KEY.pdf
-   List a year below if its paper or key is NOT on the site yet;
-   its button then shows "not yet available" instead of a broken link. */
+   Nothing to edit here: the page checks which files exist when it loads.
+   A year appears as soon as its paper or key is uploaded, and any file
+   that isn't there yet shows a "coming soon" label instead of a broken link. */
 const PAPERS = {
   gs1: {
     code: "GS I", name: "General Studies I", prefix: "PRE-GS1",
-    note: "<b>100 questions · 200 marks · 2 hours.</b> This paper decides your Prelims cut-off. Negative marking: one-third of the marks for a question are deducted for each wrong answer.",
-    missingPapers: [],
-    missingKeys: []
+    note: "<b>100 questions · 200 marks · 2 hours.</b> This paper decides your Prelims cut-off. Negative marking: one-third of the marks for a question are deducted for each wrong answer."
   },
   csat: {
     code: "CSAT", name: "General Studies II (CSAT)", prefix: "PRE-CSAT",
-    note: "<b>80 questions · 200 marks · 2 hours.</b> Qualifying since 2015: you need 33% (66 marks) and the score does not count toward the cut-off. In 2013 and 2014 it was added to the merit score. Negative marking: one-third per wrong answer.",
-    missingPapers: [],
-    missingKeys: []
+    note: "<b>80 questions · 200 marks · 2 hours.</b> Qualifying since 2015: you need 33% (66 marks) and the score does not count toward the cut-off. In 2013 and 2014 it was added to the merit score. Negative marking: one-third per wrong answer."
   }
 };
-const FIRST_YEAR = 2013, LAST_YEAR = 2026;
-/* -------------------------------------------------- */
+const FIRST_YEAR = 2013;
+const LAST_YEAR = new Date().getFullYear() + 1;   // looks one year ahead, so nothing is missed around New Year
 
 const KEYS = Object.keys(PAPERS);
 const YEARS = []; for (let y = LAST_YEAR; y >= FIRST_YEAR; y--) YEARS.push(y);
+const url = (p, y, key) => `papers/${p.prefix}-${y}${key ? '-KEY' : ''}.pdf`;
 let current = KEYS.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'gs1';
+const found = {};          // found[k][y] = {paper:bool, key:bool}
+let checked = false;
+
+async function exists(path){
+  if (location.protocol === 'file:') return true;   // local preview: can't check, assume present
+  try {
+    const r = await fetch(path, { method: 'HEAD', cache: 'no-store' });
+    return r.ok;
+  } catch (e) { return false; }
+}
+
+async function checkFiles(){
+  await Promise.all(KEYS.flatMap(k => YEARS.map(async y => {
+    const [paper, key] = await Promise.all([exists(url(PAPERS[k], y, false)), exists(url(PAPERS[k], y, true))]);
+    (found[k] = found[k] || {})[y] = { paper, key };
+  })));
+  checked = true;
+}
+
+const shownYears = k => YEARS.filter(y => { const f = found[k] && found[k][y]; return f && (f.paper || f.key); });
 
 function renderTabs(){
   const el = document.getElementById('tabs');
   el.innerHTML = KEYS.map(k => {
     const p = PAPERS[k];
-    const keys = YEARS.filter(y => !p.missingKeys.includes(y)).length;
+    let tag = 'checking files…';
+    if (checked){
+      const ys = shownYears(k);
+      const papers = ys.filter(y => found[k][y].paper).length, keys = ys.filter(y => found[k][y].key).length;
+      tag = `${papers} paper${papers===1?'':'s'} · ${keys} answer key${keys===1?'':'s'}`;
+    }
     return `<button class="gs-tab ${k===current?'active':''}" role="tab" aria-selected="${k===current}" data-k="${k}">
       <div class="gs-code">${p.code}</div><div class="gs-label">${p.name}</div>
-      <div class="gs-tag">${YEARS.length} papers · ${keys} answer keys</div></button>`;
+      <div class="gs-tag">${tag}</div></button>`;
   }).join('');
   el.querySelectorAll('.gs-tab').forEach(b => b.addEventListener('click', () => select(b.dataset.k)));
 }
 
-function btn(cls, href, label, fname, ok, offLabel){
+function btn(cls, href, label, ok, offLabel){
+  const fname = href.split('/').pop();
   return ok
     ? `<a class="dl ${cls}" href="${href}" download="${fname}">↓ ${label}</a>`
     : `<span class="dl off" aria-disabled="true">${offLabel}</span>`;
@@ -195,14 +218,18 @@ function renderYears(){
   document.getElementById('crumbPaper').textContent = p.name;
   document.title = `Prelims ${p.code} — PYQ Ledger`;
   document.getElementById('paperNote').innerHTML = p.note;
-  document.getElementById('yearList').innerHTML = YEARS.map(y => {
-    const hasP = !p.missingPapers.includes(y), hasK = !p.missingKeys.includes(y);
+  const list = document.getElementById('yearList');
+  if (!checked){ list.innerHTML = `<div class="yrow"><div class="ymeta">Checking which papers are available…</div></div>`; return; }
+  const ys = shownYears(current);
+  if (!ys.length){ list.innerHTML = `<div class="yrow"><div class="ymeta">No papers uploaded yet for this tab.</div></div>`; return; }
+  list.innerHTML = ys.map(y => {
+    const f = found[current][y];
     return `<div class="yrow">
       <div class="ynum">${y}</div>
       <div class="ymeta">CSE Prelims ${y} · ${p.name}</div>
       <div class="ybtns">
-        ${btn('paper', `papers/${p.prefix}-${y}.pdf`, 'Question paper', `${p.prefix}-${y}.pdf`, hasP, 'Paper coming soon')}
-        ${btn('key', `papers/${p.prefix}-${y}-KEY.pdf`, 'Answer key', `${p.prefix}-${y}-KEY.pdf`, hasK, 'Key not yet released')}
+        ${btn('paper', url(p, y, false), 'Question paper', f.paper, 'Paper coming soon')}
+        ${btn('key', url(p, y, true), 'Answer key', f.key, 'Key not yet released')}
       </div></div>`;
   }).join('');
 }
@@ -210,6 +237,7 @@ function renderYears(){
 function select(k){ if (k===current) return; current = k; history.replaceState(null,'','#'+k); renderTabs(); renderYears(); }
 window.addEventListener('hashchange', () => { const h = location.hash.slice(1); if (KEYS.includes(h)) select(h); });
 renderTabs(); renderYears();
+checkFiles().then(() => { renderTabs(); renderYears(); });
 </script>
 </body>
 </html>
