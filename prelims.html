@@ -2,148 +2,91 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Prelims Archive — PYQ Ledger</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prelims papers and answer keys — PYQ Ledger</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@75..150,500..900&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --paper: #F1EDE2; --paper-raised: #FAF8F1; --ink: #1E2A44; --ink-soft: #3A4763;
-    --gold: #B8862E; --correct: #3D6B4F; --stamp-red: #9C3B3B;
-    --charcoal: #2A2823; --charcoal-soft: #5B564C; --rule: #CBC2AC; --rule-soft: #DED6C0;
-  }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  body{ background: var(--paper); color: var(--charcoal); font-family: 'Inter', sans-serif; line-height: 1.5; }
-  a{color:inherit; text-decoration:none;}
-  .wrap{ max-width: 1080px; margin: 0 auto; padding: 0 24px 60px; }
-  .mono{ font-family:'IBM Plex Mono', monospace; letter-spacing:0.02em; }
+:root{
+  --ink:#0D1733; --surface:#15224A; --surface-2:#1C2C5C; --rule:#2B3D74;
+  --text:#EDF0FB; --muted:#9AA6CF; --faint:#6A78A8;
+  --marigold:#FFA928; --marigold-soft:rgba(255,169,40,.14);
+  --pink:#FF5C8A; --mint:#4FD1A5;
+  --display:'Anybody', 'Arial Narrow', system-ui, sans-serif;
+  --body:'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --radius:10px;
+  color-scheme: dark;
+}
+*{ box-sizing:border-box; margin:0; padding:0; }
+html{ -webkit-text-size-adjust:100%; }
+body{ background:var(--ink); color:var(--text); font-family:var(--body); font-size:16px; line-height:1.55; -webkit-font-smoothing:antialiased; min-height:100vh; }
+a{ color:inherit; text-decoration:none; }
+button{ font:inherit; color:inherit; background:none; border:none; cursor:pointer; }
+:focus-visible{ outline:2px solid var(--marigold); outline-offset:3px; border-radius:4px; }
+.wrap{ max-width:1180px; margin:0 auto; padding:0 24px; }
 
-  header{ border-bottom:1px solid var(--rule); padding:22px 0; margin-bottom: 8px; }
-  .header-row{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
-  .brand{ display:flex; align-items:center; gap:12px; }
-  .brand-mark{ width:36px; height:36px; border:1.5px solid var(--ink); border-radius:3px; display:flex; align-items:center; justify-content:center; font-family:'Newsreader',serif; font-weight:700; font-size:16px; color:var(--ink); transform:rotate(-2deg); }
-  .brand-name{ font-family:'Newsreader', serif; font-weight:700; font-size:19px; color:var(--ink); }
-  .brand-name span{ color:var(--gold); font-style:italic; font-weight:600; }
-  .crumb{ font-size:13px; color:var(--charcoal-soft); }
-  .crumb b{ color:var(--ink); font-weight:600; }
+/* header */
+.site-head{ position:relative; z-index:5; }
+.head-row{ display:flex; align-items:center; justify-content:space-between; gap:16px; padding:20px 0; }
+.brand{ display:flex; align-items:baseline; gap:10px; font-family:var(--display); font-weight:800; font-stretch:125%; font-size:22px; letter-spacing:-.01em; white-space:nowrap; }
+.brand-dot{ width:12px; height:12px; border-radius:50%; background:var(--marigold); display:inline-block; transform:translateY(1px); box-shadow:0 0 18px rgba(255,169,40,.6); }
+.brand small{ font-family:var(--body); font-weight:500; font-size:13px; color:var(--muted); letter-spacing:0; }
+.top-nav{ display:flex; gap:4px; background:var(--surface); border:1px solid var(--rule); border-radius:999px; padding:4px; }
+.top-nav a{ padding:7px 16px; border-radius:999px; font-weight:600; font-size:14px; color:var(--muted); }
+.top-nav a:hover{ color:var(--text); }
+.top-nav a.on{ background:var(--marigold); color:var(--ink); }
 
-  .page-title{ font-family:'Newsreader', serif; font-weight:600; font-size: clamp(26px, 3.4vw, 36px); color: var(--ink); margin: 28px 0 6px; }
-  .page-sub{ font-size:14.5px; color:var(--charcoal-soft); margin-bottom:22px; max-width: 66ch; }
+.display{ font-family:var(--display); font-weight:800; font-stretch:120%; letter-spacing:-.02em; line-height:1.02; }
+.lede{ color:var(--muted); font-size:17px; max-width:60ch; }
 
-  .notice{
-    background: rgba(184,134,46,0.09);
-    border: 1px solid rgba(184,134,46,0.35);
-    border-radius: 6px;
-    padding: 12px 16px;
-    font-size: 12.5px;
-    color: var(--charcoal-soft);
-    margin-bottom: 26px;
-  }
-  .notice b{ color: var(--ink); }
+.site-foot{ border-top:1px solid var(--rule); margin-top:72px; padding:28px 0 40px; color:var(--faint); font-size:13.5px; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
 
-  .gs-tabs{ display:grid; grid-template-columns: repeat(4, 1fr); border:1px solid var(--ink); border-radius: 6px; overflow:hidden; margin-bottom: 26px; }
-  .gs-tab{ padding: 16px 10px; text-align:center; cursor:pointer; background: var(--paper-raised); border-right: 1px solid var(--rule); transition: background 0.15s ease; }
-  .gs-tab:last-child{ border-right:none; }
-  .gs-tab:hover{ background: #FFFDF7; }
-  .gs-tab.active{ background: var(--ink); }
-  .gs-tab.disabled{ opacity: 0.45; cursor: default; }
-  .gs-code{ font-family:'IBM Plex Mono', monospace; font-weight:600; font-size: 13px; color: var(--gold); margin-bottom: 4px; }
-  .gs-tab.active .gs-code{ color: #E3C171; }
-  .gs-label{ font-family:'Newsreader', serif; font-weight:600; font-size: 15.5px; color: var(--ink); }
-  .gs-tab.active .gs-label{ color: var(--paper-raised); }
-  .gs-tag{ font-size:9.5px; text-transform:uppercase; letter-spacing:0.06em; color: var(--charcoal-soft); margin-top:2px; }
-  @media (max-width:640px){ .gs-tabs{ grid-template-columns: repeat(2,1fr); } .gs-tab{ border-bottom:1px solid var(--rule); } }
+@media (prefers-reduced-motion: reduce){ *{ animation:none !important; transition:none !important; } }
+@media (max-width:640px){ .wrap{ padding:0 16px; } .brand small{ display:none; } .brand{ font-size:19px; } .top-nav a{ padding:7px 13px; } }
 
-  .year-strip{ overflow-x:auto; padding-bottom: 6px; margin-bottom: 22px; }
-  .year-row{ display:flex; gap:8px; min-width:max-content; }
-  .year-chip{ font-family:'IBM Plex Mono', monospace; font-size: 13px; font-weight:500; padding: 8px 15px; border:1px solid var(--rule); border-radius: 999px; color: var(--charcoal-soft); white-space:nowrap; cursor:pointer; transition: all 0.15s ease; }
-  .year-chip:hover{ border-color:var(--ink); color:var(--ink); }
-  .year-chip.active{ background:var(--ink); border-color:var(--ink); color:var(--paper-raised); }
-
-  .download-bar{ display:flex; align-items:center; justify-content:space-between; background: var(--paper-raised); border:1px solid var(--rule); border-radius:6px; padding: 16px 20px; margin-bottom: 30px; flex-wrap: wrap; gap: 12px; }
-  .download-info{ font-size:13.5px; color:var(--charcoal-soft); }
-  .download-info b{ color:var(--ink); font-family:'Newsreader',serif; font-size:15px; font-weight:600; }
-  .download-info .fmt{ display:block; font-size: 11.5px; margin-top:2px; }
-  .download-btn{ background: var(--ink); color: var(--paper-raised); border:none; padding: 11px 18px; border-radius:4px; font-weight:600; font-size:13.5px; cursor:pointer; display:flex; align-items:center; gap:8px; transition: background 0.15s ease; }
-  .download-btn:hover{ background: var(--ink-soft); }
-
-  .topic-nav{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom: 30px; }
-  .topic-pill{ font-size:11.5px; font-weight:600; padding:6px 12px; border-radius:999px; background: var(--paper-raised); border:1px solid var(--rule-soft); color: var(--charcoal-soft); }
-  .topic-pill .n{ color: var(--gold); margin-right:4px; }
-
-  .topic-group{ margin-bottom: 38px; }
-  .topic-head{ display:flex; align-items:baseline; gap: 12px; border-bottom: 1px solid var(--rule); padding-bottom: 10px; margin-bottom: 16px; }
-  .topic-name{ font-family:'Newsreader', serif; font-weight:600; font-size: 18px; color: var(--ink); }
-  .topic-count{ font-size: 11.5px; color: var(--charcoal-soft); font-family:'IBM Plex Mono', monospace; }
-
-  .qrow{ display:flex; gap: 14px; padding: 14px 4px; border-bottom: 1px dashed var(--rule-soft); font-size: 14.5px; }
-  .qrow:last-child{ border-bottom:none; }
-  .qnum{ font-family:'IBM Plex Mono', monospace; font-weight:600; color: var(--gold); flex-shrink:0; min-width: 32px; white-space: nowrap; }
-  .qtext{ color: var(--charcoal); line-height:1.55; }
-  .qmarks{ font-family:'IBM Plex Mono', monospace; font-size:11.5px; color: var(--charcoal-soft); flex-shrink:0; white-space:nowrap; }
-
-  .empty-note{ border: 1px dashed var(--rule); border-radius: 6px; padding: 26px 24px; text-align:center; color: var(--charcoal-soft); font-size: 13.5px; background: var(--paper-raised); }
-  .empty-note b{ color: var(--ink); }
-
-  .gs-tab{ font: inherit; border-top:none; border-bottom:none; border-left:none; }
-  .gs-tab:focus-visible, .year-chip:focus-visible, .download-btn:focus-visible{ outline: 2px solid var(--gold); outline-offset: 2px; }
-  .gs-tab.disabled:hover{ background: var(--paper-raised); }
-  .year-chip{ background: transparent; font-family:'IBM Plex Mono', monospace; }
-  .download-btn.off{ opacity: 0.45; pointer-events: none; }
-
-  .top-nav{ display:flex; gap:6px; font-size:13.5px; font-weight:600; }
-  .top-nav a{ padding:7px 14px; border-radius:3px; color:var(--ink-soft); border:1px solid transparent; }
-  .top-nav a:hover{ border-color: var(--rule); color: var(--ink); }
-  .top-nav a.on{ background: var(--ink); color: var(--paper-raised); }
-  .crumb-line{ margin-top: 18px; }
-
-  .gs-tabs.two{ grid-template-columns: repeat(2, 1fr); }
-  @media (max-width:640px){ .gs-tabs.two{ grid-template-columns: 1fr 1fr; } }
-  .paper-note{ font-size:13px; color:var(--charcoal-soft); background:var(--paper-raised); border:1px solid var(--rule); border-left:3px solid var(--gold); border-radius:4px; padding:12px 16px; margin-bottom:22px; }
-  .paper-note b{ color:var(--ink); }
-  .year-list{ border:1px solid var(--rule); border-radius:6px; overflow:hidden; background:var(--paper-raised); margin-bottom:48px; }
-  .yrow{ display:grid; grid-template-columns: 110px 1fr auto; align-items:center; gap:16px; padding:16px 20px; border-bottom:1px solid var(--rule-soft); }
-  .yrow:last-child{ border-bottom:none; }
-  .yrow:hover{ background:#FFFDF7; }
-  .ynum{ font-family:'IBM Plex Mono', monospace; font-weight:600; font-size:20px; color:var(--ink); }
-  .ymeta{ font-size:12.5px; color:var(--charcoal-soft); }
-  .ybtns{ display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
-  .dl{ display:inline-flex; align-items:center; gap:7px; padding:9px 15px; border-radius:4px; font-size:13px; font-weight:600; border:1px solid var(--ink); white-space:nowrap; transition: background .15s ease, color .15s ease; }
-  .dl.paper{ background:var(--ink); color:var(--paper-raised); }
-  .dl.paper:hover{ background:var(--ink-soft); }
-  .dl.key{ background:transparent; color:var(--ink); }
-  .dl.key:hover{ background:var(--ink); color:var(--paper-raised); }
-  .dl.off{ border-color:var(--rule); color:var(--charcoal-soft); background:transparent; pointer-events:none; font-weight:500; }
-  .dl:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
-  @media (max-width:640px){
-    .yrow{ grid-template-columns: 1fr; gap:10px; padding:16px; }
-    .ybtns{ justify-content:flex-start; }
-    .dl{ flex:1; justify-content:center; }
-  }
-  .gs-tab.active .gs-tag{ color: #C9C3B3; }
+.intro{ margin:26px 0 26px; }
+.intro h1{ font-size:clamp(34px,5vw,56px); }
+.intro .lede{ margin-top:12px; }
+.ptabs{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+.ptab{ text-align:left; background:var(--surface); border:1px solid var(--rule); border-radius:var(--radius); padding:18px 20px; }
+.ptab:hover{ border-color:var(--faint); }
+.ptab .pcode{ font-family:var(--display); font-weight:850; font-stretch:130%; font-size:34px; line-height:1; letter-spacing:-.02em; color:var(--muted); }
+.ptab .plabel{ font-weight:600; margin-top:8px; color:var(--muted); }
+.ptab .ptag{ font-size:13px; color:var(--faint); margin-top:2px; }
+.ptab.on{ background:var(--marigold); border-color:var(--marigold); }
+.ptab.on .pcode, .ptab.on .plabel, .ptab.on .ptag{ color:var(--ink); }
+.paper-note{ font-size:14.5px; color:var(--muted); border-left:3px solid var(--marigold); padding:4px 0 4px 16px; margin:22px 0 26px; max-width:80ch; }
+.paper-note b{ color:var(--text); }
+.year-list{ display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:12px; }
+.yrow{ background:var(--surface); border:1px solid var(--rule); border-radius:var(--radius); padding:18px 18px 16px; display:flex; flex-direction:column; gap:4px; }
+.ynum{ font-family:var(--display); font-weight:850; font-stretch:135%; font-size:44px; line-height:1; letter-spacing:-.03em; }
+.ymeta{ font-size:13px; color:var(--faint); margin-bottom:12px; }
+.ybtns{ display:flex; flex-direction:column; gap:8px; margin-top:auto; }
+.dl{ flex:1; display:inline-flex; justify-content:center; align-items:center; padding:10px 12px; border-radius:999px; font-size:13.5px; font-weight:700; border:1px solid var(--rule); white-space:nowrap; }
+.dl.paper{ background:var(--marigold); border-color:var(--marigold); color:var(--ink); }
+.dl.paper:hover{ filter:brightness(1.08); }
+.dl.key{ color:var(--text); }
+.dl.key:hover{ border-color:var(--marigold); color:var(--marigold); }
+.dl.off{ color:var(--faint); font-weight:500; border-style:dashed; }
+@media (max-width:520px){ .ptab .pcode{ font-size:28px; } }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div class="header-row">
-      <a href="index.html" class="brand">
-        <div class="brand-mark">P</div>
-        <div class="brand-name">PYQ <span>Ledger</span></div>
-      </a>
-      <nav class="top-nav"><a href="mains.html">Mains</a><a href="prelims.html" class="on">Prelims</a></nav>
-    </div>
-  </header>
-  <div class="crumb crumb-line"><a href="index.html">Home</a> / Prelims / <b id="crumbPaper">General Studies I</b></div>
-
-  <div class="page-title" id="pageTitle">Prelims — Question Papers &amp; Answer Keys</div>
-  <div class="page-sub">Official UPSC Civil Services (Preliminary) papers with their official answer keys, year by year. Answer keys cover every booklet series, so match the key to the series printed on your paper.</div>
-
-  <div class="gs-tabs two" id="tabs" role="tablist"></div>
-  <div class="paper-note" id="paperNote"></div>
+<header class="site-head"><div class="wrap head-row">
+  <a href="index.html" class="brand"><span class="brand-dot"></span>PYQ Ledger <small>UPSC CSE</small></a>
+  <nav class="top-nav" aria-label="Sections"><a href="mains.html">Mains</a><a href="prelims.html" class="on">Prelims</a></nav>
+</div></header>
+<main class="wrap">
+  <div class="intro">
+    <h1 class="display">Prelims papers and answer keys</h1>
+    <p class="lede">Official UPSC Civil Services (Preliminary) question papers with their official answer keys. Keys cover every booklet series, so match the key to the series printed on your paper.</p>
+  </div>
+  <div class="ptabs" id="tabs" role="tablist" aria-label="Prelims papers"></div>
+  <p class="paper-note" id="paperNote"></p>
   <div class="year-list" id="yearList"></div>
-</div>
-
+</main>
+<footer class="wrap site-foot"><span>Papers and keys as published by UPSC.</span><span>New years appear here automatically once their PDFs are uploaded.</span></footer>
 <script>
 /* Files live in the papers/ folder, named exactly like:
      papers/PRE-GS1-2025.pdf       papers/PRE-GS1-2025-KEY.pdf
@@ -199,24 +142,23 @@ function renderTabs(){
       const papers = ys.filter(y => found[k][y].paper).length, keys = ys.filter(y => found[k][y].key).length;
       tag = `${papers} paper${papers===1?'':'s'} · ${keys} answer key${keys===1?'':'s'}`;
     }
-    return `<button class="gs-tab ${k===current?'active':''}" role="tab" aria-selected="${k===current}" data-k="${k}">
-      <div class="gs-code">${p.code}</div><div class="gs-label">${p.name}</div>
-      <div class="gs-tag">${tag}</div></button>`;
+    return `<button class="ptab ${k===current?'on':''}" role="tab" aria-selected="${k===current}" data-k="${k}">
+      <div class="pcode">${p.code}</div><div class="plabel">${p.name}</div>
+      <div class="ptag">${tag}</div></button>`;
   }).join('');
-  el.querySelectorAll('.gs-tab').forEach(b => b.addEventListener('click', () => select(b.dataset.k)));
+  el.querySelectorAll('.ptab').forEach(b => b.addEventListener('click', () => select(b.dataset.k)));
 }
 
 function btn(cls, href, label, ok, offLabel){
   const fname = href.split('/').pop();
   return ok
-    ? `<a class="dl ${cls}" href="${href}" download="${fname}">↓ ${label}</a>`
+    ? `<a class="dl ${cls}" href="${href}" download="${fname}">${label}</a>`
     : `<span class="dl off" aria-disabled="true">${offLabel}</span>`;
 }
 
 function renderYears(){
   const p = PAPERS[current];
-  document.getElementById('crumbPaper').textContent = p.name;
-  document.title = `Prelims ${p.code} — PYQ Ledger`;
+    document.title = `Prelims ${p.code} — PYQ Ledger`;
   document.getElementById('paperNote').innerHTML = p.note;
   const list = document.getElementById('yearList');
   if (!checked){ list.innerHTML = `<div class="yrow"><div class="ymeta">Checking which papers are available…</div></div>`; return; }
@@ -226,10 +168,10 @@ function renderYears(){
     const f = found[current][y];
     return `<div class="yrow">
       <div class="ynum">${y}</div>
-      <div class="ymeta">CSE Prelims ${y} · ${p.name}</div>
+      <div class="ymeta">${f.paper && f.key ? 'Paper and answer key' : f.paper ? 'Paper only, key awaited' : 'Answer key only'}</div>
       <div class="ybtns">
-        ${btn('paper', url(p, y, false), 'Question paper', f.paper, 'Paper coming soon')}
-        ${btn('key', url(p, y, true), 'Answer key', f.key, 'Key not yet released')}
+        ${btn('paper', url(p, y, false), 'Download paper', f.paper, 'Paper coming soon')}
+        ${btn('key', url(p, y, true), 'Download answer key', f.key, 'Answer key not yet released')}
       </div></div>`;
   }).join('');
 }

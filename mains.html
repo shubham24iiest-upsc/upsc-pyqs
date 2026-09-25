@@ -2,133 +2,194 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mains Archive — PYQ Ledger</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mains PYQs — PYQ Ledger</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@75..150,500..900&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --paper: #F1EDE2; --paper-raised: #FAF8F1; --ink: #1E2A44; --ink-soft: #3A4763;
-    --gold: #B8862E; --correct: #3D6B4F; --stamp-red: #9C3B3B;
-    --charcoal: #2A2823; --charcoal-soft: #5B564C; --rule: #CBC2AC; --rule-soft: #DED6C0;
-  }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  body{ background: var(--paper); color: var(--charcoal); font-family: 'Inter', sans-serif; line-height: 1.5; }
-  a{color:inherit; text-decoration:none;}
-  .wrap{ max-width: 1080px; margin: 0 auto; padding: 0 24px 60px; }
-  .mono{ font-family:'IBM Plex Mono', monospace; letter-spacing:0.02em; }
+:root{
+  --ink:#0D1733; --surface:#15224A; --surface-2:#1C2C5C; --rule:#2B3D74;
+  --text:#EDF0FB; --muted:#9AA6CF; --faint:#6A78A8;
+  --marigold:#FFA928; --marigold-soft:rgba(255,169,40,.14);
+  --pink:#FF5C8A; --mint:#4FD1A5;
+  --display:'Anybody', 'Arial Narrow', system-ui, sans-serif;
+  --body:'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --radius:10px;
+  color-scheme: dark;
+}
+*{ box-sizing:border-box; margin:0; padding:0; }
+html{ -webkit-text-size-adjust:100%; }
+body{ background:var(--ink); color:var(--text); font-family:var(--body); font-size:16px; line-height:1.55; -webkit-font-smoothing:antialiased; min-height:100vh; }
+a{ color:inherit; text-decoration:none; }
+button{ font:inherit; color:inherit; background:none; border:none; cursor:pointer; }
+:focus-visible{ outline:2px solid var(--marigold); outline-offset:3px; border-radius:4px; }
+.wrap{ max-width:1180px; margin:0 auto; padding:0 24px; }
 
-  header{ border-bottom:1px solid var(--rule); padding:22px 0; margin-bottom: 8px; }
-  .header-row{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
-  .brand{ display:flex; align-items:center; gap:12px; }
-  .brand-mark{ width:36px; height:36px; border:1.5px solid var(--ink); border-radius:3px; display:flex; align-items:center; justify-content:center; font-family:'Newsreader',serif; font-weight:700; font-size:16px; color:var(--ink); transform:rotate(-2deg); }
-  .brand-name{ font-family:'Newsreader', serif; font-weight:700; font-size:19px; color:var(--ink); }
-  .brand-name span{ color:var(--gold); font-style:italic; font-weight:600; }
-  .crumb{ font-size:13px; color:var(--charcoal-soft); }
-  .crumb b{ color:var(--ink); font-weight:600; }
+/* header */
+.site-head{ position:relative; z-index:5; }
+.head-row{ display:flex; align-items:center; justify-content:space-between; gap:16px; padding:20px 0; }
+.brand{ display:flex; align-items:baseline; gap:10px; font-family:var(--display); font-weight:800; font-stretch:125%; font-size:22px; letter-spacing:-.01em; white-space:nowrap; }
+.brand-dot{ width:12px; height:12px; border-radius:50%; background:var(--marigold); display:inline-block; transform:translateY(1px); box-shadow:0 0 18px rgba(255,169,40,.6); }
+.brand small{ font-family:var(--body); font-weight:500; font-size:13px; color:var(--muted); letter-spacing:0; }
+.top-nav{ display:flex; gap:4px; background:var(--surface); border:1px solid var(--rule); border-radius:999px; padding:4px; }
+.top-nav a{ padding:7px 16px; border-radius:999px; font-weight:600; font-size:14px; color:var(--muted); }
+.top-nav a:hover{ color:var(--text); }
+.top-nav a.on{ background:var(--marigold); color:var(--ink); }
 
-  .page-title{ font-family:'Newsreader', serif; font-weight:600; font-size: clamp(26px, 3.4vw, 36px); color: var(--ink); margin: 28px 0 6px; }
-  .page-sub{ font-size:14.5px; color:var(--charcoal-soft); margin-bottom:22px; max-width: 66ch; }
+.display{ font-family:var(--display); font-weight:800; font-stretch:120%; letter-spacing:-.02em; line-height:1.02; }
+.lede{ color:var(--muted); font-size:17px; max-width:60ch; }
 
-  .notice{
-    background: rgba(184,134,46,0.09);
-    border: 1px solid rgba(184,134,46,0.35);
-    border-radius: 6px;
-    padding: 12px 16px;
-    font-size: 12.5px;
-    color: var(--charcoal-soft);
-    margin-bottom: 26px;
-  }
-  .notice b{ color: var(--ink); }
+.site-foot{ border-top:1px solid var(--rule); margin-top:72px; padding:28px 0 40px; color:var(--faint); font-size:13.5px; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
 
-  .gs-tabs{ display:grid; grid-template-columns: repeat(4, 1fr); border:1px solid var(--ink); border-radius: 6px; overflow:hidden; margin-bottom: 26px; }
-  .gs-tab{ padding: 16px 10px; text-align:center; cursor:pointer; background: var(--paper-raised); border-right: 1px solid var(--rule); transition: background 0.15s ease; }
-  .gs-tab:last-child{ border-right:none; }
-  .gs-tab:hover{ background: #FFFDF7; }
-  .gs-tab.active{ background: var(--ink); }
-  .gs-tab.disabled{ opacity: 0.45; cursor: default; }
-  .gs-code{ font-family:'IBM Plex Mono', monospace; font-weight:600; font-size: 13px; color: var(--gold); margin-bottom: 4px; }
-  .gs-tab.active .gs-code{ color: #E3C171; }
-  .gs-label{ font-family:'Newsreader', serif; font-weight:600; font-size: 15.5px; color: var(--ink); }
-  .gs-tab.active .gs-label{ color: var(--paper-raised); }
-  .gs-tag{ font-size:9.5px; text-transform:uppercase; letter-spacing:0.06em; color: var(--charcoal-soft); margin-top:2px; }
-  @media (max-width:640px){ .gs-tabs{ grid-template-columns: repeat(2,1fr); } .gs-tab{ border-bottom:1px solid var(--rule); } }
+@media (prefers-reduced-motion: reduce){ *{ animation:none !important; transition:none !important; } }
+@media (max-width:640px){ .wrap{ padding:0 16px; } .brand small{ display:none; } .brand{ font-size:19px; } .top-nav a{ padding:7px 13px; } }
 
-  .year-strip{ overflow-x:auto; padding-bottom: 6px; margin-bottom: 22px; }
-  .year-row{ display:flex; gap:8px; min-width:max-content; }
-  .year-chip{ font-family:'IBM Plex Mono', monospace; font-size: 13px; font-weight:500; padding: 8px 15px; border:1px solid var(--rule); border-radius: 999px; color: var(--charcoal-soft); white-space:nowrap; cursor:pointer; transition: all 0.15s ease; }
-  .year-chip:hover{ border-color:var(--ink); color:var(--ink); }
-  .year-chip.active{ background:var(--ink); border-color:var(--ink); color:var(--paper-raised); }
+/* paper switcher */
+.papers{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:18px 0 34px; }
+.pcard{ text-align:left; background:var(--surface); border:1px solid var(--rule); border-radius:var(--radius); padding:16px 18px 14px; transition:border-color .15s; }
+.pcard:hover{ border-color:var(--faint); }
+.pcard .pname{ font-family:var(--display); font-weight:800; font-stretch:130%; font-size:30px; line-height:1; letter-spacing:-.02em; color:var(--muted); }
+.pcard .psub{ font-size:13px; color:var(--muted); margin-top:6px; }
+.pcard .pbar{ height:4px; background:var(--surface-2); border-radius:4px; margin-top:12px; overflow:hidden; }
+.pcard .pbar i{ display:block; height:100%; background:var(--mint); width:0; transition:width .4s; }
+.pcard .pprog{ font-size:12px; color:var(--faint); margin-top:6px; }
+.pcard.on{ background:var(--marigold); border-color:var(--marigold); color:var(--ink); }
+.pcard.on .pname, .pcard.on .psub, .pcard.on .pprog{ color:var(--ink); }
+.pcard.on .pbar{ background:rgba(13,23,51,.2); } .pcard.on .pbar i{ background:var(--ink); }
+.pcard[disabled]{ opacity:.45; cursor:not-allowed; }
 
-  .download-bar{ display:flex; align-items:center; justify-content:space-between; background: var(--paper-raised); border:1px solid var(--rule); border-radius:6px; padding: 16px 20px; margin-bottom: 30px; flex-wrap: wrap; gap: 12px; }
-  .download-info{ font-size:13.5px; color:var(--charcoal-soft); }
-  .download-info b{ color:var(--ink); font-family:'Newsreader',serif; font-size:15px; font-weight:600; }
-  .download-info .fmt{ display:block; font-size: 11.5px; margin-top:2px; }
-  .download-btn{ background: var(--ink); color: var(--paper-raised); border:none; padding: 11px 18px; border-radius:4px; font-weight:600; font-size:13.5px; cursor:pointer; display:flex; align-items:center; gap:8px; transition: background 0.15s ease; }
-  .download-btn:hover{ background: var(--ink-soft); }
+.intro{ display:flex; justify-content:space-between; align-items:flex-end; gap:24px; flex-wrap:wrap; margin-bottom:22px; }
+.intro h1{ font-size:clamp(34px,5vw,56px); }
+.intro .lede{ margin-top:10px; }
 
-  .topic-nav{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom: 30px; }
-  .topic-pill{ font-size:11.5px; font-weight:600; padding:6px 12px; border-radius:999px; background: var(--paper-raised); border:1px solid var(--rule-soft); color: var(--charcoal-soft); }
-  .topic-pill .n{ color: var(--gold); margin-right:4px; }
+/* heatmap */
+.trends{ background:var(--surface); border:1px solid var(--rule); border-radius:14px; padding:22px 22px 18px; margin-bottom:28px; }
+.trends-head{ display:flex; justify-content:space-between; align-items:baseline; gap:16px; flex-wrap:wrap; margin-bottom:16px; }
+.trends-head h2{ font-family:var(--display); font-weight:750; font-stretch:115%; font-size:22px; }
+.trends-head p{ color:var(--muted); font-size:14px; }
+.hm-scroll{ overflow-x:auto; padding-bottom:4px; }
+.hm{ --lab:230px; display:grid; gap:4px; min-width:760px; }
+.hm .rl{ font-size:13.5px; line-height:1.25; font-weight:600; color:var(--text); text-align:left; padding:0 10px 0 0; display:flex; align-items:center; justify-content:space-between; gap:8px; border-radius:6px; }
+.hm .rl span.tot{ color:var(--faint); font-weight:500; font-size:12.5px; }
+.hm .rl:hover, .hm .rl.sel{ color:var(--marigold); }
+.hm .cl{ font-family:var(--display); font-stretch:90%; font-weight:600; font-size:12.5px; color:var(--muted); text-align:center; padding-bottom:4px; border-radius:6px; }
+.hm .cl:hover, .hm .cl.sel{ color:var(--marigold); }
+.hm .c{ height:34px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-family:var(--display); font-weight:700; font-size:13px; color:transparent; background:var(--surface-2); transition:transform .12s, box-shadow .12s; }
+.hm .c[data-n="0"]{ cursor:default; }
+.hm .c:not([data-n="0"]):hover{ transform:scale(1.08); box-shadow:0 0 0 2px var(--text); }
+.hm .c.sel{ box-shadow:0 0 0 2px var(--text); }
+.hm.anim .c{ animation:glow .5s both; }
+@keyframes glow{ from{ opacity:0; transform:scale(.6);} to{ opacity:1; transform:none; } }
+.legend{ display:flex; align-items:center; gap:8px; margin-top:14px; font-size:12.5px; color:var(--faint); }
+.legend i{ width:18px; height:12px; border-radius:3px; display:inline-block; }
 
-  .topic-group{ margin-bottom: 38px; }
-  .topic-head{ display:flex; align-items:baseline; gap: 12px; border-bottom: 1px solid var(--rule); padding-bottom: 10px; margin-bottom: 16px; }
-  .topic-name{ font-family:'Newsreader', serif; font-weight:600; font-size: 18px; color: var(--ink); }
-  .topic-count{ font-size: 11.5px; color: var(--charcoal-soft); font-family:'IBM Plex Mono', monospace; }
+/* toolbar */
+.toolbar{ position:sticky; top:0; z-index:4; background:rgba(13,23,51,.92); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); padding:12px 0; margin:0 0 8px; border-bottom:1px solid var(--rule); }
+.tb-row{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+.search{ flex:1 1 280px; position:relative; }
+.search input{ width:100%; background:var(--surface); border:1px solid var(--rule); border-radius:999px; padding:11px 16px 11px 40px; color:var(--text); font:inherit; font-size:15px; }
+.search input::placeholder{ color:var(--faint); }
+.search input:focus{ outline:none; border-color:var(--marigold); }
+.search svg{ position:absolute; left:14px; top:50%; transform:translateY(-50%); width:17px; height:17px; stroke:var(--muted); }
+.sel-wrap select{ appearance:none; -webkit-appearance:none; background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239AA6CF' fill='none' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 14px center; border:1px solid var(--rule); border-radius:999px; padding:10px 34px 10px 15px; color:var(--text); font:inherit; font-size:14px; max-width:260px; }
+.sel-wrap select:focus{ outline:none; border-color:var(--marigold); }
+.scope{ display:inline-flex; background:var(--surface); border:1px solid var(--rule); border-radius:999px; padding:3px; }
+.scope button{ padding:7px 12px; border-radius:999px; font-size:13px; font-weight:600; color:var(--muted); }
+.scope button.on{ background:var(--surface-2); color:var(--text); }
+.tb-meta{ display:flex; justify-content:space-between; gap:12px; margin-top:10px; font-size:13.5px; color:var(--muted); flex-wrap:wrap; }
+.tb-meta b{ color:var(--text); }
+.linkbtn{ color:var(--marigold); font-weight:600; font-size:13.5px; }
+.linkbtn:hover{ text-decoration:underline; }
 
-  .qrow{ display:flex; gap: 14px; padding: 14px 4px; border-bottom: 1px dashed var(--rule-soft); font-size: 14.5px; }
-  .qrow:last-child{ border-bottom:none; }
-  .qnum{ font-family:'IBM Plex Mono', monospace; font-weight:600; color: var(--gold); flex-shrink:0; min-width: 32px; white-space: nowrap; }
-  .qtext{ color: var(--charcoal); line-height:1.55; }
-  .qmarks{ font-family:'IBM Plex Mono', monospace; font-size:11.5px; color: var(--charcoal-soft); flex-shrink:0; white-space:nowrap; }
+/* results */
+.ygroup{ margin-top:30px; }
+.yhead{ display:flex; align-items:baseline; justify-content:space-between; gap:14px; flex-wrap:wrap; padding-bottom:10px; border-bottom:1px solid var(--rule); }
+.yhead h3{ font-family:var(--display); font-weight:850; font-stretch:130%; font-size:40px; line-height:1; letter-spacing:-.02em; }
+.yhead h3 small{ font-family:var(--body); font-stretch:100%; font-size:14px; font-weight:600; color:var(--muted); margin-left:10px; letter-spacing:0; }
+.yhead .ymeta{ display:flex; align-items:center; gap:14px; color:var(--faint); font-size:13px; flex-wrap:wrap; }
+.pdf{ display:inline-flex; align-items:center; gap:6px; border:1px solid var(--rule); border-radius:999px; padding:7px 14px; font-weight:600; font-size:13px; color:var(--text); }
+.pdf:hover{ border-color:var(--marigold); color:var(--marigold); }
 
-  .empty-note{ border: 1px dashed var(--rule); border-radius: 6px; padding: 26px 24px; text-align:center; color: var(--charcoal-soft); font-size: 13.5px; background: var(--paper-raised); }
-  .empty-note b{ color: var(--ink); }
+.q{ display:grid; grid-template-columns:64px 1fr auto; gap:6px 16px; padding:18px 0; border-bottom:1px solid rgba(43,61,116,.55); }
+.q .num{ font-family:var(--display); font-weight:800; font-stretch:110%; font-size:22px; color:var(--marigold); line-height:1.25; white-space:nowrap; }
+.q .txt{ font-size:16px; line-height:1.62; max-width:78ch; }
+.q .txt mark{ background:var(--marigold-soft); color:var(--marigold); border-radius:3px; padding:0 2px; }
+.q .meta{ grid-column:2; display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:4px; }
+.chip{ font-size:12.5px; font-weight:600; border-radius:999px; padding:4px 11px; background:var(--surface-2); color:var(--muted); }
+button.chip:hover{ color:var(--marigold); }
+.chip.marks{ background:transparent; border:1px solid var(--rule); }
+.chip.paper{ background:var(--marigold-soft); color:var(--marigold); }
+.acts{ grid-column:3; grid-row:1 / span 2; display:flex; flex-direction:column; gap:8px; }
+.act{ width:40px; height:40px; border-radius:50%; border:1px solid var(--rule); display:flex; align-items:center; justify-content:center; color:var(--faint); transition:background .15s, color .15s, border-color .15s; }
+.act svg{ width:18px; height:18px; }
+.act:hover{ color:var(--text); border-color:var(--faint); }
+.act.done[aria-pressed="true"]{ background:var(--mint); border-color:var(--mint); color:var(--ink); }
+.act.save[aria-pressed="true"]{ background:var(--pink); border-color:var(--pink); color:var(--ink); }
+.q.is-done .txt{ color:var(--muted); }
+.empty{ text-align:center; padding:60px 20px; color:var(--muted); }
+.empty h3{ font-family:var(--display); font-stretch:115%; font-size:26px; color:var(--text); margin-bottom:8px; }
+.more{ display:block; margin:28px auto 0; padding:12px 22px; border-radius:999px; border:1px solid var(--rule); font-weight:600; }
+.more:hover{ border-color:var(--marigold); color:var(--marigold); }
 
-  .gs-tab{ font: inherit; border-top:none; border-bottom:none; border-left:none; }
-  .gs-tab:focus-visible, .year-chip:focus-visible, .download-btn:focus-visible{ outline: 2px solid var(--gold); outline-offset: 2px; }
-  .gs-tab.disabled:hover{ background: var(--paper-raised); }
-  .year-chip{ background: transparent; font-family:'IBM Plex Mono', monospace; }
-  .download-btn.off{ opacity: 0.45; pointer-events: none; }
-
-  .top-nav{ display:flex; gap:6px; font-size:13.5px; font-weight:600; }
-  .top-nav a{ padding:7px 14px; border-radius:3px; color:var(--ink-soft); border:1px solid transparent; }
-  .top-nav a:hover{ border-color: var(--rule); color: var(--ink); }
-  .top-nav a.on{ background: var(--ink); color: var(--paper-raised); }
-  .crumb-line{ margin-top: 18px; }
-  .gs-tab.active .gs-tag{ color: #C9C3B3; }
+@media (max-width:860px){ .papers{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:640px){
+  .toolbar{ position:static; }
+  .hm{ --lab:128px; min-width:640px; }
+  .hm .rl{ position:sticky; left:0; z-index:1; background:var(--surface); font-size:12.5px; padding-right:6px; }
+  .hm .rl span.tot{ display:none; }
+  .trends{ padding:18px 14px 14px; }
+  .q{ grid-template-columns:1fr auto; }
+  .q .num{ grid-column:1; font-size:18px; }
+  .q .txt, .q .meta{ grid-column:1 / span 2; }
+  .acts{ grid-column:2; grid-row:1; flex-direction:row; }
+  .act{ width:36px; height:36px; }
+  .yhead h3{ font-size:32px; }
+  .pcard .pname{ font-size:26px; }
+  .sel-wrap{ flex:1 1 45%; } .sel-wrap select{ width:100%; max-width:none; }
+}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div class="header-row">
-      <a href="index.html" class="brand">
-        <div class="brand-mark">P</div>
-        <div class="brand-name">PYQ <span>Ledger</span></div>
-      </a>
-      <nav class="top-nav"><a href="mains.html" class="on">Mains</a><a href="prelims.html">Prelims</a></nav>
-    </div>
-  </header>
-  <div class="crumb crumb-line"><a href="index.html">Home</a> / Mains / <b id="crumbPaper">GS Paper I</b></div>
+<header class="site-head"><div class="wrap head-row">
+  <a href="index.html" class="brand"><span class="brand-dot"></span>PYQ Ledger <small>UPSC CSE</small></a>
+  <nav class="top-nav" aria-label="Sections"><a href="mains.html" class="on">Mains</a><a href="prelims.html">Prelims</a></nav>
+</div></header>
 
-  <div class="page-title" id="pageTitle">GS Paper I — Previous Year Questions</div>
-  <div class="page-sub" id="pageSub"></div>
+<main class="wrap">
+  <div class="papers" id="papers" role="tablist" aria-label="GS papers"></div>
 
-  <div class="gs-tabs" id="gsTabs" role="tablist"></div>
-
-  <div id="paperBody">
-    <div class="year-strip"><div class="year-row" id="yearRow"></div></div>
-
-    <div class="download-bar">
-      <div class="download-info">Official paper — <b id="downloadLabel"></b><span class="fmt mono" id="downloadFmt"></span></div>
-      <a class="download-btn" id="downloadBtn" href="#" download>↓ Download official PDF</a>
-    </div>
-
-    <div class="topic-nav" id="topicNav"></div>
-    <div id="topicArea"></div>
+  <div class="intro">
+    <div><h1 class="display" id="title">GS Paper I</h1><p class="lede" id="blurb"></p></div>
   </div>
-</div>
+
+  <section class="trends" aria-labelledby="trendsTitle">
+    <div class="trends-head">
+      <h2 id="trendsTitle">Where the questions come from</h2>
+      <p>Each cell counts questions per topic per year. Click a cell, a topic or a year to filter the list below.</p>
+    </div>
+    <div class="hm-scroll"><div class="hm" id="hm"></div></div>
+    <div class="legend" aria-hidden="true">Fewer <span id="legendCells" style="display:flex;gap:3px"></span> More</div>
+  </section>
+
+  <div class="toolbar" id="toolbar">
+    <div class="tb-row">
+      <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="Search questions, e.g. federalism, Gandhi, cyber" aria-label="Search questions"></label>
+      <div class="scope" role="group" aria-label="Search in"><button data-scope="paper" class="on">This paper</button><button data-scope="all">All papers</button></div>
+      <span class="sel-wrap"><select id="fYear" aria-label="Year"></select></span>
+      <span class="sel-wrap"><select id="fTopic" aria-label="Topic"></select></span>
+      <span class="sel-wrap"><select id="fShow" aria-label="Show">
+        <option value="all">All questions</option><option value="todo">Not practised yet</option>
+        <option value="done">Practised</option><option value="saved">Bookmarked</option></select></span>
+    </div>
+    <div class="tb-meta"><span id="count"></span><button class="linkbtn" id="clear" hidden>Clear filters</button></div>
+  </div>
+
+  <div id="results"></div>
+</main>
+
+<footer class="wrap site-foot"><span>Questions transcribed from the official UPSC Civil Services (Main) papers.</span><span>Practised and bookmarked marks are saved in this browser only.</span></footer>
 
 <script>
 // GS Paper I — 2013 to 2025
@@ -1439,131 +1500,189 @@ window.PYQ.gs4 = {
 };
 </script>
 <script>
-const PAPER_KEYS = ['gs1','gs2','gs3','gs4'];
-const PAPERS = window.PYQ || {};
-
-const yearsOf = key => Object.keys((PAPERS[key] && PAPERS[key].data) || {}).map(Number).sort((a,b) => b - a);
-const isLoaded = key => yearsOf(key).length > 0;
-
-function initialPaper(){
-  const h = location.hash.replace('#','').toLowerCase();
-  if (PAPER_KEYS.includes(h)) return h;
-  return PAPER_KEYS.find(isLoaded) || 'gs1';
+const PK = ['gs1','gs2','gs3','gs4'];
+const P = window.PYQ || {};
+const ALL = [];
+for (const k of PK){
+  const p = P[k]; if (!p) continue;
+  for (const y of Object.keys(p.data)){
+    for (const q of p.data[y].questions){
+      ALL.push({ k, y:+y, n:String(q.n), t:q.t, q:q.q, m:q.m, id:`${k}-${y}-${q.n}`, lc:q.q.toLowerCase() });
+    }
+  }
 }
+const yearsOf = k => [...new Set(ALL.filter(x=>x.k===k).map(x=>x.y))].sort((a,b)=>b-a);
+const topicsOf = k => { const p=P[k]; const seen=new Set(ALL.filter(x=>x.k===k).map(x=>x.t)); return p.topics.filter(t=>seen.has(t)).concat([...seen].filter(t=>!p.topics.includes(t))); };
 
-let currentPaper = initialPaper();
-let currentYear = yearsOf(currentPaper)[0];
+/* progress, stored in this browser */
+let prog = { done:{}, saved:{} };
+try { prog = Object.assign(prog, JSON.parse(localStorage.getItem('pyq-progress')||'{}')); } catch(e){}
+const saveProg = () => { try { localStorage.setItem('pyq-progress', JSON.stringify(prog)); } catch(e){} };
 
-function renderTabs(){
-  const el = document.getElementById('gsTabs');
-  el.innerHTML = PAPER_KEYS.map(k => {
-    const p = PAPERS[k] || { code: k.toUpperCase(), name: '' };
-    const n = yearsOf(k).length;
-    const tag = n ? `${n} year${n>1?'s':''} loaded` : 'awaiting PDFs';
-    const cls = ['gs-tab', k===currentPaper ? 'active' : '', n ? '' : 'disabled'].join(' ');
-    return `<button class="${cls}" role="tab" aria-selected="${k===currentPaper}" data-paper="${k}">
-      <div class="gs-code">${p.code}</div><div class="gs-label">${p.name}</div><div class="gs-tag">${tag}</div>
-    </button>`;
+const S = { k: PK.find(k => location.hash.slice(1)===k && P[k]) || PK.find(k=>P[k]), q:'', scope:'paper', year:'all', topic:'all', show:'all', limit:60 };
+const $ = id => document.getElementById(id);
+const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pdfOf = (k,y) => `papers/${P[k].pdfPrefix || k}-${y}.pdf`;
+const label = k => `GS${k.slice(2)}`;
+
+function renderPapers(){
+  $('papers').innerHTML = PK.map(k => {
+    const p = P[k]; if (!p) return `<button class="pcard" disabled><div class="pname">${label(k)}</div><div class="psub">Coming soon</div></button>`;
+    const items = ALL.filter(x=>x.k===k), done = items.filter(x=>prog.done[x.id]).length;
+    const pct = items.length ? Math.round(done*100/items.length) : 0;
+    return `<button class="pcard ${k===S.k?'on':''}" role="tab" aria-selected="${k===S.k}" data-k="${k}">
+      <div class="pname">${label(k)}</div><div class="psub">${items.length} questions</div>
+      <div class="pbar"><i style="width:${pct}%"></i></div><div class="pprog">${done ? `${done} practised (${pct}%)` : 'Nothing practised yet'}</div></button>`;
   }).join('');
-  el.querySelectorAll('.gs-tab').forEach(t => t.addEventListener('click', () => selectPaper(t.dataset.paper)));
+  $('papers').querySelectorAll('.pcard[data-k]').forEach(b => b.onclick = () => selectPaper(b.dataset.k));
 }
 
-function selectPaper(key){
-  if (key === currentPaper) return;
-  currentPaper = key;
-  const ys = yearsOf(key);
-  // keep the same year when switching papers, if that year exists
-  if (!ys.includes(currentYear)) currentYear = ys[0];
-  history.replaceState(null, '', '#' + key);
-  renderAll();
+function selectPaper(k){
+  if (k===S.k) return;
+  S.k = k; S.year='all'; S.topic='all'; S.limit=60;
+  history.replaceState(null,'','#'+k);
+  renderAll(true);
 }
 
-function renderHeader(){
-  const p = PAPERS[currentPaper];
-  const n = yearsOf(currentPaper).length;
-  const label = `GS Paper ${p.roman}`;
-  document.title = `${p.code} Mains Archive — PYQ Ledger`;
-  document.getElementById('crumbPaper').textContent = label;
-  document.getElementById('pageTitle').textContent = `${label} — Previous Year Questions`;
-  document.getElementById('pageSub').textContent = n
-    ? `All ${n} year${n>1?'s':''}, arranged by syllabus topic within each year. ${p.blurb}`
-    : p.blurb;
+const RAMP=[[74,63,145],[150,70,150],[232,95,110],[255,150,52],[255,206,110]];
+function heatRGB(n,max){
+  const f=Math.sqrt(n/max)*(RAMP.length-1), i=Math.min(RAMP.length-2,Math.floor(f)), t=f-i;
+  return RAMP[i].map((c,j)=>Math.round(c+(RAMP[i+1][j]-c)*t));
+}
+function heat(n,max){ if (!n) return 'var(--surface-2)'; const c=heatRGB(n,max); return `rgb(${c})`; }
+function heatInk(n,max){ const [r,g,b]=heatRGB(n,max); return (0.299*r+0.587*g+0.114*b)>150 ? 'var(--ink)' : '#fff'; }
+function renderHeatmap(animate){
+  const k=S.k, years=yearsOf(k).slice().reverse(), topics=topicsOf(k);
+  const cnt={}; let max=1;
+  for (const x of ALL) if (x.k===k){ const key=x.t+'|'+x.y; cnt[key]=(cnt[key]||0)+1; max=Math.max(max,cnt[key]); }
+  const tot=t=>ALL.filter(x=>x.k===k&&x.t===t).length;
+  const hm=$('hm');
+  hm.style.gridTemplateColumns = `minmax(var(--lab),1.9fr) repeat(${years.length}, minmax(34px,1fr))`;
+  let h = `<div></div>` + years.map(y=>`<button class="cl ${S.year==y?'sel':''}" data-y="${y}" aria-label="Show ${y}">${String(y).slice(2).padStart(3,"'")}</button>`).join('');
+  let i=0;
+  for (const t of topics){
+    h += `<button class="rl ${S.topic===t?'sel':''}" data-t="${esc(t)}">${esc(t)} <span class="tot">${tot(t)}</span></button>`;
+    for (const y of years){
+      const n=cnt[t+'|'+y]||0; const sel = S.topic===t && S.year==y;
+      h += `<button class="c ${sel?'sel':''}" data-n="${n}" data-t="${esc(t)}" data-y="${y}" style="background:${heat(n,max)};color:${n?heatInk(n,max):'transparent'};animation-delay:${(i++%years.length)*18}ms" aria-label="${esc(t)}, ${y}: ${n} question${n===1?'':'s'}" ${n?'':'tabindex="-1"'}>${n||''}</button>`;
+    }
+  }
+  hm.innerHTML=h;
+  hm.classList.toggle('anim', !!animate);
+  hm.querySelectorAll('.c').forEach(c => c.onclick = () => { if (c.dataset.n==='0') return; setFilter({topic:c.dataset.t, year:+c.dataset.y}); scrollToList(); });
+  hm.querySelectorAll('.rl').forEach(c => c.onclick = () => { setFilter({topic: S.topic===c.dataset.t?'all':c.dataset.t, year:'all'}); scrollToList(); });
+  hm.querySelectorAll('.cl').forEach(c => c.onclick = () => { setFilter({year: S.year==c.dataset.y?'all':+c.dataset.y, topic:'all'}); scrollToList(); });
+  $('legendCells').innerHTML=[...new Set([0,1,Math.round(max*.15),Math.round(max*.4),max])].map(n=>`<i style="background:${heat(n,max)}"></i>`).join('');
 }
 
-function renderYearStrip(){
-  const el = document.getElementById('yearRow');
-  el.innerHTML = yearsOf(currentPaper).map(y =>
-    `<button class="year-chip ${currentYear===y?'active':''}" data-year="${y}">${y}</button>`).join('');
-  el.querySelectorAll('.year-chip').forEach(c => c.addEventListener('click', () => {
-    currentYear = parseInt(c.dataset.year); renderAll();
-  }));
+function scrollToList(){ const t=$('toolbar'); window.scrollTo({ top: t.getBoundingClientRect().top + window.scrollY - 4, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); }
+
+function renderFilters(){
+  const years=yearsOf(S.k), topics=topicsOf(S.k);
+  $('fYear').innerHTML = `<option value="all">All years</option>` + years.map(y=>`<option value="${y}" ${S.year==y?'selected':''}>${y}</option>`).join('');
+  $('fTopic').innerHTML = `<option value="all">All topics</option>` + topics.map(t=>`<option ${S.topic===t?'selected':''}>${esc(t)}</option>`).join('');
+  $('fShow').value = S.show;
+  const cross = S.scope==='all' && S.q;
+  $('fYear').disabled = $('fTopic').disabled = !!cross;
+  document.querySelectorAll('.scope button').forEach(b=>b.classList.toggle('on', b.dataset.scope===S.scope));
 }
 
-function renderDownload(){
-  const p = PAPERS[currentPaper];
-  const d = p.data[currentYear];
-  document.getElementById('downloadLabel').textContent = `GS Paper ${p.roman} · ${currentYear}`;
-  document.getElementById('downloadFmt').textContent = d.fmt || '';
-  const btn = document.getElementById('downloadBtn');
-  // pdfPrefix in the data file sets the file name, e.g. "GS2" → papers/GS2-2025.pdf
-  btn.href = `papers/${p.pdfPrefix || currentPaper}-${currentYear}.pdf`;
-  btn.setAttribute('download', `${p.code}-${currentYear}.pdf`);
+function setFilter(o){ Object.assign(S,o,{limit:60}); renderFilters(); renderHeatmap(false); renderResults(); }
+
+function matches(x){
+  const cross = S.scope==='all' && S.q;
+  if (!cross){ if (x.k!==S.k) return false; if (S.year!=='all' && x.y!==S.year) return false; if (S.topic!=='all' && x.t!==S.topic) return false; }
+  if (S.show==='done' && !prog.done[x.id]) return false;
+  if (S.show==='todo' && prog.done[x.id]) return false;
+  if (S.show==='saved' && !prog.saved[x.id]) return false;
+  if (S.q){ const words=S.q.toLowerCase().split(/\s+/).filter(Boolean); if (!words.every(w=>x.lc.includes(w))) return false; }
+  return true;
 }
 
-function renderTopics(){
-  const p = PAPERS[currentPaper];
-  const d = p.data[currentYear];
-  const el = document.getElementById('topicArea');
-  const nav = document.getElementById('topicNav');
-  const grouped = {};
-  d.questions.forEach(q => { (grouped[q.t] = grouped[q.t] || []).push(q); });
+function hl(text){
+  let h=esc(text); if (!S.q) return h;
+  const words=S.q.split(/\s+/).filter(w=>w.length>1).map(w=>w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'));
+  if (!words.length) return h;
+  return h.replace(new RegExp(`(${words.join('|')})`,'gi'),'<mark>$1</mark>');
+}
 
-  // listed topics in syllabus order, then any unlisted topic so no question is silently dropped
-  const order = p.topics.filter(t => grouped[t]).concat(Object.keys(grouped).filter(t => !p.topics.includes(t)));
-  nav.innerHTML = order.map(t => `<div class="topic-pill"><span class="n">${grouped[t].length}</span>${t}</div>`).join('');
+const ICON_DONE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+const ICON_SAVE='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3.2l2.6 5.5 6 .8-4.4 4.2 1.1 6-5.3-2.9-5.3 2.9 1.1-6L3.4 9.5l6-.8z"/></svg>';
 
-  el.innerHTML = order.map(topic => `
-    <div class="topic-group">
-      <div class="topic-head">
-        <div class="topic-name">${topic}</div>
-        <div class="topic-count mono">${grouped[topic].length} question${grouped[topic].length>1?'s':''}</div>
+function renderResults(){
+  const list=ALL.filter(matches);
+  const cross = S.scope==='all' && S.q;
+  // order: paper, year desc, then paper order
+  const order = new Map(); ALL.forEach((x,i)=>order.set(x.id,i));
+  list.sort((a,b)=> (cross ? PK.indexOf(a.k)-PK.indexOf(b.k) : 0) || b.y-a.y || order.get(a.id)-order.get(b.id));
+  const shown=list.slice(0,S.limit);
+  const filtered = S.q || S.year!=='all' || S.topic!=='all' || S.show!=='all';
+  $('clear').hidden = !filtered;
+  let scopeTxt = cross ? 'all four papers' : label(S.k);
+  $('count').innerHTML = `<b>${list.length}</b> question${list.length===1?'':'s'} in ${scopeTxt}` + (S.topic!=='all'&&!cross?` on <b>${esc(S.topic)}</b>`:'') + (S.year!=='all'&&!cross?` from <b>${S.year}</b>`:'');
+  if (!list.length){
+    $('results').innerHTML = `<div class="empty"><h3>No questions match</h3><p>${S.show==='saved'?'Bookmark a question with the star to find it here later.':S.show==='done'?'Tick a question once you have practised it.':'Try a shorter search, or clear the filters.'}</p></div>`;
+    return;
+  }
+  let h='', cur='';
+  for (const x of shown){
+    const g=x.k+x.y;
+    if (g!==cur){
+      if (cur) h+='</div>';
+      cur=g;
+      const fmt=P[x.k].data[x.y].fmt||'';
+      h+=`<div class="ygroup"><div class="yhead"><h3>${x.y}<small>${cross?label(x.k):P[x.k].name.replace('General Studies','GS Paper')}</small></h3>
+        <div class="ymeta"><span>${esc(fmt)}</span><a class="pdf" href="${pdfOf(x.k,x.y)}" download>Official paper (PDF)</a></div></div>`;
+    }
+    const d=!!prog.done[x.id], s=!!prog.saved[x.id];
+    h+=`<article class="q ${d?'is-done':''}" data-id="${x.id}">
+      <div class="num">Q${esc(x.n)}</div>
+      <div class="txt">${hl(x.q)}</div>
+      <div class="acts">
+        <button class="act done" aria-pressed="${d}" title="Mark as practised" aria-label="Mark Q${esc(x.n)} ${x.y} as practised">${ICON_DONE}</button>
+        <button class="act save" aria-pressed="${s}" title="Bookmark" aria-label="Bookmark Q${esc(x.n)} ${x.y}">${ICON_SAVE}</button>
       </div>
-      ${grouped[topic].map(q => `
-        <div class="qrow">
-          <div class="qnum">Q${q.n}</div>
-          <div class="qtext">${q.q}</div>
-          <div class="qmarks">${q.m} marks</div>
-        </div>
-      `).join('')}
-    </div>
-  `).join('');
+      <div class="meta">${cross?`<span class="chip paper">${label(x.k)}</span>`:''}<button class="chip" data-topic="${esc(x.t)}" data-k="${x.k}">${esc(x.t)}</button><span class="chip marks">${esc(x.m)} marks</span></div>
+    </article>`;
+  }
+  h+='</div>';
+  if (list.length>shown.length) h+=`<button class="more" id="more">Show ${Math.min(60,list.length-shown.length)} more of ${list.length-shown.length} remaining</button>`;
+  $('results').innerHTML=h;
+  const more=$('more'); if (more) more.onclick=()=>{ S.limit+=60; renderResults(); };
 }
 
-function renderEmpty(){
-  const p = PAPERS[currentPaper];
-  document.getElementById('paperBody').innerHTML = `
-    <div class="empty-note"><b>GS Paper ${p.roman} is on its way.</b><br>
-    Questions for this paper haven't been added yet. Meanwhile, the other loaded papers are a tab away.</div>`;
-}
-
-let bodyTemplate = null;
-function renderAll(){
-  const body = document.getElementById('paperBody');
-  if (bodyTemplate === null) bodyTemplate = body.innerHTML;
-  renderTabs();
-  renderHeader();
-  if (!isLoaded(currentPaper)) { renderEmpty(); return; }
-  if (!document.getElementById('yearRow')) body.innerHTML = bodyTemplate;
-  renderYearStrip();
-  renderDownload();
-  renderTopics();
-}
-
-window.addEventListener('hashchange', () => {
-  const h = location.hash.replace('#','').toLowerCase();
-  if (PAPER_KEYS.includes(h)) selectPaper(h);
+$('results').addEventListener('click', e => {
+  const a=e.target.closest('.act'); 
+  if (a){
+    const id=a.closest('.q').dataset.id, key=a.classList.contains('done')?'done':'saved';
+    if (prog[key][id]) delete prog[key][id]; else prog[key][id]=Date.now();
+    saveProg();
+    const on=!!prog[key][id]; a.setAttribute('aria-pressed',on);
+    if (key==='done'){ a.closest('.q').classList.toggle('is-done',on); renderPapers(); }
+    return;
+  }
+  const c=e.target.closest('.chip[data-topic]');
+  if (c){ if (c.dataset.k!==S.k){ S.k=c.dataset.k; history.replaceState(null,'','#'+S.k); }
+    S.scope='paper'; S.q=''; $('q').value=''; setFilter({topic:c.dataset.topic, year:'all'}); renderAll(false); scrollToList(); }
 });
-renderAll();
+
+let tmr; $('q').addEventListener('input', e => { clearTimeout(tmr); tmr=setTimeout(()=>{ S.q=e.target.value.trim(); S.limit=60; renderFilters(); renderResults(); },140); });
+document.querySelectorAll('.scope button').forEach(b => b.onclick = () => { S.scope=b.dataset.scope; S.limit=60; renderFilters(); renderResults(); });
+$('fYear').onchange = e => setFilter({year: e.target.value==='all'?'all':+e.target.value});
+$('fTopic').onchange = e => setFilter({topic: e.target.value});
+$('fShow').onchange = e => setFilter({show: e.target.value});
+$('clear').onclick = () => { S.q=''; $('q').value=''; setFilter({year:'all',topic:'all',show:'all'}); };
+
+function renderAll(animate){
+  const p=P[S.k];
+  $('title').textContent = p.name.replace('General Studies','GS Paper');
+  document.title = `${label(S.k)} Mains PYQs — PYQ Ledger`;
+  const ys=yearsOf(S.k);
+  $('blurb').textContent = `${ALL.filter(x=>x.k===S.k).length} questions from ${ys[ys.length-1]} to ${ys[0]}. ${p.blurb}`;
+  renderPapers(); renderFilters(); renderHeatmap(animate); renderResults();
+}
+window.addEventListener('hashchange', () => { const h=location.hash.slice(1); if (P[h] && h!==S.k){ S.k=h; S.year='all'; S.topic='all'; renderAll(true); } });
+renderAll(true);
 </script>
 </body>
 </html>
