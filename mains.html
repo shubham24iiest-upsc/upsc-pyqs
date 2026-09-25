@@ -90,6 +90,13 @@
   .gs-tab.disabled:hover{ background: var(--paper-raised); }
   .year-chip{ background: transparent; font-family:'IBM Plex Mono', monospace; }
   .download-btn.off{ opacity: 0.45; pointer-events: none; }
+
+  .top-nav{ display:flex; gap:6px; font-size:13.5px; font-weight:600; }
+  .top-nav a{ padding:7px 14px; border-radius:3px; color:var(--ink-soft); border:1px solid transparent; }
+  .top-nav a:hover{ border-color: var(--rule); color: var(--ink); }
+  .top-nav a.on{ background: var(--ink); color: var(--paper-raised); }
+  .crumb-line{ margin-top: 18px; }
+  .gs-tab.active .gs-tag{ color: #C9C3B3; }
 </style>
 </head>
 <body>
@@ -100,9 +107,10 @@
         <div class="brand-mark">P</div>
         <div class="brand-name">PYQ <span>Ledger</span></div>
       </a>
-      <div class="crumb"><a href="index.html">Home</a> / Mains / <b id="crumbPaper">GS Paper I</b></div>
+      <nav class="top-nav"><a href="mains.html" class="on">Mains</a><a href="prelims.html">Prelims</a></nav>
     </div>
   </header>
+  <div class="crumb crumb-line"><a href="index.html">Home</a> / Mains / <b id="crumbPaper">GS Paper I</b></div>
 
   <div class="page-title" id="pageTitle">GS Paper I — Previous Year Questions</div>
   <div class="page-sub" id="pageSub"></div>

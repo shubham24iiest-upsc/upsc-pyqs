@@ -65,6 +65,8 @@
 
   footer{ border-top: 1px solid var(--rule); padding: 32px 0 44px; display:flex; justify-content: space-between; align-items:center; font-size: 13px; color: var(--charcoal-soft); }
   @media (max-width: 560px){ footer{ flex-direction:column; gap:10px; text-align:center; } }
+  .prelims-grid{ grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 860px){ .prelims-grid{ grid-template-columns: 1fr 1fr; } }
 </style>
 </head>
 <body>
@@ -77,6 +79,7 @@
       </div>
       <nav>
         <a href="mains.html">Mains Archive</a>
+        <a href="prelims.html">Prelims Archive</a>
       </nav>
       <a href="mains.html" class="nav-cta">Start solving</a>
     </div>
@@ -86,9 +89,10 @@
     <div>
       <div class="eyebrow">Est. archive · 2013 – 2026</div>
       <h1>Every question<br>UPSC has <em>ever</em> asked.</h1>
-      <p class="hero-sub">A searchable ledger of Mains questions, sorted by GS paper, year and syllabus topic — straight from the official papers, downloadable as PDF.</p>
+      <p class="hero-sub">A searchable ledger of Mains questions, sorted by GS paper, year and syllabus topic, plus every Prelims paper with its official answer key — straight from UPSC, downloadable as PDF.</p>
       <div class="cta-row">
         <a href="mains.html" class="btn-primary">Browse the Mains archive →</a>
+        <a href="prelims.html" class="btn-secondary">Prelims papers &amp; keys</a>
       </div>
     </div>
     <div class="stamp-zone">
@@ -111,9 +115,29 @@
     </div>
   </section>
 
+
+  <section class="section">
+    <div class="section-head">
+      <div class="section-title">Prelims — Papers &amp; Answer Keys</div>
+      <div class="section-note">Official question papers and answer keys, year-wise</div>
+    </div>
+    <div class="status-grid prelims-grid">
+      <a href="prelims.html#gs1" class="status-card ready">
+        <div class="status-index">GS I</div>
+        <div class="status-name">General Studies I</div>
+        <div class="status-count">papers + answer keys</div>
+      </a>
+      <a href="prelims.html#csat" class="status-card ready">
+        <div class="status-index">CSAT</div>
+        <div class="status-name">General Studies II (CSAT)</div>
+        <div class="status-count">papers + answer keys</div>
+      </a>
+    </div>
+  </section>
+
   <footer>
     <div>PYQ Ledger — built for aspirants, not algorithms.</div>
-    <div class="mono">v0.3</div>
+    <div class="mono">v0.4</div>
   </footer>
 </div>
 </body>
