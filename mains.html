@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>(function(){var t;try{t=localStorage.getItem('pyq-theme')}catch(e){}if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t)})();</script>
 
-<title>Mains PYQs — PYQ Ledger</title>
+<title>Mains PYQs — PrashnaKosh</title>
 <style>
 :root{
   /* light: pastel lavender paper */
@@ -67,6 +67,22 @@ button{ font:inherit; color:inherit; background:none; border:none; cursor:pointe
 .theme-toggle .i-sun{ display:none; } :root[data-theme="dark"] .theme-toggle .i-sun{ display:block; } :root[data-theme="dark"] .theme-toggle .i-moon{ display:none; }
 .top-nav{ box-shadow:var(--shadow); }
 @media (max-width:640px){ .top-nav a{ padding:7px 11px; font-size:13px; } .theme-toggle{ width:36px; height:36px; } }
+@media (max-width:440px){
+  .head-row{ gap:8px; padding-top:16px; padding-bottom:16px; }
+  .brand{ font-size:17px; gap:7px; }
+  .brand-dot{ width:10px; height:10px; }
+  .head-right{ gap:6px; }
+  .top-nav{ padding:3px; }
+  .top-nav a{ padding:6px 9px; font-size:12.5px; }
+  .theme-toggle{ width:32px; height:32px; }
+  .theme-toggle svg{ width:16px; height:16px; }
+}
+@media (max-width:380px){
+  .brand{ font-size:15.5px; }
+  .brand-dot{ display:none; }
+  .top-nav a{ padding:6px 7px; font-size:12px; }
+  .head-right{ gap:5px; }
+}
 
 /* paper switcher */
 .papers{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:18px 0 34px; }
@@ -179,7 +195,7 @@ button.chip:hover{ color:var(--marigold); }
 </head>
 <body>
 <header class="site-head"><div class="wrap head-row">
-  <a href="index.html" class="brand"><span class="brand-dot"></span>PYQ Ledger <small>UPSC CSE</small></a>
+  <a href="index.html" class="brand"><span class="brand-dot"></span>PrashnaKosh <small>UPSC CSE</small></a>
   <div class="head-right"><nav class="top-nav" aria-label="Sections"><a href="mains.html" class="on">Mains</a><a href="prelims.html">Prelims</a><a href="practice.html">Practice</a></nav><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch colour theme"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button></div>
 </div></header>
 
@@ -246,7 +262,7 @@ window.PYQ.gs1 = {
   {n:5, t:"Geography — Physical, Resources & Phenomena", q:"What are non-farm primary activities? How are these activities related to physiographic features in India? Discuss with suitable examples.", m:"10"},
   {n:6, t:"Geography — Physical, Resources & Phenomena", q:"Explain briefly the ecological and economic benefits of solar energy generation in India with suitable examples.", m:"10"},
   {n:7, t:"Geography — Physical, Resources & Phenomena", q:"What are Tsunamis? How and where are they formed? What are their consequences? Explain with examples.", m:"10"},
-  {n:8, t:"Women, Population & Urbanization", q:"How does smart city in India address the issues of urban poverty and distributive justice?", m:"10"},
+  {n:8, t:"Indian Society", q:"How does smart city in India address the issues of urban poverty and distributive justice?", m:"10"},
   {n:9, t:"Post-Independence Consolidation", q:"The ethos of civil service in India stand for the combination of professionalism with nationalistic consciousness — Elucidate.", m:"10"},
   {n:10, t:"Globalization, Communalism & Secularism", q:"Do you think that globalization results in only an aggressive consumer culture? Justify your answer.", m:"10"},
   {n:11, t:"Modern Indian History", q:"Mahatma Jotirao Phule's writings and efforts of social reforms touched issues of almost all subaltern classes. Discuss.", m:"15"},
@@ -1703,7 +1719,7 @@ $('clear').onclick = () => { S.q=''; $('q').value=''; setFilter({year:'all',topi
 function renderAll(animate){
   const p=P[S.k];
   $('title').textContent = p.name.replace('General Studies','GS Paper');
-  document.title = `${label(S.k)} Mains PYQs — PYQ Ledger`;
+  document.title = `${label(S.k)} Mains PYQs — PrashnaKosh`;
   const ys=yearsOf(S.k);
   $('blurb').textContent = `${ALL.filter(x=>x.k===S.k).length} questions from ${ys[ys.length-1]} to ${ys[0]}. ${p.blurb}`;
   renderPapers(); renderFilters(); renderHeatmap(animate); renderResults();
