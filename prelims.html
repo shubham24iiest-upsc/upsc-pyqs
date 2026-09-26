@@ -6,6 +6,7 @@
 <script>(function(){var t;try{t=localStorage.getItem('pyq-theme')}catch(e){}if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t)})();</script>
 
 <title>Prelims papers and answer keys — PrashnaKosh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:wght@400;500;600;700&display=swap">
 <style>
 :root{
   /* light: pastel lavender paper */
@@ -16,8 +17,8 @@
   --peach:#F6C9A8; --glass:rgba(246,245,250,.88);
   --accent-glow:rgba(108,99,217,.22);
   --shadow:0 1px 2px rgba(37,34,47,.04), 0 10px 30px -18px rgba(37,34,47,.18);
-  --display:Georgia, 'Times New Roman', serif;
-  --body:Georgia, 'Times New Roman', serif;
+  --display:'IBM Plex Serif', Georgia, 'Times New Roman', serif;
+  --body:'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --radius:14px;
   color-scheme: light;
 }
@@ -84,35 +85,55 @@ button{ font:inherit; color:inherit; background:none; border:none; cursor:pointe
   .head-right{ gap:5px; }
 }
 
-.intro{ margin:26px 0 26px; }
-.intro h1{ font-size:clamp(28px,3.6vw,40px); }
-.intro .lede{ margin-top:12px; }
-.ptabs{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
-.ptab{ text-align:left; background:var(--surface); border:1px solid var(--rule); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px 20px; }
-.ptab:hover{ border-color:var(--faint); }
-.ptab .pcode{ font-family:var(--display); font-weight:700; font-size:24px; line-height:1; letter-spacing:-.01em; color:var(--marigold); }
-.ptab .plabel{ font-weight:600; margin-top:8px; color:var(--muted); }
-.ptab .ptag{ font-size:13px; color:var(--faint); margin-top:2px; }
-.ptab.on{ background:var(--marigold); border-color:var(--marigold); }
-.ptab.on .pcode, .ptab.on .plabel, .ptab.on .ptag{ color:var(--on-accent); }
-.cta-box{ display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; background:var(--surface); border:1px solid var(--marigold); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px 20px; margin-bottom:22px; }
-.cta-box b{ color:var(--marigold); font-size:17px; } .cta-box p{ color:var(--muted); font-size:14.5px; margin-top:2px; }
-.cta-box a{ background:var(--marigold); color:var(--on-accent); font-weight:700; border-radius:999px; padding:11px 20px; white-space:nowrap; }
-.paper-note{ font-size:14.5px; color:var(--muted); border-left:3px solid var(--marigold); padding:4px 0 4px 16px; margin:22px 0 26px; max-width:80ch; }
-.paper-note b{ color:var(--text); }
-.year-list{ display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:12px; }
-.yrow{ background:var(--surface); border:1px solid var(--rule); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px 18px 16px; display:flex; flex-direction:column; gap:4px; }
-.ynum{ font-family:var(--display); font-weight:700; font-size:28px; line-height:1; letter-spacing:-.01em; color:var(--marigold); }
-.ymeta{ font-size:13px; color:var(--faint); margin-bottom:12px; }
-.ybtns{ display:flex; flex-direction:column; gap:8px; margin-top:auto; }
-.dl{ flex:1; display:inline-flex; justify-content:center; align-items:center; gap:8px; padding:12px 14px; border-radius:999px; font-size:15px; font-weight:700; border:1px solid var(--rule); white-space:nowrap; }
-.dl.paper{ background:var(--marigold); border-color:var(--marigold); color:var(--on-accent); box-shadow:0 6px 22px -6px var(--accent-glow); }
+html,body{ height:100%; }
+body{ display:flex; flex-direction:column; }
+.site-head{ flex-shrink:0; border-bottom:1px solid var(--rule); }
+.pv{ flex:1; display:grid; grid-template-columns:300px minmax(0,1fr); min-height:0; }
+.pv-list{ background:var(--surface); border-right:1px solid var(--rule); overflow:auto; display:flex; flex-direction:column; }
+.pv-lh{ padding:16px 16px 12px; border-bottom:1px solid var(--rule); position:sticky; top:0; background:var(--surface); z-index:1; }
+.pv-lh h1{ font-family:var(--display); font-weight:400; font-size:21px; line-height:1.2; }
+.seg{ display:flex; gap:3px; background:var(--surface-2); border-radius:999px; padding:3px; margin-top:12px; }
+.seg button{ flex:1; padding:7px 10px; border-radius:999px; font-size:13.5px; font-weight:700; color:var(--muted); }
+.seg button.on{ background:var(--marigold); color:var(--on-accent); }
+.yi{ display:flex; justify-content:space-between; align-items:center; gap:8px; width:100%; text-align:left; padding:11px 18px; border-bottom:1px solid var(--rule); }
+.yi:hover{ background:var(--surface-2); }
+.yi b{ font-family:var(--display); font-size:19px; }
+.yi span{ font-size:12px; color:var(--faint); }
+.yi.cur{ background:var(--marigold-soft); box-shadow:inset 3px 0 0 var(--marigold); }
+.yi.cur b{ color:var(--marigold); }
+.pv-msg{ padding:18px; color:var(--faint); font-size:14px; }
+.pv-detail{ overflow:auto; }
+.pv-in{ max-width:780px; padding:34px 44px 60px; }
+.pv-kick{ font-size:12.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--faint); }
+.pv-year{ font-family:var(--display); font-weight:700; font-size:clamp(44px,6vw,64px); line-height:1; color:var(--marigold); margin-top:6px; letter-spacing:-.02em; }
+.pv-note{ color:var(--muted); font-size:15px; line-height:1.65; margin-top:14px; max-width:64ch; }
+.pv-note b{ color:var(--text); }
+.pv-acts{ display:flex; gap:10px; flex-wrap:wrap; margin-top:24px; }
+.dl{ display:inline-flex; justify-content:center; align-items:center; gap:8px; padding:12px 18px; border-radius:999px; font-size:15px; font-weight:700; border:1px solid var(--rule); white-space:nowrap; background:var(--surface); }
 .dl svg{ width:17px; height:17px; flex-shrink:0; }
+.dl.paper{ background:var(--marigold); border-color:var(--marigold); color:var(--on-accent); box-shadow:0 6px 22px -6px var(--accent-glow); }
 .dl.paper:hover{ filter:brightness(1.08); }
 .dl.key{ color:var(--marigold); border:2px solid var(--marigold); }
 .dl.key:hover{ background:var(--marigold); color:var(--on-accent); }
+.dl.go{ color:var(--text); }
+.dl.go:hover{ border-color:var(--marigold); color:var(--marigold); }
 .dl.off{ color:var(--faint); font-weight:500; border-style:dashed; }
-@media (max-width:520px){ .ptab .pcode{ font-size:21px; } }
+.pv-card{ margin-top:28px; background:var(--surface); border:1px solid var(--rule); border-radius:14px; box-shadow:var(--shadow); padding:18px 20px; }
+.pv-card h2{ font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--faint); margin-bottom:10px; }
+.pb{ display:grid; grid-template-columns:minmax(120px,210px) 1fr 30px; gap:10px; align-items:center; font-size:13.5px; margin:6px 0; }
+.pb .t{ height:12px; background:var(--surface-2); border-radius:4px; overflow:hidden; }
+.pb .t i{ display:block; height:100%; border-radius:4px; background:var(--marigold); }
+.pb b{ text-align:right; color:var(--marigold); }
+.pv-foot{ margin-top:30px; font-size:13px; color:var(--faint); }
+.pv-back{ display:none; margin-bottom:14px; font-weight:700; color:var(--marigold); font-size:14px; }
+@media (max-width:760px){
+  .pv{ grid-template-columns:1fr; }
+  .pv-detail{ display:none; }
+  .pv.detail .pv-list{ display:none; } .pv.detail .pv-detail{ display:block; }
+  .pv-back{ display:inline-block; }
+  .pv-in{ padding:18px 16px 40px; }
+  .pb{ grid-template-columns:minmax(90px,140px) 1fr 26px; font-size:12.5px; }
+}
 </style>
 </head>
 <body>
@@ -120,17 +141,13 @@ button{ font:inherit; color:inherit; background:none; border:none; cursor:pointe
   <a href="index.html" class="brand"><span class="brand-dot"></span>PrashnaKosh <small>UPSC CSE</small></a>
   <div class="head-right"><nav class="top-nav" aria-label="Sections"><a href="mains.html">Mains</a><a href="prelims.html" class="on">Prelims</a><a href="practice.html">Practice</a></nav><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch colour theme"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button></div>
 </div></header>
-<main class="wrap">
-  <div class="intro">
-    <h1 class="display">Prelims papers and answer keys</h1>
-    <p class="lede">Official UPSC Civil Services (Preliminary) question papers with their official answer keys. Keys cover every booklet series, so match the key to the series printed on your paper.</p>
-  </div>
-  <div class="cta-box"><div><b>Solve these papers online</b><p>Practise GS I questions subject by subject, with instant marking, explanations and topic analysis.</p></div><a href="practice.html">Start practising</a></div>
-  <div class="ptabs" id="tabs" role="tablist" aria-label="Prelims papers"></div>
-  <p class="paper-note" id="paperNote"></p>
-  <div class="year-list" id="yearList"></div>
+<main class="pv" id="pv">
+  <nav class="pv-list" aria-label="Years">
+    <div class="pv-lh"><h1>Prelims papers and answer keys</h1><div class="seg" id="tabs" role="tablist" aria-label="Prelims papers"></div></div>
+    <div id="yearList"></div>
+  </nav>
+  <section class="pv-detail" id="detail" aria-live="polite"></section>
 </main>
-<footer class="wrap site-foot"><span>Papers and keys as published by UPSC.</span><span>New years appear here automatically once their PDFs are uploaded.</span></footer>
 <script>
 /* Files live in the papers/ folder, named exactly like:
      papers/PRE-GS1-2025.pdf       papers/PRE-GS1-2025-KEY.pdf
@@ -176,52 +193,64 @@ async function checkFiles(){
 
 const shownYears = k => YEARS.filter(y => { const f = found[k] && found[k][y]; return f && (f.paper || f.key); });
 
-function renderTabs(){
-  const el = document.getElementById('tabs');
-  el.innerHTML = KEYS.map(k => {
-    const p = PAPERS[k];
-    let tag = 'checking files…';
-    if (checked){
-      const ys = shownYears(k);
-      const papers = ys.filter(y => found[k][y].paper).length, keys = ys.filter(y => found[k][y].key).length;
-      tag = `${papers} paper${papers===1?'':'s'} · ${keys} answer key${keys===1?'':'s'}`;
-    }
-    return `<button class="ptab ${k===current?'on':''}" role="tab" aria-selected="${k===current}" data-k="${k}">
-      <div class="pcode">${p.code}</div><div class="plabel">${p.name}</div>
-      <div class="ptag">${tag}</div></button>`;
-  }).join('');
-  el.querySelectorAll('.ptab').forEach(b => b.addEventListener('click', () => select(b.dataset.k)));
-}
+const PRE_SUBJ = {"2014": {"Agriculture": 7, "Environment and Ecology": 20, "Geography": 10, "Art and Culture": 12, "International Relations": 3, "Science and Technology": 13, "Modern Indian History": 5, "Indian Polity and Governance": 10, "Medieval Indian History": 3, "Ancient Indian History": 1, "Economy": 12, "Places in News": 3, "Miscellaneous": 1}, "2015": {"Economy": 17, "International Relations": 7, "Geography": 13, "Indian Polity and Governance": 13, "Environment and Ecology": 15, "Science and Technology": 8, "Agriculture": 5, "Modern Indian History": 8, "Places in News": 4, "Medieval Indian History": 4, "Ancient Indian History": 1, "Art and Culture": 5}, "2016": {"Indian Polity and Governance": 6, "Economy": 22, "Science and Technology": 13, "Environment and Ecology": 18, "Medieval Indian History": 3, "Art and Culture": 4, "Places in News": 1, "International Relations": 10, "Agriculture": 6, "Geography": 7, "Ancient Indian History": 3, "Modern Indian History": 6, "Miscellaneous": 1}, "2017": {"Indian Polity and Governance": 25, "Ancient Indian History": 2, "Economy": 19, "Environment and Ecology": 13, "Science and Technology": 9, "Art and Culture": 4, "Modern Indian History": 7, "International Relations": 7, "Geography": 9, "Agriculture": 3, "Medieval Indian History": 1, "Places in News": 1}, "2018": {"Indian Polity and Governance": 13, "Science and Technology": 13, "Agriculture": 8, "Environment and Ecology": 10, "Economy": 16, "International Relations": 6, "Modern Indian History": 13, "Places in News": 4, "Art and Culture": 6, "Geography": 7, "Ancient Indian History": 2, "Medieval Indian History": 1, "Miscellaneous": 1}, "2019": {"Medieval Indian History": 3, "Agriculture": 7, "Economy": 18, "Modern Indian History": 5, "Ancient Indian History": 4, "Art and Culture": 3, "Environment and Ecology": 19, "Indian Polity and Governance": 15, "Geography": 9, "Science and Technology": 12, "Places in News": 1, "International Relations": 4}, "2020": {"Indian Polity and Governance": 17, "Economy": 15, "International Relations": 3, "Modern Indian History": 9, "Ancient Indian History": 5, "Medieval Indian History": 3, "Art and Culture": 2, "Science and Technology": 12, "Environment and Ecology": 13, "Geography": 7, "Agriculture": 13, "Places in News": 1}, "2021": {"Economy": 15, "Environment and Ecology": 17, "Art and Culture": 6, "Ancient Indian History": 3, "Modern Indian History": 8, "Medieval Indian History": 4, "International Relations": 1, "Agriculture": 5, "Geography": 10, "Science and Technology": 12, "Indian Polity and Governance": 16, "Miscellaneous": 3}, "2022": {"Economy": 16, "Indian Polity and Governance": 11, "Science and Technology": 16, "Environment and Ecology": 15, "Agriculture": 3, "Places in News": 6, "Geography": 9, "Modern Indian History": 4, "Art and Culture": 4, "Ancient Indian History": 4, "Medieval Indian History": 4, "International Relations": 8}, "2023": {"Geography": 15, "Economy": 15, "Agriculture": 3, "Places in News": 5, "Environment and Ecology": 14, "Science and Technology": 11, "Indian Polity and Governance": 16, "Ancient Indian History": 4, "Art and Culture": 5, "Medieval Indian History": 3, "Modern Indian History": 2, "International Relations": 6, "Miscellaneous": 1}, "2024": {"Geography": 19, "Agriculture": 4, "Places in News": 3, "Economy": 14, "Environment and Ecology": 13, "International Relations": 7, "Science and Technology": 8, "Ancient Indian History": 4, "Medieval Indian History": 1, "Modern Indian History": 2, "Art and Culture": 3, "Indian Polity and Governance": 19, "Miscellaneous": 3}, "2025": {"Economy": 15, "Indian Polity and Governance": 14, "Geography": 14, "Environment and Ecology": 14, "Modern Indian History": 8, "Art and Culture": 3, "Ancient Indian History": 6, "International Relations": 5, "Places in News": 3, "Agriculture": 2, "Science and Technology": 13, "Miscellaneous": 3}, "2026": {"Art and Culture": 10, "Modern Indian History": 5, "Ancient Indian History": 7, "Geography": 7, "Environment and Ecology": 9, "Economy": 17, "Agriculture": 1, "Places in News": 3, "Science and Technology": 15, "Miscellaneous": 5, "Indian Polity and Governance": 9, "International Relations": 12}};   // GS I: questions per subject in each year (filled in by build_site.py)
+let curYear = null;
+{ const m = location.hash.match(/^#(gs1|csat)(?:-(\d{4}))?$/); if (m){ current=m[1]; if (m[2]) curYear=+m[2]; } }
+const $ = id => document.getElementById(id);
 
+function renderTabs(){
+  $('tabs').innerHTML = KEYS.map(k => `<button class="${k===current?'on':''}" role="tab" aria-selected="${k===current}" data-k="${k}">${PAPERS[k].code}</button>`).join('');
+  $('tabs').querySelectorAll('button').forEach(b => b.onclick = () => select(b.dataset.k));
+}
+function renderYears(){
+  const p = PAPERS[current];
+  document.title = `Prelims ${p.code} — PrashnaKosh`;
+  const list = $('yearList');
+  if (!checked){ list.innerHTML = `<div class="pv-msg">Checking which papers are available…</div>`; $('detail').innerHTML=''; return; }
+  const ys = shownYears(current);
+  if (!ys.length){ list.innerHTML = `<div class="pv-msg">No papers uploaded yet for this paper.</div>`; $('detail').innerHTML=''; return; }
+  if (!ys.includes(curYear)) curYear = (current==='gs1' && ys.find(y => PRE_SUBJ[y] && found[current][y].paper && found[current][y].key)) || ys.find(y => found[current][y].paper && found[current][y].key) || ys[0];
+  list.innerHTML = ys.map(y => { const f=found[current][y];
+    return `<button class="yi ${y===curYear?'cur':''}" data-y="${y}" ${y===curYear?'aria-current="true"':''}><b>${y}</b><span>${f.paper && f.key ? 'paper + key' : f.paper ? 'paper, key awaited' : 'key only'}</span></button>`; }).join('');
+  list.querySelectorAll('.yi').forEach(b => b.onclick = () => { curYear=+b.dataset.y; history.replaceState(null,'','#'+current+'-'+curYear); renderYears(); $('pv').classList.add('detail'); $('detail').scrollTop=0; });
+  renderDetail();
+}
 function btn(cls, href, label, ok, offLabel){
   const fname = href.split('/').pop();
   return ok
     ? `<a class="dl ${cls}" href="${href}" download="${fname}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 10.5l5 5 5-5"/><path d="M5 20h14"/></svg>${label}</a>`
     : `<span class="dl off" aria-disabled="true">${offLabel}</span>`;
 }
-
-function renderYears(){
-  const p = PAPERS[current];
-    document.title = `Prelims ${p.code} — PrashnaKosh`;
-  document.getElementById('paperNote').innerHTML = p.note;
-  const list = document.getElementById('yearList');
-  if (!checked){ list.innerHTML = `<div class="yrow"><div class="ymeta">Checking which papers are available…</div></div>`; return; }
-  const ys = shownYears(current);
-  if (!ys.length){ list.innerHTML = `<div class="yrow"><div class="ymeta">No papers uploaded yet for this tab.</div></div>`; return; }
-  list.innerHTML = ys.map(y => {
-    const f = found[current][y];
-    return `<div class="yrow">
-      <div class="ynum">${y}</div>
-      <div class="ymeta">${f.paper && f.key ? 'Paper and answer key' : f.paper ? 'Paper only, key awaited' : 'Answer key only'}</div>
-      <div class="ybtns">
-        ${btn('paper', url(p, y, false), 'Download paper', f.paper, 'Paper coming soon')}
-        ${btn('key', url(p, y, true), 'Download answer key', f.key, 'Answer key not yet released')}
-      </div></div>`;
-  }).join('');
+function renderDetail(){
+  const p = PAPERS[current], y = curYear, f = found[current][y];
+  const subj = current==='gs1' ? PRE_SUBJ[y] : null;
+  let card = '';
+  if (subj){
+    const rows = Object.entries(subj).sort((a,b)=>b[1]-a[1]), max = rows[0][1];
+    card = `<div class="pv-card"><h2>What this paper asked</h2>${rows.map(([s,n])=>`<div class="pb"><span>${s}</span><span class="t"><i style="width:${Math.max(4,100*n/max)}%"></i></span><b>${n}</b></div>`).join('')}</div>`;
+  }
+  $('detail').innerHTML = `<div class="pv-in">
+    <button class="pv-back" id="back">‹ All years</button>
+    <div class="pv-kick">Prelims · ${p.name}</div>
+    <div class="pv-year">${y}</div>
+    <p class="pv-note">${p.note}</p>
+    <div class="pv-acts">
+      ${btn('paper', url(p, y, false), 'Question paper', f.paper, 'Paper coming soon')}
+      ${btn('key', url(p, y, true), 'Answer key', f.key, 'Key not yet released')}
+      ${subj ? `<a class="dl go" href="practice.html#year=${y}">Practise ${y} online →</a>` : ''}
+    </div>
+    ${card}
+    <p class="pv-foot">${subj ? 'Subject counts use the tags on the Practice page.' : current==='gs1' ? 'This year is not on the Practice page yet.' : 'CSAT is qualifying, so it is not part of the Practice page.'} Keys cover every booklet series; match the key to the series printed on your paper.</p>
+  </div>`;
+  const b=$('back'); if (b) b.onclick = () => $('pv').classList.remove('detail');
 }
-
-function select(k){ if (k===current) return; current = k; history.replaceState(null,'','#'+k); renderTabs(); renderYears(); }
-window.addEventListener('hashchange', () => { const h = location.hash.slice(1); if (KEYS.includes(h)) select(h); });
+function select(k){ if (k===current) return; current = k; curYear = null; history.replaceState(null,'','#'+k); $('pv').classList.remove('detail'); renderTabs(); renderYears(); }
+window.addEventListener('hashchange', () => { const m = location.hash.match(/^#(gs1|csat)(?:-(\d{4}))?$/); if (m){ current=m[1]; curYear=m[2]?+m[2]:null; renderTabs(); renderYears(); } });
+document.addEventListener('keydown', e => {
+  if (!checked || !['ArrowDown','ArrowUp'].includes(e.key) || /^(SELECT|INPUT|TEXTAREA)$/.test(e.target.tagName)) return;
+  const ys = shownYears(current), i = ys.indexOf(curYear), j = i + (e.key==='ArrowDown'?1:-1);
+  if (j<0 || j>=ys.length) return; e.preventDefault(); curYear = ys[j]; renderYears(); $('yearList').querySelector('.cur')?.scrollIntoView({block:'nearest'});
+});
 renderTabs(); renderYears();
 checkFiles().then(() => { renderTabs(); renderYears(); });
 </script>

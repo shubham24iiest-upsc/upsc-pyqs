@@ -6,6 +6,7 @@
 <script>(function(){var t;try{t=localStorage.getItem('pyq-theme')}catch(e){}if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t)})();</script>
 
 <title>Prelims practice — PrashnaKosh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:wght@400;500;600;700&display=swap">
 <style>
 :root{
   /* light: pastel lavender paper */
@@ -16,8 +17,8 @@
   --peach:#F6C9A8; --glass:rgba(246,245,250,.88);
   --accent-glow:rgba(108,99,217,.22);
   --shadow:0 1px 2px rgba(37,34,47,.04), 0 10px 30px -18px rgba(37,34,47,.18);
-  --display:Georgia, 'Times New Roman', serif;
-  --body:Georgia, 'Times New Roman', serif;
+  --display:'IBM Plex Serif', Georgia, 'Times New Roman', serif;
+  --body:'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --radius:14px;
   color-scheme: light;
 }
@@ -134,16 +135,71 @@ button{ font:inherit; color:inherit; background:none; border:none; cursor:pointe
 .hm .c{ height:28px; border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; }
 .empty-an{ color:var(--faint); font-size:14px; padding:12px 0; }
 
-/* score + toolbar */
-.scorebar{ position:sticky; top:0; z-index:4; background:var(--glass); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); border-bottom:1px solid var(--rule); padding:12px 0; margin-bottom:6px; }
-.sb-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
-.sb-stats{ display:flex; gap:18px; flex-wrap:wrap; font-size:14px; color:var(--muted); }
-.sb-stats b{ color:var(--text); font-size:16px; }
+/* launch bar: sits between the filters and the analysis */
+.scorebar{ background:var(--surface); border:1px solid var(--rule); border-radius:14px; box-shadow:var(--shadow); padding:14px 18px; margin:0 0 26px; }
+.sb-row{ display:flex; align-items:center; justify-content:space-between; gap:12px 18px; flex-wrap:wrap; }
+.sb-sum{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+.sb-sum .t{ font-family:var(--display); font-size:18px; color:var(--text); }
+.sb-sum .t b{ color:var(--marigold); }
+.sb-stats{ display:flex; gap:14px; flex-wrap:wrap; font-size:13.5px; color:var(--muted); }
+.sb-stats b{ color:var(--text); font-size:14.5px; }
 .sb-stats .ok b{ color:var(--mint); } .sb-stats .no b{ color:var(--pink); } .sb-stats .net b{ color:var(--marigold); }
 .sb-tools{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
 .sb-tools select{ appearance:none; -webkit-appearance:none; background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23BDAF9E' fill='none' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 12px center; border:1px solid var(--rule); border-radius:999px; padding:8px 30px 8px 14px; color:var(--text); font:inherit; font-size:14px; }
-.sb-tools button{ border:1px solid var(--rule); border-radius:999px; padding:8px 14px; font-size:13.5px; color:var(--muted); }
+.sb-tools button{ border:1px solid var(--rule); border-radius:999px; padding:8px 14px; font-size:13.5px; color:var(--muted); background:var(--surface); }
 .sb-tools button:hover{ border-color:var(--marigold); color:var(--marigold); }
+.sb-tools .go{ background:var(--marigold); border-color:var(--marigold); color:var(--on-accent); font-weight:700; font-size:15px; padding:10px 22px; box-shadow:0 6px 18px -8px var(--accent-glow); }
+.sb-tools .go:hover{ color:var(--on-accent); filter:brightness(1.06); }
+.sb-tools .go[disabled]{ opacity:.45; cursor:not-allowed; filter:none; }
+
+/* focus test view */
+.fx{ position:fixed; inset:0; z-index:40; background:var(--ink); display:flex; flex-direction:column; }
+.fx[hidden]{ display:none; }
+.fx-top{ border-bottom:1px solid var(--rule); background:var(--glass); }
+.fx-top .wrap{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding-top:12px; padding-bottom:12px; flex-wrap:wrap; }
+.fx-t{ display:flex; flex-direction:column; min-width:0; }
+.fx-t b{ font-family:var(--display); font-size:18px; font-weight:400; }
+.fx-t span{ color:var(--muted); font-size:13px; }
+.fx-acts{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.fx-b{ border:1px solid var(--rule); border-radius:999px; padding:8px 14px; font-size:13.5px; font-weight:700; color:var(--muted); background:var(--surface); }
+.fx-b:hover{ border-color:var(--marigold); color:var(--marigold); }
+.fx-b.pri{ background:var(--marigold); border-color:var(--marigold); color:var(--on-accent); }
+.fx-b.pri:hover{ color:var(--on-accent); filter:brightness(1.06); }
+.fx-time{ font-size:13px; color:var(--faint); font-variant-numeric:tabular-nums; margin-right:4px; }
+.fx-scroll{ flex:1; overflow:auto; }
+.fx-body{ display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:28px; padding-top:22px; padding-bottom:40px; align-items:start; }
+.fx-card{ background:var(--surface); border:1px solid var(--rule); border-radius:16px; box-shadow:var(--shadow); padding:22px 26px; }
+.fx-card .qc{ border:none; padding:0; }
+.fx .qbody{ display:block; }
+.fx .qright{ position:static; }
+.fx .stem{ font-size:18px; }
+.fx-nav{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:14px; }
+.fx-keys{ font-size:12px; color:var(--faint); text-align:center; }
+kbd{ font:600 11px var(--body); border:1px solid var(--rule); border-bottom-width:2px; border-radius:5px; padding:1px 6px; background:var(--surface); color:var(--muted); }
+.fx-side{ position:sticky; top:0; }
+.fx-side .fx-card{ padding:16px; }
+.fx-pos{ display:flex; justify-content:space-between; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--faint); }
+.fx-grid{ position:relative; display:grid; grid-template-columns:repeat(auto-fill,minmax(34px,1fr)); gap:5px; margin-top:10px; max-height:46vh; overflow:auto; padding:2px; }
+.fx-grid button{ height:32px; border-radius:7px; border:1px solid var(--rule); font-size:12px; font-weight:700; color:var(--muted); background:var(--surface); }
+.fx-grid button:hover{ border-color:var(--marigold); }
+.fx-grid .ok{ background:var(--mint-soft); border-color:var(--mint); color:var(--mint); }
+.fx-grid .no{ background:var(--pink-soft); border-color:var(--pink); color:var(--pink); }
+.fx-grid .seen{ background:var(--surface-2); }
+.fx-grid .sv{ box-shadow:inset 0 -3px 0 var(--marigold); }
+.fx-grid .cur{ background:var(--marigold); border-color:var(--marigold); color:var(--on-accent); }
+.fx-score{ display:flex; flex-wrap:wrap; gap:6px 14px; margin-top:12px; font-size:13.5px; color:var(--muted); }
+.fx-score b{ color:var(--text); } .fx-score .ok b{ color:var(--mint); } .fx-score .no b{ color:var(--pink); } .fx-score .net b{ color:var(--marigold); }
+.fx-leg{ font-size:11.5px; color:var(--faint); margin-top:8px; }
+.fx-navt{ display:none; }
+@media (max-width:900px){
+  .fx-body{ grid-template-columns:1fr; }
+  .fx-side{ position:static; order:-1; display:none; }
+  .fx.shownav .fx-side{ display:block; }
+  .fx-navt{ display:inline-flex; }
+  .fx-card{ padding:18px 16px; }
+  .fx .stem{ font-size:16.5px; }
+  .fx-keys{ display:none; }
+}
 
 /* question card */
 .qc{ border-bottom:1px solid var(--rule); padding:26px 0; }
@@ -226,7 +282,14 @@ button{ font:inherit; color:inherit; background:none; border:none; cursor:pointe
 @media (max-width:520px){ .rs{ padding:22px 18px 18px; } .rs-grid{ grid-template-columns:1fr; } }
 @media (max-width:860px){ .an-grid{ grid-template-columns:1fr; } }
 @media (max-width:640px){
-  .scorebar{ position:static; }
+  .scorebar{ padding:12px; }
+  .sb-row{ gap:8px; }
+  .sb-sum .t{ font-size:15px; }
+  .sb-stats{ display:none; }
+  .sb-tools{ width:100%; gap:6px; }
+  .sb-tools select{ flex:1; min-width:0; padding:7px 26px 7px 12px; font-size:13px; }
+  .sb-tools #seeResult, .sb-tools #reset{ display:none; }
+  .sb-tools .go, .sb-tools #resume:not([hidden]){ flex:1 1 100%; }
   .stats b{ font-size:20px; }
   .bar{ grid-template-columns:minmax(90px,130px) 1fr 28px; font-size:12.5px; }
   .stem{ font-size:16px; } .opt{ font-size:15px; }
@@ -242,7 +305,7 @@ button{ font:inherit; color:inherit; background:none; border:none; cursor:pointe
 <main class="wrap">
   <div class="intro">
     <h1 class="display">Prelims practice, subject by subject</h1>
-    <p class="lede" id="lede">Pick a subject, choose the years and topics you want, see how often UPSC asks them, then solve the questions with instant marking against the official answer key.</p>
+    <p class="lede" id="lede">Pick a subject, choose the years and topics you want, see how often UPSC asks them, then start a test marked against the official answer key.</p>
     <p class="keynote" id="keynote"></p>
   </div>
 
@@ -261,6 +324,23 @@ button{ font:inherit; color:inherit; background:none; border:none; cursor:pointe
     <div class="chips" id="topics"></div>
   </section>
 
+  <div class="scorebar" id="scorebar">
+    <div class="sb-row">
+      <div class="sb-sum"><span class="t" id="sbSum"></span><div class="sb-stats" id="score"></div></div>
+      <div class="sb-tools">
+        <select id="show" aria-label="Which questions">
+          <option value="all">All questions</option><option value="new">Not attempted</option>
+          <option value="wrong">Answered wrong</option><option value="saved">Bookmarked</option></select>
+        <select id="order" aria-label="Order">
+          <option value="year">Newest year first</option><option value="shuffle">Shuffled</option></select>
+        <button id="seeResult">Result</button>
+        <button id="reset">Reset answers</button>
+        <button id="resume" hidden></button>
+        <button id="start" class="go">Start test</button>
+      </div>
+    </div>
+  </div>
+
   <section class="analysis" aria-labelledby="anH">
     <div class="an-grid">
       <div>
@@ -277,20 +357,26 @@ button{ font:inherit; color:inherit; background:none; border:none; cursor:pointe
     </div>
   </section>
 
-  <div class="scorebar" id="scorebar">
-    <div class="sb-row">
-      <div class="sb-stats" id="score"></div>
-      <div class="sb-tools">
-        <select id="show" aria-label="Show">
-          <option value="all">All questions</option><option value="new">Not attempted</option>
-          <option value="wrong">Answered wrong</option><option value="saved">Bookmarked</option></select>
-        <button id="seeResult" class="see">See result</button>
-        <button id="reset">Reset answers for this set</button>
-      </div>
-    </div>
-  </div>
-  <div id="list"></div>
 </main>
+
+<div class="fx" id="fx" hidden role="dialog" aria-modal="true" aria-labelledby="fxTitle">
+  <div class="fx-top"><div class="wrap">
+    <div class="fx-t"><b id="fxTitle">Test</b><span id="fxSub"></span></div>
+    <div class="fx-acts"><span class="fx-time" id="fxTime" aria-label="Time spent"></span><button class="fx-b fx-navt" id="fxNavT">Questions</button><button class="fx-b pri" id="fxFinish">Finish and see result</button><button class="fx-b" id="fxExit">Exit</button></div>
+  </div></div>
+  <div class="fx-scroll" id="fxScroll"><div class="wrap fx-body">
+    <div class="fx-main">
+      <div class="fx-card" id="fxQ"></div>
+      <div class="fx-nav"><button class="fx-b" id="fxPrev">‹ Previous</button><span class="fx-keys"><kbd>A</kbd>–<kbd>D</kbd> answer · <kbd>←</kbd> <kbd>→</kbd> move · <kbd>S</kbd> bookmark</span><button class="fx-b pri" id="fxNext">Next ›</button></div>
+    </div>
+    <aside class="fx-side" id="fxSide"><div class="fx-card">
+      <div class="fx-pos"><span id="fxPos"></span><span id="fxLeft"></span></div>
+      <div class="fx-grid" id="fxGrid"></div>
+      <div class="fx-score" id="fxScore"></div>
+      <div class="fx-leg">Green right · pink wrong · grey seen · underline bookmarked</div>
+    </div></aside>
+  </div></div>
+</div>
 
 
 <div class="rs-back" id="rsBack" aria-hidden="true">
@@ -18842,6 +18928,7 @@ try { store = Object.assign(store, JSON.parse(localStorage.getItem('pyq-prelims'
 const persist = () => { try { localStorage.setItem('pyq-prelims', JSON.stringify(store)); } catch(e){} };
 
 const S = { subject:'__all', years:new Set(YEARS), topics:new Set(), show:'all', limit:25 };
+{ const m = location.hash.match(/^#year=(\d{4})$/); if (m && YEARS.includes(+m[1])) S.years = new Set([+m[1]]); }
 
 const topicList = s => s==='__all' ? [] : (D.topics[s].length ? D.topics[s] : [s]);
 const inScope = q => S.years.has(q.y) && (S.subject==='__all' || q.s===S.subject);
@@ -18945,37 +19032,122 @@ function card(q){
     <div class="opts">${opts}</div></div><div class="qright">${after}</div></div></article>`;
 }
 
-function renderList(){
-  renderScore();
+const BYID = Object.fromEntries(ALL.map(q=>[q.id,q]));
+const SHOWN = { all:'', new:'not attempted', wrong:'answered wrong', saved:'bookmarked' };
+S.order = 'year';
+function pool(){   // the questions "Start test" will use
   let qs = selected();
-  if (S.show==='new') qs = qs.filter(q => !store.ans[q.id]);
+  if (S.show==='new') qs = qs.filter(q => !store.ans[q.id] && !(store.reveal||{})[q.id]);
   if (S.show==='wrong') qs = qs.filter(q => store.ans[q.id] && q.a!=='x' && store.ans[q.id]!==q.a);
   if (S.show==='saved') qs = qs.filter(q => store.saved[q.id]);
-  qs.sort((a,b)=> b.y-a.y || a.n-b.n);
-  if (!qs.length){ $('list').innerHTML = `<div class="none"><h3>No questions here</h3><p>${!S.years.size?'Select at least one year.':S.show==='saved'?'Bookmark questions with the star to collect them here.':S.show==='wrong'?'Questions you answer wrongly will appear here for revision.':'Try selecting more topics or years.'}</p></div>`; return; }
-  const shown = qs.slice(0,S.limit);
-  $('list').innerHTML = shown.map(card).join('') + (qs.length>shown.length ? `<button class="more" id="more">Show more (${qs.length-shown.length} left)</button>` : '');
-  const m=$('more'); if (m) m.onclick=()=>{ S.limit+=25; renderList(); };
+  return qs.sort((a,b)=> b.y-a.y || a.n-b.n);
+}
+function scopeLabel(){
+  const yrs = YEARS.filter(y=>S.years.has(y));
+  const yl = !yrs.length ? 'no years' : yrs.length===1 ? String(yrs[0]) : yrs.length===YEARS.length ? `${yrs[yrs.length-1]}–${yrs[0]}` : `${yrs.length} years`;
+  return `${S.subject==='__all'?'All subjects':S.subject}${S.topics.size?` · ${S.topics.size} topic${S.topics.size>1?'s':''}`:''} · ${yl}`;
+}
+function renderList(){   // updates the launch bar
+  renderScore();
+  const n = pool().length;
+  $('sbSum').innerHTML = `<b>${n}</b> question${n===1?'':'s'}${SHOWN[S.show]?' '+SHOWN[S.show]:''} · ${esc(scopeLabel())}`;
+  $('start').disabled = !n;
+  $('start').textContent = n ? `Start test · ${n}` : (S.years.size ? 'No questions' : 'Select a year');
+  $('resume').hidden = !T.ids.length;
+  if (T.ids.length) $('resume').textContent = `Resume test (${T.i+1} of ${T.ids.length})`;
 }
 
-$('list').addEventListener('click', e => {
-  const art=e.target.closest('.qc'); if (!art) return; const id=art.dataset.id;
-  const o=e.target.closest('.opt');
-  if (o && !o.disabled){ const was=result(); store.ans[id]=o.dataset.l; persist(); art.outerHTML = card(ALL.find(q=>q.id===id)); renderScore(); const now=result(); if (now.total && now.skip===0 && was.skip>0) setTimeout(openResult, 700); return; }
-  if (e.target.closest('[data-rev]')){ store.reveal=store.reveal||{}; store.reveal[id]=1; persist(); art.outerHTML = card(ALL.find(q=>q.id===id)); return; }
-  const s=e.target.closest('.save');
-  if (s){ store.saved[id] ? delete store.saved[id] : store.saved[id]=1; persist(); s.setAttribute('aria-pressed', !!store.saved[id]); }
+/* ---------- focus test view ---------- */
+let T = { ids:[], i:0, label:'', spent:0, t0:0 };
+try { const t = JSON.parse(localStorage.getItem('pyq-test')||'null');
+  if (t && Array.isArray(t.ids)) { const ids=t.ids.filter(id=>BYID[id]); if (ids.length) T = { ids, i:Math.min(t.i||0, ids.length-1), label:t.label||'Test', spent:t.spent||0, t0:0 }; } } catch(e){}
+const saveT = () => { try { localStorage.setItem('pyq-test', JSON.stringify({ ids:T.ids, i:T.i, label:T.label, spent:T.spent })); } catch(e){} };
+const testQs = () => T.ids.map(id=>BYID[id]);
+const inTest = () => !$('fx').hidden;
+let tick = null;
+function startTest(ids, label){ T = { ids, i:0, label, spent:0, t0:0 }; saveT(); openTest(); }
+function openTest(){
+  T.t0 = Date.now(); $('fx').hidden = false; $('fx').classList.remove('shownav');
+  document.body.style.overflow = 'hidden'; renderTest(); showTime();
+  clearInterval(tick); tick = setInterval(showTime, 1000);
+}
+function closeTest(){
+  if (T.t0) T.spent += (Date.now()-T.t0)/1000; T.t0 = 0; saveT(); clearInterval(tick);
+  $('fx').hidden = true; document.body.style.overflow = ''; renderList();
+}
+function showTime(){ const s = Math.floor(T.spent + (T.t0 ? (Date.now()-T.t0)/1000 : 0)); $('fxTime').textContent = `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`; }
+function statusOf(id){ const q=BYID[id], a=store.ans[id]; if (a) return q.a==='x' ? 'seen' : (a===q.a ? 'ok' : 'no'); return (store.reveal||{})[id] ? 'seen' : ''; }
+function renderTest(){
+  const q = BYID[T.ids[T.i]];
+  $('fxTitle').textContent = T.label;
+  $('fxSub').textContent = `Question ${T.i+1} of ${T.ids.length}`;
+  $('fxQ').innerHTML = card(q);
+  $('fxPrev').style.visibility = T.i===0 ? 'hidden' : 'visible';
+  $('fxNext').textContent = T.i===T.ids.length-1 ? 'Finish ›' : 'Next ›';
+  renderGrid(); $('fxScroll').scrollTop = 0; saveT();
+}
+function renderGrid(){
+  const g = $('fxGrid');
+  g.innerHTML = T.ids.map((id,i) => `<button data-i="${i}" class="${statusOf(id)}${store.saved[id]?' sv':''}${i===T.i?' cur':''}" aria-label="Question ${i+1}"${i===T.i?' aria-current="true"':''}>${i+1}</button>`).join('');
+  const r = result(testQs());
+  $('fxPos').textContent = `${T.ids.length} questions`; $('fxLeft').textContent = `${r.skip} left`;
+  $('fxScore').innerHTML = `<span class="ok">Correct <b>${r.ok}</b></span><span class="no">Wrong <b>${r.no}</b></span><span class="net">Score <b>${fmt(r.net)}</b></span>`;
+  const cur = g.querySelector('.cur');
+  if (cur && (cur.offsetTop < g.scrollTop || cur.offsetTop > g.scrollTop + g.clientHeight - 36)) g.scrollTop = cur.offsetTop - g.clientHeight/2;
+}
+function go(i){ if (i<0 || i>=T.ids.length) return; T.i = i; $('fx').classList.remove('shownav'); renderTest(); }
+function answer(l){
+  const q = BYID[T.ids[T.i]]; if (store.ans[q.id] || (store.reveal||{})[q.id]) return;
+  const was = result(testQs()).skip; store.ans[q.id] = l; persist();
+  $('fxQ').innerHTML = card(q); renderGrid();
+  if (was>0 && result(testQs()).skip===0) setTimeout(()=>openResult(true), 700);
+}
+function toggleSave(){
+  const id = T.ids[T.i]; store.saved[id] ? delete store.saved[id] : store.saved[id]=1; persist();
+  const b = $('fxQ').querySelector('.save'); if (b) b.setAttribute('aria-pressed', !!store.saved[id]); renderGrid();
+}
+$('fxQ').addEventListener('click', e => {
+  const q = BYID[T.ids[T.i]];
+  const o = e.target.closest('.opt'); if (o && !o.disabled){ answer(o.dataset.l); return; }
+  if (e.target.closest('[data-rev]')){ store.reveal = store.reveal||{}; store.reveal[q.id] = 1; persist(); $('fxQ').innerHTML = card(q); renderGrid(); return; }
+  if (e.target.closest('.save')) toggleSave();
 });
+$('fxGrid').addEventListener('click', e => { const b = e.target.closest('[data-i]'); if (b) go(+b.dataset.i); });
+$('fxPrev').onclick = () => go(T.i-1);
+$('fxNext').onclick = () => T.i===T.ids.length-1 ? openResult(true) : go(T.i+1);
+$('fxFinish').onclick = () => openResult(true);
+$('fxExit').onclick = closeTest;
+$('fxNavT').onclick = () => $('fx').classList.toggle('shownav');
+document.addEventListener('keydown', e => {
+  if (!inTest() || $('rsBack').classList.contains('open') || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (/^(SELECT|INPUT|TEXTAREA)$/.test(e.target.tagName)) return;
+  const k = e.key.toLowerCase();
+  if ('abcd'.includes(k) && k.length===1){ const q=BYID[T.ids[T.i]]; if ('abcd'.indexOf(k) < q.o.length){ e.preventDefault(); answer(k); } }
+  else if (e.key==='ArrowRight'){ e.preventDefault(); go(T.i+1); }
+  else if (e.key==='ArrowLeft'){ e.preventDefault(); go(T.i-1); }
+  else if (k==='s'){ e.preventDefault(); toggleSave(); }
+});
+$('start').onclick = () => {
+  const qs = pool(); if (!qs.length) return;
+  const ids = qs.map(q=>q.id);
+  if (S.order==='shuffle') for (let i=ids.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [ids[i],ids[j]]=[ids[j],ids[i]]; }
+  startTest(ids, scopeLabel() + (SHOWN[S.show] ? ` · ${SHOWN[S.show]}` : ''));
+};
+$('resume').onclick = openTest;
 
 /* result card */
-function result(){
-  const qs=selected(), sc=qs.filter(q=>q.a!=='x'), s=score(qs);
+let RS = { test:false };
+function result(qs){
+  qs = qs || selected(); const sc=qs.filter(q=>q.a!=='x'), s=score(qs);
   return { total:sc.length, att:s.att, ok:s.ok, no:s.no, skip:sc.length-s.att, full:sc.length*2, plus:s.ok*2, minus:s.no*0.66, net:s.net, dropped:qs.length-sc.length };
 }
 const fmt = n => (Math.round(n*100)/100).toLocaleString('en-IN',{minimumFractionDigits:n%1?2:0, maximumFractionDigits:2});
-function openResult(){
-  const r=result(), yrs=YEARS.filter(y=>S.years.has(y));
-  $('rsScope').textContent = `${S.subject==='__all'?'All subjects':S.subject}${S.topics.size?` · ${S.topics.size} topic${S.topics.size>1?'s':''}`:''} · ${yrs.length===1?yrs[0]:yrs.length+' years'}`;
+const rsList = () => RS.test ? testQs() : selected();
+function openResult(test){
+  RS.test = !!test && T.ids.length>0;
+  const r = result(rsList());
+  $('rsTitle').textContent = RS.test ? 'Test result' : 'Practice result';
+  $('rsScope').textContent = RS.test ? T.label : scopeLabel();
   $('rsNet').textContent = fmt(r.net);
   $('rsOutOf').textContent = `marks scored out of ${r.full}`;
   const acc = r.att ? Math.round(100*r.ok/r.att) : 0;
@@ -18989,21 +19161,29 @@ function openResult(){
     <div class="rs-cell"><span>Total marks</span><b>${r.full}</b></div>
     <div class="rs-cell ok"><span>Marks for correct</span><b>+${fmt(r.plus)}</b></div>
     <div class="rs-cell no"><span>Negative marks</span><b>−${fmt(r.minus)}</b></div>
-    <div class="rs-cell"><span>Final score</span><b>${fmt(r.net)}</b></div>` + (r.dropped?`<div class="rs-cell" style="grid-column:1/-1"><span>Dropped by UPSC (not scored)</span><b>${r.dropped}</b></div>`:'');
+    <div class="rs-cell"><span>Final score</span><b>${fmt(r.net)}</b></div>` + (r.dropped?`<div class="rs-cell" style="grid-column:1/-1"><span>Dropped by UPSC (not scored)</span><b>${r.dropped}</b></div>`:'') + (RS.test && T.t0 ? `<div class="rs-cell" style="grid-column:1/-1"><span>Time spent</span><b>${$('fxTime').textContent}</b></div>` : '');
   const w = n => r.total ? (100*n/r.total) : 0;
   $('rsBar').innerHTML = `<i class="g" style="width:${w(r.ok)}%"></i><i class="r" style="width:${w(r.no)}%"></i>`;
   $('rsWrong').disabled = !r.no; $('rsWrong').style.opacity = r.no ? 1 : .4;
+  $('rsDone').textContent = RS.test ? 'Back to test' : 'Close';
   $('rsBack').classList.add('open'); $('rsBack').setAttribute('aria-hidden','false'); $('rsDone').focus();
 }
 function closeResult(){ $('rsBack').classList.remove('open'); $('rsBack').setAttribute('aria-hidden','true'); }
-$('seeResult').onclick = openResult;
+$('seeResult').onclick = () => openResult(false);
 $('rsClose').onclick = $('rsDone').onclick = closeResult;
 $('rsBack').addEventListener('click', e => { if (e.target.id==='rsBack') closeResult(); });
-document.addEventListener('keydown', e => { if (e.key==='Escape') closeResult(); });
-$('rsWrong').onclick = () => { closeResult(); S.show='wrong'; $('show').value='wrong'; S.limit=25; renderList(); $('scorebar').scrollIntoView({behavior:'smooth'}); };
-$('rsRetry').onclick = () => { selected().forEach(q => { delete store.ans[q.id]; if (store.reveal) delete store.reveal[q.id]; }); persist(); closeResult(); S.show='all'; $('show').value='all'; renderList(); $('scorebar').scrollIntoView({behavior:'smooth'}); };
+document.addEventListener('keydown', e => { if (e.key==='Escape'){ if ($('rsBack').classList.contains('open')) closeResult(); else if (inTest()) closeTest(); } });
+$('rsWrong').onclick = () => {
+  const ids = rsList().filter(q => store.ans[q.id] && q.a!=='x' && store.ans[q.id]!==q.a).map(q=>q.id);
+  closeResult(); if (ids.length) startTest(ids, 'Review · answered wrong');
+};
+$('rsRetry').onclick = () => {
+  const qs = rsList(); qs.forEach(q => { delete store.ans[q.id]; if (store.reveal) delete store.reveal[q.id]; }); persist();
+  closeResult(); if (RS.test) startTest(T.ids, T.label); else renderList();
+};
 
-$('show').onchange = e => { S.show=e.target.value; S.limit=25; renderList(); };
+$('show').onchange = e => { S.show=e.target.value; renderList(); };
+$('order').onchange = e => { S.order=e.target.value; };
 $('reset').onclick = () => { if (!confirm('Clear your answers for the questions in this selection?')) return; selected().forEach(q => { delete store.ans[q.id]; if (store.reveal) delete store.reveal[q.id]; }); persist(); renderList(); };
 $('yAll').onclick = () => { S.years=new Set(YEARS); renderAll(); };
 $('yNone').onclick = () => { S.years=new Set(); renderAll(); };
@@ -19012,7 +19192,7 @@ $('tNone').onclick = () => { S.topics=new Set(); renderTopics(); renderAnalysis(
 
 function renderAll(){ renderSubjects(); renderYears(); renderTopics(); renderAnalysis(); renderList(); }
 const total=ALL.length, ny=YEARS.length;
-$('lede').textContent = `${total} questions from GS Paper I (${ny===1?YEARS[0]:`${YEARS[ny-1]}–${YEARS[0]}`}), tagged by subject and topic. Pick a subject, choose the years and topics you want, see how often UPSC asks them, then solve with instant marking against the official answer key.`;
+$('lede').textContent = `${total} questions from GS Paper I (${ny===1?YEARS[0]:`${YEARS[ny-1]}–${YEARS[0]}`}), tagged by subject and topic. Pick a subject, choose the years and topics you want, see how often UPSC asks them, then start a test: one question at a time, marked instantly against the official answer key.`;
 $('keynote').textContent = 'Answer keys used: ' + YEARS.map(y => `${y} Series ${D.years[y].series}, ${D.years[y].keyType.toLowerCase()}`).join('; ') + '.';
 renderAll();
 </script>

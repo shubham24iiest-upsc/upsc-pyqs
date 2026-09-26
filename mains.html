@@ -6,6 +6,7 @@
 <script>(function(){var t;try{t=localStorage.getItem('pyq-theme')}catch(e){}if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t)})();</script>
 
 <title>Mains PYQs — PrashnaKosh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:wght@400;500;600;700&display=swap">
 <style>
 :root{
   /* light: pastel lavender paper */
@@ -16,8 +17,8 @@
   --peach:#F6C9A8; --glass:rgba(246,245,250,.88);
   --accent-glow:rgba(108,99,217,.22);
   --shadow:0 1px 2px rgba(37,34,47,.04), 0 10px 30px -18px rgba(37,34,47,.18);
-  --display:Georgia, 'Times New Roman', serif;
-  --body:Georgia, 'Times New Roman', serif;
+  --display:'IBM Plex Serif', Georgia, 'Times New Roman', serif;
+  --body:'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --radius:14px;
   color-scheme: light;
 }
@@ -125,7 +126,7 @@ button{ font:inherit; color:inherit; background:none; border:none; cursor:pointe
 .legend i{ width:18px; height:12px; border-radius:3px; display:inline-block; }
 
 /* toolbar */
-.toolbar{ position:sticky; top:0; z-index:4; background:var(--glass); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); padding:12px 0; margin:0 0 8px; border-bottom:1px solid var(--rule); }
+.toolbar{ padding:0 0 12px; margin:0; }
 .tb-row{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
 .search{ flex:1 1 280px; position:relative; }
 .search input{ width:100%; background:var(--surface); border:1px solid var(--rule); border-radius:999px; padding:11px 16px 11px 40px; color:var(--text); font:inherit; font-size:15px; }
@@ -173,9 +174,117 @@ button.chip:hover{ color:var(--marigold); }
 .more{ display:block; margin:28px auto 0; padding:12px 22px; border-radius:999px; border:1px solid var(--rule); font-weight:600; }
 .more:hover{ border-color:var(--marigold); color:var(--marigold); }
 
+/* launch bar */
+.launch{ background:var(--surface); border:1px solid var(--rule); border-radius:14px; box-shadow:var(--shadow); padding:14px 18px; margin:4px 0 22px; display:flex; justify-content:space-between; align-items:center; gap:10px 16px; flex-wrap:wrap; }
+.launch .t{ font-family:var(--display); font-size:18px; }
+.launch .t b{ color:var(--marigold); }
+.launch .sub{ font-size:13px; color:var(--muted); }
+.launch .btns{ display:flex; gap:8px; flex-wrap:wrap; }
+.lbtn{ border:1px solid var(--rule); border-radius:999px; padding:9px 16px; font-size:14px; font-weight:700; color:var(--muted); background:var(--surface); }
+.lbtn:hover{ border-color:var(--marigold); color:var(--marigold); }
+.lbtn.go{ background:var(--marigold); border-color:var(--marigold); color:var(--on-accent); font-size:15px; padding:10px 22px; box-shadow:0 6px 18px -8px var(--accent-glow); }
+.lbtn.go:hover{ color:var(--on-accent); filter:brightness(1.06); }
+.lbtn[disabled]{ opacity:.45; cursor:not-allowed; filter:none; }
+
+/* split view */
+.sv{ position:fixed; inset:0; z-index:40; background:var(--ink); display:flex; flex-direction:column; }
+.sv[hidden]{ display:none; }
+.sv-top{ border-bottom:1px solid var(--rule); background:var(--glass); }
+.sv-top .wrap{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding-top:12px; padding-bottom:12px; max-width:none; }
+.sv-t{ min-width:0; } .sv-t b{ font-family:var(--display); font-size:18px; font-weight:400; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .sv-t span{ font-size:13px; color:var(--muted); }
+.sv-body{ flex:1; display:grid; grid-template-columns:minmax(300px,420px) minmax(0,1fr); min-height:0; }
+.sv-list{ overflow:auto; border-right:1px solid var(--rule); background:var(--surface); }
+.sv-yh{ position:sticky; top:0; z-index:1; background:var(--surface-2); padding:6px 16px; font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--rule); }
+.sv-item{ display:block; width:100%; text-align:left; padding:10px 16px 11px; border-bottom:1px solid var(--rule); position:relative; }
+.sv-item:hover{ background:var(--surface-2); }
+.sv-item.cur{ background:var(--marigold-soft); box-shadow:inset 3px 0 0 var(--marigold); }
+.sv-item .m{ font-size:12px; color:var(--faint); font-weight:600; display:flex; gap:6px; align-items:center; }
+.sv-item .m .n{ color:var(--marigold); font-weight:700; }
+.sv-item .m .f{ margin-left:auto; display:flex; gap:4px; }
+.sv-item .m .f i{ font-style:normal; font-size:11px; border-radius:999px; padding:0 6px; }
+.sv-item .m .f .d{ background:var(--mint-soft); color:var(--mint); } .sv-item .m .f .s{ background:var(--pink-soft); color:var(--pink); }
+.sv-item .x{ font-size:14.5px; line-height:1.45; color:var(--text); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin-top:2px; }
+.sv-item.is-done .x{ color:var(--muted); }
+.sv-item mark, .sv-q mark{ background:var(--marigold-soft); color:var(--marigold); border-radius:3px; padding:0 2px; }
+.sv-detail{ overflow:auto; }
+.sv-in{ max-width:820px; padding:34px 44px 60px; }
+.sv-kick{ font-size:13px; font-weight:700; color:var(--marigold); letter-spacing:.02em; }
+.sv-q{ font-family:var(--display); font-size:clamp(21px,2.3vw,28px); line-height:1.4; margin-top:12px; color:var(--text); }
+.sv-chips{ display:flex; gap:8px; flex-wrap:wrap; margin-top:16px; }
+.sv-acts{ display:flex; gap:8px; flex-wrap:wrap; margin-top:24px; }
+.sv-acts .lbtn[aria-pressed="true"].dn{ background:var(--mint); border-color:var(--mint); color:var(--ink); }
+.sv-acts .lbtn[aria-pressed="true"].sa{ background:var(--pink); border-color:var(--pink); color:var(--ink); }
+.sv-acts .lbtn svg{ width:15px; height:15px; vertical-align:-2px; margin-right:4px; }
+.sv-rel{ margin-top:30px; background:var(--surface); border:1px solid var(--rule); border-radius:14px; padding:14px 18px; }
+.sv-rel h4{ font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--faint); margin-bottom:6px; }
+.sv-rel button{ display:block; width:100%; text-align:left; padding:8px 0; border-bottom:1px solid var(--rule); font-size:14.5px; line-height:1.45; color:var(--text); }
+.sv-rel button:last-child{ border-bottom:none; }
+.sv-rel button b{ color:var(--marigold); font-size:12.5px; margin-right:6px; }
+.sv-rel button:hover{ color:var(--marigold); }
+.sv-nav{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:28px; }
+.sv-keys{ font-size:12px; color:var(--faint); }
+kbd{ font:600 11px var(--body); border:1px solid var(--rule); border-bottom-width:2px; border-radius:5px; padding:1px 6px; background:var(--surface); color:var(--muted); }
+.sv-back{ display:none; }
+@media (max-width:860px){
+  .sv-body{ grid-template-columns:1fr; }
+  .sv-detail{ display:none; }
+  .sv.detail .sv-list{ display:none; } .sv.detail .sv-detail{ display:block; }
+  .sv.detail .sv-back{ display:inline-flex; }
+  .sv-in{ padding:20px 16px 40px; }
+  .sv-keys{ display:none; }
+}
+
+/* brainstorm mode */
+.lbtn.bsb[aria-pressed="true"]{ background:var(--marigold); border-color:var(--marigold); color:var(--on-accent); }
+.bs{ margin-top:22px; background:var(--surface); border:1px solid var(--marigold); border-radius:16px; box-shadow:0 0 0 4px var(--marigold-soft); padding:18px 20px; }
+.bs-head b{ font-family:var(--display); font-weight:400; font-size:20px; }
+.bs-head p{ color:var(--muted); font-size:14px; margin-top:2px; }
+.bs-rec{ display:flex; align-items:center; gap:14px; margin-top:14px; }
+.mic{ width:58px; height:58px; border-radius:50%; background:var(--marigold); color:var(--on-accent); display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 8px 22px -8px var(--accent-glow); transition:transform .12s; }
+.mic svg{ width:24px; height:24px; }
+.mic:hover{ transform:scale(1.05); }
+.mic[aria-pressed="true"]{ background:var(--pink); animation:pulse 1.4s infinite; }
+.mic[disabled]{ opacity:.4; cursor:not-allowed; animation:none; }
+@keyframes pulse{ 0%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--pink) 55%,transparent);} 100%{ box-shadow:0 0 0 16px transparent; } }
+.bs-status{ font-weight:700; font-size:14.5px; }
+.bs-meta{ font-size:13px; color:var(--muted); margin-top:3px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.bs-meta select{ font:inherit; font-size:12.5px; color:var(--text); background:var(--surface); border:1px solid var(--rule); border-radius:999px; padding:3px 8px; }
+.bs textarea{ width:100%; min-height:150px; margin-top:14px; resize:vertical; background:var(--ink); color:var(--text); border:1px solid var(--rule); border-radius:12px; padding:12px 14px; font:inherit; font-size:15.5px; line-height:1.6; }
+.bs textarea:focus{ outline:none; border-color:var(--marigold); }
+.bs-interim{ color:var(--faint); font-style:italic; font-size:14.5px; min-height:0; margin-top:6px; }
+.bs-btns{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:12px; }
+.bs-note{ font-size:12.5px; color:var(--faint); }
+.bs-err{ margin-top:12px; background:var(--pink-soft); color:var(--pink); border-radius:10px; padding:10px 12px; font-size:14px; font-weight:600; }
+.bs-res{ margin-top:18px; border-top:1px solid var(--rule); padding-top:18px; }
+.bs-top{ display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+.bs-score{ width:96px; height:96px; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; background:conic-gradient(var(--marigold) calc(var(--v)*1%), var(--surface-2) 0); position:relative; flex-shrink:0; }
+.bs-score::before{ content:""; position:absolute; inset:8px; border-radius:50%; background:var(--surface); }
+.bs-score b, .bs-score span{ position:relative; }
+.bs-score b{ font-family:var(--display); font-size:30px; line-height:1; color:var(--text); }
+.bs-score span{ font-size:12px; color:var(--muted); }
+.bs-band{ font-family:var(--display); font-size:22px; }
+.bs-kind{ font-size:12.5px; color:var(--faint); margin-top:2px; }
+.bs-dir{ margin-top:14px; font-size:14.5px; padding:10px 12px; border-radius:10px; background:var(--surface-2); }
+.bs-dir.ok b{ color:var(--mint); } .bs-dir.no b{ color:var(--pink); }
+.bs-sec{ margin-top:16px; }
+.bs-sec h4{ font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--faint); margin-bottom:6px; }
+.bs-sec ul{ list-style:none; display:grid; gap:6px; }
+.bs-sec li{ font-size:14.5px; line-height:1.5; padding:8px 12px; border-radius:10px; border-left:3px solid var(--rule); background:var(--ink); }
+.bs-sec li small{ display:block; color:var(--muted); font-size:13px; margin-top:2px; }
+.bs-sec.ok li{ border-color:var(--mint); } .bs-sec.no li{ border-color:var(--pink); } .bs-sec.ex li{ border-color:var(--marigold); }
+.bs-fb{ margin-top:16px; font-size:15px; line-height:1.65; }
+.bs-ol{ margin-top:14px; background:var(--marigold-soft); border-radius:12px; padding:12px 16px; font-size:14.5px; line-height:1.6; }
+.bs-ol b{ color:var(--marigold); }
+.bs-ol ol{ padding-left:20px; margin:4px 0; }
+.bs details{ margin-top:14px; font-size:14px; }
+.bs summary{ cursor:pointer; color:var(--marigold); font-weight:700; }
+.bs-hist{ margin-top:14px; font-size:13px; color:var(--muted); display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+.bs-hist span{ background:var(--surface-2); border-radius:999px; padding:2px 9px; }
+@media (max-width:860px){ .bs{ padding:14px; } .bs-score{ width:82px; height:82px; } .bs-score b{ font-size:26px; } }
+
 @media (max-width:860px){ .papers{ grid-template-columns:repeat(2,1fr); } }
 @media (max-width:640px){
-  .toolbar{ position:static; }
+  .launch{ padding:12px; } .launch .t{ font-size:15px; } .launch .btns{ width:100%; } .lbtn.go{ flex:1; }
   .hm{ --lab:128px; min-width:640px; }
   .hm .rl{ position:sticky; left:0; z-index:1; background:var(--surface); font-size:12.5px; padding-right:6px; }
   .hm .rl span.tot{ display:none; }
@@ -206,15 +315,6 @@ button.chip:hover{ color:var(--marigold); }
     <div><h1 class="display" id="title">GS Paper I</h1><p class="lede" id="blurb"></p></div>
   </div>
 
-  <section class="trends" aria-labelledby="trendsTitle">
-    <div class="trends-head">
-      <h2 id="trendsTitle">Where the questions come from</h2>
-      <p>Each cell counts questions per topic per year. Click a cell, a topic or a year to filter the list below.</p>
-    </div>
-    <div class="hm-scroll"><div class="hm" id="hm"></div></div>
-    <div class="legend" aria-hidden="true">Fewer <span id="legendCells" style="display:flex;gap:3px"></span> More</div>
-  </section>
-
   <div class="toolbar" id="toolbar">
     <div class="tb-row">
       <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
@@ -226,11 +326,35 @@ button.chip:hover{ color:var(--marigold); }
         <option value="all">All questions</option><option value="todo">Not practised yet</option>
         <option value="done">Practised</option><option value="saved">Bookmarked</option></select></span>
     </div>
-    <div class="tb-meta"><span id="count"></span><button class="linkbtn" id="clear" hidden>Clear filters</button></div>
+    <div class="tb-meta"><span id="tbHint">Filter here, or click a topic, year or cell in the heatmap below, then press Start.</span><button class="linkbtn" id="clear" hidden>Clear filters</button></div>
   </div>
 
-  <div id="results"></div>
+  <div class="launch" id="launch">
+    <div><div class="t" id="count"></div><div class="sub" id="lsub"></div></div>
+    <div class="btns"><button class="lbtn" id="resume" hidden></button><button class="lbtn go" id="start">Start</button></div>
+  </div>
+
+  <section class="trends" aria-labelledby="trendsTitle">
+    <div class="trends-head">
+      <h2 id="trendsTitle">Where the questions come from</h2>
+      <p>Each cell counts questions per topic per year. Click a cell, a topic or a year to pick those questions.</p>
+    </div>
+    <div class="hm-scroll"><div class="hm" id="hm"></div></div>
+    <div class="legend" aria-hidden="true">Fewer <span id="legendCells" style="display:flex;gap:3px"></span> More</div>
+  </section>
+
 </main>
+
+<div class="sv" id="sv" hidden role="dialog" aria-modal="true" aria-labelledby="svTitle">
+  <div class="sv-top"><div class="wrap">
+    <div class="sv-t"><b id="svTitle"></b><span id="svSub"></span></div>
+    <div style="display:flex;gap:8px"><button class="lbtn sv-back" id="svBack">‹ List</button><button class="lbtn" id="svExit">Exit</button></div>
+  </div></div>
+  <div class="sv-body">
+    <nav class="sv-list" id="svList" aria-label="Questions"></nav>
+    <section class="sv-detail" id="svDetail"></section>
+  </div>
+</div>
 
 <footer class="wrap site-foot"><span>Questions transcribed from the official UPSC Civil Services (Main) papers.</span><span>Practised and bookmarked marks are saved in this browser only.</span></footer>
 
@@ -1543,6 +1667,10 @@ window.PYQ.gs4 = {
 };
 </script>
 <script>
+// Marking checklists for the Mains brainstorm mode. Generated by mains-work/build_rubrics.py; edit mains-work/rubrics/*.txt instead.
+window.RUB = {"gs1-2025-1":{"d":"Discuss","n":"Describe the main features of Harappan architecture and town planning, with site examples.","p":[["Planned towns on a grid, with a raised citadel and a lower town",["grid","citadel","lower town","planned","planning","chessboard"]],["Covered drainage and sanitation built into streets and houses",["drain","sewer","sanit","soak pit"]],["Standardised burnt bricks in a fixed ratio (1:2:4) and use of mud brick",["brick","burnt","baked","1:2:4","ratio","standard"]],["Public buildings: Great Bath, granaries, assembly halls, dockyard",["great bath","granar","dockyard","lothal","assembly","warehouse"]],["Houses with courtyards, wells, bathrooms and doors opening to side lanes",["courtyard","well","house","bathroom","lane","residential"]],["Water management and fortification, e.g. Dholavira reservoirs, walls",["dholavira","reservoir","water","fort","wall"]],["Named sites as examples: Mohenjo-daro, Harappa, Kalibangan, Lothal, Rakhigarhi",["mohenjo","harappa","kalibangan","lothal","rakhigarhi","banawali"]],["Significance: utilitarian, civic sense, absence of palaces/temples",["utilitar","civic","no temple","no palace","egalitarian","secular","municipal"]]]},"gs1-2025-2":{"d":"Examine","n":"Analyse the main aspects of Akbar's religious syncretism, its motives and limits.","p":[["Sulh-i-kul (universal peace) as the guiding principle",["sulh","universal peace","peace with all","tolerance"]],["Ibadat Khana debates with scholars of many faiths",["ibadat","debate","discussion","fatehpur","scholars","jesuit"]],["Din-i-Ilahi / Tauhid-i-Ilahi and its limited following",["din","ilahi","tauhid","disciple","murid"]],["Policies: abolition of jizya and pilgrim tax, Rajput alliances",["jizya","pilgrim tax","rajput","marriage","alliance"]],["Translations and culture: Maktab Khana, Mahabharata as Razmnama",["translat","razmnama","maktab","mahabharat","ramayan","sanskrit"]],["Mahzar (1579) and his role as final arbiter",["mahzar","infallib","decree","arbiter","ulema"]],["Motives and critique: political consolidation, orthodox opposition (Badauni, Sirhindi)",["political","consolidat","badauni","sirhindi","orthodox","legitim"]],["Legacy: tolerance and composite culture",["legacy","composite","syncret","pluralis","ganga-jamuni"]]]},"gs1-2025-3":{"d":"Elucidate","n":"Explain, with examples, how Chandella sculpture shows vigour and the full range of life.","p":[["Context: Chandellas of Bundelkhand, Khajuraho temples (c. 950–1050 CE), Nagara style",["chandel","khajuraho","bundelkhand","nagara","10th","11th"]],["Vigour: dynamic, energetic poses, tribhanga, sense of movement",["vigour","vigor","dynamic","movement","tribhanga","energy","pose"]],["Breadth of life: war, hunting, music, dance, daily chores, processions",["daily life","war","hunt","music","danc","procession","domestic"]],["Surasundaris/apsaras and human emotion, grooming, play",["surasundari","apsara","nayika","women","emotion","mirror"]],["Erotic (mithuna) sculpture and its interpretations",["mithuna","erotic","kama","tantric","maithuna"]],["Religious range: Hindu and Jain temples, deities, Kandariya Mahadeva, Lakshmana",["kandariya","lakshman","jain","parshvanath","deity","shiva","vishnu"]],["Technique: sandstone, high relief, three-dimensional depth, integration with architecture",["sandstone","relief","three-dimensional","3d","carving","integrat"]],["Significance: UNESCO World Heritage Site, peak of medieval sculpture",["unesco","heritage","peak","masterpiece","legacy"]]]},"gs1-2025-4":{"d":"Discuss","n":"Explain how climate change and sea-level rise threaten island nations' existence, with examples.","p":[["Causes: thermal expansion, melting ice, rising sea levels",["thermal expansion","melting","ice","glacier","sea level","warming"]],["Land loss and submergence of low-lying atolls",["submerg","land loss","atoll","low-lying","sinking","inundat"]],["Saltwater intrusion into freshwater and soil",["salt","saline","freshwater","groundwater","intrusion"]],["Coral bleaching, fisheries and livelihood loss",["coral","bleach","fish","livelihood","reef"]],["Stronger cyclones, storm surges, coastal erosion",["cyclone","storm","surge","erosion","extreme"]],["Examples: Tuvalu, Kiribati, Maldives, Marshall Islands, Fiji",["tuvalu","kiribati","maldives","marshall","fiji","pacific"]],["Existential issues: climate migration, sovereignty, loss of culture",["migrat","refugee","sovereign","statehood","culture","existential"]],["Responses: AOSIS, loss and damage fund, adaptation, Falepili treaty",["aosis","loss and damage","adaptation","falepili","sids","cop"]]]},"gs1-2025-5":{"d":"Discuss","n":"Define non-farm primary activities and link each to India's physiography, with examples.","p":[["Definition: primary activities other than farming — fishing, forestry, mining, animal rearing",["definition","non-farm","primary","extract"]],["Fishing: coastline, continental shelf, inland waters",["fish","coast","continental shelf","marine","inland"]],["Forestry and forest products linked to relief and rainfall",["forest","timber","lumber","tendu","bamboo","minor forest"]],["Mining linked to geology, e.g. Chota Nagpur plateau minerals",["mining","mineral","chota nagpur","plateau","coal","iron","geology"]],["Pastoralism and animal rearing in mountains and arid zones",["pastoral","animal","livestock","gaddi","bakarwal","transhum","rajasthan","himalaya"]],["Other examples: salt pans, sericulture, apiculture tied to terrain",["salt","sericult","silk","apicult","honey","quarry"]],["Region-wise examples tying activity to physiography",["himalaya","plateau","desert","coastal","plain","region"]],["Significance and concerns: livelihoods, sustainability",["livelihood","employment","sustainab","degradation"]]]},"gs1-2025-6":{"d":"Explain","n":"Explain briefly the ecological and economic benefits of solar power in India, with examples.","p":[["Ecological: lower carbon emissions, cleaner air, climate targets",["emission","carbon","clean air","pollution","climate","net zero","ndc"]],["Ecological: less water use than thermal power, less fossil extraction",["water","fossil","coal","thermal"]],["Economic: energy security, lower import bill",["security","import","oil","independence"]],["Economic: falling tariffs, cheap power, decentralised supply",["tariff","cheap","cost","decentral","rooftop"]],["Jobs and manufacturing: PLI for modules, rural employment",["job","employment","manufactur","pli","module"]],["Farmers and villages: PM-KUSUM solar pumps, agri-voltaics",["kusum","pump","farmer","agri","irrigation"]],["Examples: Bhadla, Pavagada, Rewa, Modhera solar village, PM Surya Ghar",["bhadla","pavagada","rewa","modhera","surya ghar","rooftop"]],["Global role: International Solar Alliance, 2030 targets",["international solar alliance","isa","500 gw","2030","target"]]]},"gs1-2025-7":{"d":"Explain","n":"Define tsunamis, explain their formation and locations, and their consequences with examples.","p":[["Definition: series of long-wavelength sea waves from sudden displacement of water",["definition","wave","displacement","long wavelength","seismic sea"]],["Causes: undersea earthquakes at subduction zones, landslides, volcanoes, meteorites",["earthquake","subduct","landslide","volcan","fault","meteor"]],["Mechanism: fast in deep ocean, slows and grows near coast",["deep ocean","speed","shoal","height","amplitude","coast"]],["Where: Pacific Ring of Fire, Sunda arc, Makran",["ring of fire","pacific","sunda","sumatra","makran","subduction"]],["Consequences: deaths, coastal destruction, flooding, salinisation",["death","destruct","flood","damage","salin","casualt"]],["Wider effects: nuclear accidents, economy, ecosystems",["fukushima","nuclear","econom","ecosystem","mangrove","coral"]],["Examples: 2004 Indian Ocean, 2011 Tohoku, 2018 Sulawesi/Anak Krakatau",["2004","2011","tohoku","japan","indonesia","sulawesi","krakatau"]],["Mitigation: early warning (INCOIS), mangroves, preparedness",["warning","incois","mangrove","preparedness","evacuat"]]]},"gs1-2025-8":{"d":"Analyse (how does)","n":"Assess how the Smart Cities Mission tackles urban poverty and fair distribution of benefits, and where it falls short.","p":[["Mission basics: area-based development, pan-city ICT solutions",["smart city","mission","area-based","pan-city","ict","100 cities"]],["Poverty angle: affordable housing, basic services, water, sanitation",["housing","affordable","basic services","water","sanitation","slum"]],["Livelihoods and inclusion: street vendors, skills, digital services",["livelihood","vendor","skill","employment","digital"]],["Distributive justice: who benefits, fairness across classes and areas",["distributive","justice","equity","fair","inclusive"]],["Criticism: elite enclaves, small area focus, displacement of the poor",["elite","enclave","displace","exclusion","gentrif","small area"]],["Governance issues: SPVs bypass elected bodies, low participation",["spv","special purpose","municipal","elected","participation","74th"]],["Convergence with PMAY-U, AMRUT, DAY-NULM",["pmay","amrut","nulm","convergence"]],["Way forward: participatory planning, inclusive design, balanced conclusion",["way forward","participat","inclusive","conclusion"]]]},"gs1-2025-9":{"d":"Elucidate","n":"Explain how Indian civil service ethos combines professional competence with a commitment to the nation.","p":[["Historical roots: from ICS to IAS, Patel's 'steel frame'",["steel frame","patel","ics","colonial","all india service"]],["Professionalism: merit, neutrality, expertise, rule of law",["merit","neutral","expertise","professional","rule of law","impartial"]],["Nationalistic consciousness: nation-building, unity and integrity",["nation","unity","integrat","nation-building","patriot"]],["Constitutional values: commitment to the Constitution, public service",["constitution","public service","values","oath"]],["Examples: integration of states, elections, disaster response, welfare delivery",["integration","election","disaster","welfare","v.p. menon","menon"]],["Tensions: committed bureaucracy vs neutrality, politicisation",["committed","politicis","neutrality","tension","political"]],["Reforms: Mission Karmayogi, lateral entry, ethics training",["karmayogi","lateral","reform","training","2nd arc","arc"]],["Conclusion tying professionalism and nationalism",["conclusion","balance","synthesis"]]]},"gs1-2025-10":{"d":"Justify (opinion)","n":"Give a reasoned view on whether globalisation produces only aggressive consumerism, with both sides.","p":[["Clear stand: not only consumerism",["stand","opinion","not only","disagree","partly"]],["Yes side: consumerism, brands, advertising, materialism, debt",["consumer","brand","advertis","material","mall","debt","e-commerce"]],["Cultural effects: homogenisation, westernisation",["homogen","westerni","cultural","mcdonald"]],["Other side: jobs, technology, growth, poverty reduction",["job","technolog","growth","poverty","income"]],["Knowledge and rights: ideas, education, awareness, women's empowerment",["knowledge","education","awareness","rights","women"]],["Glocalisation and cultural revival (yoga, handloom exports)",["glocal","yoga","handloom","revival","export","diaspora"]],["Negative non-consumer effects: inequality, environment",["inequal","environment","waste"]],["Balanced conclusion",["conclusion","balance","both"]]]},"gs1-2025-11":{"d":"Discuss","n":"Discuss how Jotirao Phule's writings and reforms addressed the full range of subaltern groups.","p":[["Context: 19th-century caste hierarchy and Brahmanical dominance",["caste","brahmin","hierarchy","19th","subaltern"]],["Writings: Gulamgiri, Shetkaryacha Asud, Tritiya Ratna",["gulamgiri","shetkaryacha","asud","tritiya ratna","book","writing"]],["Satyashodhak Samaj (1873) and anti-caste movement",["satyashodhak","1873","samaj","anti-caste"]],["Women: girls' school with Savitribai (1848), widows, infanticide home",["savitribai","girl","women","school","1848","widow","infanticide"]],["Shudras and Ati-Shudras: education, water tank opened to untouchables",["shudra","untouchab","dalit","ati-shudra","water","tank"]],["Peasants and workers: exploitation by moneylenders and officials",["peasant","farmer","cultivator","worker","moneylender","shetkari"]],["Method: rationalism, critique of scriptures, Bali Raja imagery",["rational","scripture","bali","myth","critique"]],["Legacy: influence on Ambedkar, non-Brahmin movement",["ambedkar","non-brahmin","legacy","mahatma"]]]},"gs1-2025-12":{"d":"Trace","n":"Trace, step by step, how India consolidated itself after independence across polity, economy, education and foreign policy.","p":[["Polity: integration of princely states, Constitution, elections",["princely","integrat","constitution","election","1952","patel"]],["Polity: linguistic reorganisation of states (1956)",["linguistic","reorganis","1956","sraa","potti"]],["Economy: mixed economy, Five-Year Plans, Planning Commission",["mixed economy","five-year","plan","planning commission","mahalanobis"]],["Economy: land reforms, public sector, heavy industry",["land reform","zamindari","public sector","heavy industr","steel"]],["Education: IITs, UGC, Kothari Commission, scientific institutions",["iit","ugc","kothari","education","radhakrishnan","university"]],["International relations: Non-Alignment, Panchsheel, NAM",["non-align","nam","panchsheel","bandung","foreign policy"]],["Challenges: partition refugees, food shortages, Kashmir, 1962 war",["refugee","partition","food","kashmir","1962"]],["Chronological flow and assessment",["chronolog","phase","conclusion","assess"]]]},"gs1-2025-13":{"d":"Explain","n":"Explain how the French Revolution's ideas and outcomes still matter in today's world.","p":[["Core ideas: liberty, equality, fraternity",["liberty","equality","fraternity"]],["Popular sovereignty and democracy, end of divine right",["sovereign","democra","divine right","republic","monarch"]],["Rights: Declaration of the Rights of Man, human rights charters",["rights of man","declaration","human rights","udhr"]],["Nationalism and the nation-state",["nationalis","nation-state","nation"]],["Secularism and separation of church and state",["secular","church","religion"]],["Legal and administrative legacy: Napoleonic Code, metric system",["napoleon","code","civil code","metric"]],["Contemporary relevance: Indian Preamble, protest movements, social justice",["preamble","india","protest","movement","today","contemporary"]],["Limits: Reign of Terror, violence, lessons",["terror","violence","robespierre","limit"]]]},"gs1-2025-14":{"d":"Explain and differentiate","n":"Explain the geographic distribution of offshore oil and how it differs from onshore oil.","p":[["Origin: marine organic matter in sedimentary basins, source and reservoir rocks",["sediment","organic","marine","source rock","reservoir","trap"]],["Offshore on continental shelves and margins",["continental shelf","margin","shelf","slope","deep water"]],["Major offshore regions: Persian Gulf, North Sea, Gulf of Mexico, Brazil pre-salt, West Africa",["persian gulf","north sea","gulf of mexico","brazil","pre-salt","nigeria","angola"]],["India's offshore: Mumbai High, KG Basin",["mumbai high","bombay high","kg basin","krishna","godavari"]],["Onshore distribution: Middle East, Russia, US shale, Venezuela; Assam in India",["onshore","russia","shale","venezuela","assam","digboi","texas"]],["Differences: technology, rigs, cost, depth, environmental risk",["rig","platform","cost","technolog","spill","depth"]],["Differences: geology and scale of fields, access and logistics",["geolog","scale","access","pipeline","logistic"]],["Map or diagram and conclusion",["map","diagram","conclusion"]]]},"gs1-2025-15":{"d":"Explain (how)","n":"Show practical ways AI and drones, combined with GIS and remote sensing, improve location and area planning.","p":[["Basics: GIS layers data; RS gives satellite imagery; AI analyses; drones give high-resolution data",["gis","remote sensing","satellite","imagery","drone","uav"]],["AI uses: pattern detection, prediction, land-use classification",["machine learning","predict","classif","pattern","ai"]],["Urban planning: land use, zoning, traffic, smart cities",["urban","land use","zoning","traffic","master plan"]],["Land records: SVAMITVA drone mapping",["svamitva","land record","property","cadastral"]],["Agriculture and resources: crop monitoring, watersheds",["crop","agricultur","watershed","soil","irrigation"]],["Disaster and infrastructure: flood mapping, site selection, PM Gati Shakti",["disaster","flood","site selection","gati shakti","infrastructure"]],["Challenges: data privacy, skills, cost, drone rules",["privacy","skill","cost","regulat","drone rules"]],["Way forward",["way forward","conclusion"]]]},"gs1-2025-16":{"d":"Discuss","n":"Explain how plate tectonics changes the shape and size of continents and ocean basins over time.","p":[["Theory: continental drift (Wegener) to plate tectonics, sea-floor spreading",["wegener","continental drift","plate tectonic","sea-floor spread","hess"]],["Divergent boundaries: new crust, widening oceans (Mid-Atlantic Ridge, Red Sea)",["divergent","ridge","mid-atlantic","red sea","spreading","rift"]],["Convergent boundaries: subduction, trenches, oceans shrink (Pacific)",["convergent","subduct","trench","pacific","shrink"]],["Collision: mountain building, Himalaya from India–Eurasia",["collision","himalaya","eurasia","fold mountain","orogen"]],["Transform boundaries: San Andreas",["transform","san andreas","fault"]],["Supercontinent cycle: Pangaea, Gondwana, Laurasia",["pangaea","gondwana","laurasia","supercontinent"]],["Driving forces: mantle convection, slab pull, ridge push",["convection","mantle","slab pull","ridge push"]],["Diagram and conclusion",["diagram","conclusion"]]]},"gs1-2025-17":{"d":"Discuss","n":"Explain population distribution and density across the Ganga basin in relation to land, soil and water.","p":[["Overview: one of the world's densest regions, a large share of India's people",["dense","density","population","crore","largest"]],["Land: flat alluvial plains, gentle slope help settlement",["plain","flat","alluvial","gentle slope","relief"]],["Soil: fertile alluvium, khadar and bhangar",["alluvi","fertile","khadar","bhangar","soil"]],["Water: perennial rivers, groundwater, canals",["perennial","groundwater","canal","irrigation","river"]],["Regional variation: higher density in middle and lower basin, lower in hills and dry west",["bihar","west bengal","uttar pradesh","delta","variation","hill","uttarakhand"]],["Urban centres and history: Kanpur, Patna, Varanasi, Kolkata",["kanpur","patna","varanasi","kolkata","urban","city"]],["Pressures: floods, fragmented land, pollution",["flood","pressure","fragment","pollution","namami gange"]],["Map and conclusion",["map","conclusion"]]]},"gs1-2025-18":{"d":"Account for and illustrate","n":"Explain why fast food keeps growing despite health concerns, using Indian examples.","p":[["Urbanisation and busy lifestyles, nuclear families, working women",["urban","lifestyle","busy","working women","nuclear family","time"]],["Rising incomes, young population, aspirations",["income","youth","young","aspiration","middle class"]],["Marketing and delivery apps: Zomato, Swiggy, quick commerce",["marketing","advertis","zomato","swiggy","delivery","app"]],["Taste, low cost, convenience, eating out as social activity",["taste","cheap","convenien","social","habit"]],["Globalisation and franchises; Indianised menus",["globali","franchise","mcdonald","domino","kfc","glocal"]],["Health concerns: obesity, diabetes, NCDs",["obesity","diabet","ncd","heart","lifestyle disease"]],["Responses: FSSAI rules, Eat Right India, labelling",["fssai","eat right","label","regulation","tax"]],["Balanced conclusion: awareness and healthy alternatives",["conclusion","awareness","millet","healthy"]]]},"gs1-2025-19":{"d":"Comment","n":"Give a reasoned opinion on the conflict between green growth and poor people's needs in India, and how to reconcile them.","p":[["Sustainable growth and environmental protection defined",["sustainab","environment","green","protect"]],["Where conflict arises: forests and mining vs tribal livelihoods",["forest","mining","tribal","livelihood","adivasi"]],["Energy: coal phase-out vs cheap power and jobs",["coal","energy","cheap power","jobs","just transition"]],["Conservation displacing communities: protected areas, dams",["protected area","displace","dam","conservation","sanctuary"]],["Costs of green rules for poor: fuel, farming curbs, informal sector",["cost","fuel","informal","stubble","regulation"]],["Counterpoint: poor suffer most from environmental damage",["poor suffer","vulnerab","climate","pollution"]],["Reconciliation: FRA, MGNREGA green works, LPG, just transition, green jobs",["fra","forest rights","mgnrega","ujjwala","lpg","just transition","green job"]],["Balanced conclusion",["conclusion","balance","both"]]]},"gs1-2025-20":{"d":"Opinion","n":"State and defend a view on whether tribal development is only about displacement and rehabilitation.","p":[["Clear stand with reasoning",["stand","opinion","agree","disagree","partly"]],["Displacement: dams, mines, industry, protected areas",["displace","dam","mine","mining","industr","sardar sarovar","niyamgiri"]],["Rehabilitation: RFCTLARR Act 2013, weak implementation",["rehabilitat","resettle","larr","2013","compensation"]],["Other axes: education, health, livelihoods",["education","health","livelihood","eklavya","school"]],["Rights and self-rule: Fifth and Sixth Schedule, PESA, FRA",["pesa","fra","forest rights","fifth schedule","sixth schedule","gram sabha"]],["Culture and identity, tribal sub-plan",["culture","identity","sub-plan","tsp"]],["Recent schemes: PM-JANMAN for PVTGs, Dharti Aaba abhiyan",["janman","pvtg","dharti aaba","van dhan"]],["Balanced conclusion",["conclusion","balance"]]]}};
+</script>
+<script>
 const PK = ['gs1','gs2','gs3','gs4'];
 const P = window.PYQ || {};
 const ALL = [];
@@ -1618,7 +1746,7 @@ function renderHeatmap(animate){
   $('legendCells').innerHTML=`<i style="background:var(--surface-2)" title="None"></i>`+RAMP.map(c=>`<i style="background:rgb(${c})"></i>`).join('');
 }
 
-function scrollToList(){ const t=$('toolbar'); window.scrollTo({ top: t.getBoundingClientRect().top + window.scrollY - 4, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); }
+function scrollToList(){ const l=$('launch'); if (l.getBoundingClientRect().top < 0) l.scrollIntoView({block:'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'}); l.animate && !matchMedia('(prefers-reduced-motion: reduce)').matches && l.animate([{boxShadow:'0 0 0 3px var(--marigold)'},{boxShadow:'0 0 0 0 transparent'}],{duration:700}); }
 
 function renderFilters(){
   const years=yearsOf(S.k), topics=topicsOf(S.k);
@@ -1652,64 +1780,247 @@ function hl(text){
 const ICON_DONE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 const ICON_SAVE='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3.2l2.6 5.5 6 .8-4.4 4.2 1.1 6-5.3-2.9-5.3 2.9 1.1-6L3.4 9.5l6-.8z"/></svg>';
 
-function renderResults(){
-  const list=ALL.filter(matches);
-  const cross = S.scope==='all' && S.q;
-  // order: paper, year desc, then paper order
+function currentList(){
+  const list=ALL.filter(matches), cross = S.scope==='all' && S.q;
   const order = new Map(); ALL.forEach((x,i)=>order.set(x.id,i));
-  list.sort((a,b)=> (cross ? PK.indexOf(a.k)-PK.indexOf(b.k) : 0) || b.y-a.y || order.get(a.id)-order.get(b.id));
-  const shown=list.slice(0,S.limit);
-  const filtered = S.q || S.year!=='all' || S.topic!=='all' || S.show!=='all';
-  $('clear').hidden = !filtered;
-  let scopeTxt = cross ? 'all four papers' : label(S.k);
-  $('count').innerHTML = `<b>${list.length}</b> question${list.length===1?'':'s'} in ${scopeTxt}` + (S.topic!=='all'&&!cross?` on <b>${esc(S.topic)}</b>`:'') + (S.year!=='all'&&!cross?` from <b>${S.year}</b>`:'');
-  if (!list.length){
-    $('results').innerHTML = `<div class="empty"><h3>No questions match</h3><p>${S.show==='saved'?'Bookmark a question with the star to find it here later.':S.show==='done'?'Tick a question once you have practised it.':'Try a shorter search, or clear the filters.'}</p></div>`;
-    return;
-  }
-  let h='', cur='';
-  for (const x of shown){
-    const g=x.k+x.y;
-    if (g!==cur){
-      if (cur) h+='</div>';
-      cur=g;
-      const fmt=P[x.k].data[x.y].fmt||'';
-      h+=`<div class="ygroup"><div class="yhead"><h3>${x.y}<small>${cross?label(x.k):P[x.k].name.replace('General Studies','GS Paper')}</small></h3>
-        <div class="ymeta"><span>${esc(fmt)}</span><a class="pdf" href="${pdfOf(x.k,x.y)}" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 10.5l5 5 5-5"/><path d="M5 20h14"/></svg>Download official paper (${x.y})</a></div></div>`;
-    }
-    const d=!!prog.done[x.id], s=!!prog.saved[x.id];
-    h+=`<article class="q ${d?'is-done':''}" data-id="${x.id}">
-      <div class="num">Q${esc(x.n)}</div>
-      <div class="txt">${hl(x.q)}</div>
-      <div class="acts">
-        <button class="act done" aria-pressed="${d}" title="Mark as practised" aria-label="Mark Q${esc(x.n)} ${x.y} as practised">${ICON_DONE}</button>
-        <button class="act save" aria-pressed="${s}" title="Bookmark" aria-label="Bookmark Q${esc(x.n)} ${x.y}">${ICON_SAVE}</button>
-      </div>
-      <div class="meta">${cross?`<span class="chip paper">${label(x.k)}</span>`:''}<button class="chip" data-topic="${esc(x.t)}" data-k="${x.k}">${esc(x.t)}</button><span class="chip marks">${esc(x.m)} marks</span></div>
-    </article>`;
-  }
-  h+='</div>';
-  if (list.length>shown.length) h+=`<button class="more" id="more">Show ${Math.min(60,list.length-shown.length)} more of ${list.length-shown.length} remaining</button>`;
-  $('results').innerHTML=h;
-  const more=$('more'); if (more) more.onclick=()=>{ S.limit+=60; renderResults(); };
+  return list.sort((a,b)=> (cross ? PK.indexOf(a.k)-PK.indexOf(b.k) : 0) || b.y-a.y || order.get(a.id)-order.get(b.id));
+}
+function scopeText(){
+  const cross = S.scope==='all' && S.q;
+  return (cross ? 'All four papers' : P[S.k].name.replace('General Studies','GS Paper')) + (S.topic!=='all'&&!cross?` · ${S.topic}`:'') + (S.year!=='all'&&!cross?` · ${S.year}`:'') + (S.q?` · “${S.q}”`:'') + ({todo:' · not practised',done:' · practised',saved:' · bookmarked'}[S.show]||'');
+}
+function renderResults(){   // updates the launch bar
+  const list=currentList();
+  $('clear').hidden = !(S.q || S.year!=='all' || S.topic!=='all' || S.show!=='all');
+  $('count').innerHTML = `<b>${list.length}</b> question${list.length===1?'':'s'} · ${esc(scopeText())}`;
+  const d=list.filter(x=>prog.done[x.id]).length;
+  $('lsub').textContent = list.length ? `${d} practised, ${list.length-d} to go` : (S.show==='saved'?'Bookmark questions with the star to find them here.':'Try a shorter search, or clear the filters.');
+  $('start').disabled = !list.length;
+  $('start').textContent = list.length ? `Start · ${list.length} question${list.length===1?'':'s'}` : 'No questions';
+  $('resume').hidden = !V.ids.length;
+  if (V.ids.length) $('resume').textContent = `Resume (${V.i+1} of ${V.ids.length})`;
 }
 
-$('results').addEventListener('click', e => {
-  const a=e.target.closest('.act'); 
-  if (a){
-    const id=a.closest('.q').dataset.id, key=a.classList.contains('done')?'done':'saved';
-    if (prog[key][id]) delete prog[key][id]; else prog[key][id]=Date.now();
-    saveProg();
-    const on=!!prog[key][id]; a.setAttribute('aria-pressed',on);
-    if (key==='done'){ a.closest('.q').classList.toggle('is-done',on); renderPapers(); }
-    return;
-  }
-  const c=e.target.closest('.chip[data-topic]');
-  if (c){ if (c.dataset.k!==S.k){ S.k=c.dataset.k; history.replaceState(null,'','#'+S.k); }
-    S.scope='paper'; S.q=''; $('q').value=''; setFilter({topic:c.dataset.topic, year:'all'}); renderAll(false); scrollToList(); }
+/* ---------- split view ---------- */
+const BYID = Object.fromEntries(ALL.map(x=>[x.id,x]));
+let V = { ids:[], i:0, label:'', q:'' };
+try { const v=JSON.parse(localStorage.getItem('pyq-mains-view')||'null'); if (v && Array.isArray(v.ids)){ const ids=v.ids.filter(id=>BYID[id]); if (ids.length) V={ ids, i:Math.min(v.i||0,ids.length-1), label:v.label||'', q:v.q||'' }; } } catch(e){}
+const saveV = () => { try { localStorage.setItem('pyq-mains-view', JSON.stringify(V)); } catch(e){} };
+let extra = null;   // a related question opened from "same topic" (not in the list)
+function hlq(text){ let h=esc(text); if (!V.q) return h; const w=V.q.split(/\s+/).filter(w=>w.length>1).map(w=>w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')); return w.length ? h.replace(new RegExp(`(${w.join('|')})`,'gi'),'<mark>$1</mark>') : h; }
+function openView(ids, lab){
+  if (ids){ V = { ids, i:0, label:lab, q:S.q }; saveV(); }
+  extra=null; $('sv').hidden=false; $('sv').classList.remove('detail'); document.body.style.overflow='hidden';
+  renderList(); renderDetail();
+  if (matchMedia('(min-width:861px)').matches) $('svList').querySelector('.cur')?.scrollIntoView({block:'center'});
+}
+function closeView(){ bsStop(); saveV(); $('sv').hidden=true; document.body.style.overflow=''; renderPapers(); renderResults(); }
+function renderList(){
+  $('svTitle').textContent = V.label;
+  let h='', g='';
+  V.ids.forEach((id,i) => { const x=BYID[id]; const gg=x.k+x.y;
+    if (gg!==g){ g=gg; h+=`<div class="sv-yh">${x.y} · ${label(x.k)}</div>`; }
+    h+=`<button class="sv-item${i===V.i&&!extra?' cur':''}${prog.done[id]?' is-done':''}" data-i="${i}"${i===V.i&&!extra?' aria-current="true"':''}><span class="m"><span class="n">Q${esc(x.n)}</span>${esc(x.t)}<span class="f">${prog.done[id]?'<i class="d">✓ done</i>':''}${prog.saved[id]?'<i class="s">★</i>':''}</span></span><span class="x">${hlq(x.q)}</span></button>`;
+  });
+  $('svList').innerHTML=h;
+}
+function renderDetail(){
+  const x = extra ? BYID[extra] : BYID[V.ids[V.i]], d=!!prog.done[x.id], s=!!prog.saved[x.id];
+  $('svSub').textContent = extra ? 'Related question' : `Question ${V.i+1} of ${V.ids.length}`;
+  const fmt=(P[x.k].data[x.y]||{}).fmt||'';
+  const rel = ALL.filter(o=>o.k===x.k && o.t===x.t && o.id!==x.id).sort((a,b)=>b.y-a.y).slice(0,6);
+  $('svDetail').innerHTML = `<div class="sv-in">
+    <div class="sv-kick">${P[x.k].name.replace('General Studies','GS Paper')} · ${x.y} · Q${esc(x.n)}</div>
+    <h2 class="sv-q">${hlq(x.q)}</h2>
+    <div class="sv-chips"><span class="chip">${esc(x.t)}</span><span class="chip marks">${esc(x.m)} marks</span>${(()=>{ const w=((fmt.split('·').find(f=>f.includes(x.m+' marks'))||'').match(/\d+\s*words/)||[])[0]; return w?`<span class="chip marks">${w}</span>`:''; })()}</div>
+    <div class="sv-acts">
+      <button class="lbtn dn" id="svDone" aria-pressed="${d}">${ICON_DONE}${d?'Practised':'Mark as practised'}</button>
+      <button class="lbtn sa" id="svSave" aria-pressed="${s}">${ICON_SAVE}${s?'Bookmarked':'Bookmark'}</button>
+      ${BS_ENABLED?`<button class="lbtn bsb" id="svBs" aria-pressed="${BS.on}">${ICON_MIC}${BS.on?'Brainstorming':'Brainstorm'}</button>`:''}
+      <a class="lbtn" href="${pdfOf(x.k,x.y)}" download>Download ${x.y} paper</a>
+    </div>
+    <div id="bsWrap"></div>
+    ${rel.length?`<div class="sv-rel"><h4>More on this topic</h4>${rel.map(o=>`<button data-rel="${o.id}"><b>${o.y} · Q${esc(o.n)}</b>${esc(o.q.length>150?o.q.slice(0,150)+'…':o.q)}</button>`).join('')}</div>`:''}
+    <div class="sv-nav">${extra?`<button class="lbtn" id="svRet">‹ Back to question ${V.i+1}</button><span></span>`:`<button class="lbtn" id="svPrev" ${V.i===0?'style="visibility:hidden"':''}>‹ Previous</button><span class="sv-keys"><kbd>↑</kbd> <kbd>↓</kbd> move · <kbd>P</kbd> practised · <kbd>S</kbd> bookmark</span><button class="lbtn go" id="svNext" ${V.i===V.ids.length-1?'style="visibility:hidden"':''}>Next ›</button>`}</div>
+  </div>`;
+  $('svDetail').scrollTop=0;
+  bsRender(x);
+}
+function goV(i){ if (i<0||i>=V.ids.length) return; bsStop(); V.i=i; extra=null; saveV(); renderList(); renderDetail(); $('svList').querySelector('.cur')?.scrollIntoView({block:'nearest'}); }
+function toggleV(key){
+  const id = extra || V.ids[V.i]; if (prog[key][id]) delete prog[key][id]; else prog[key][id]=Date.now(); saveProg(); renderList();
+  const on=!!prog[key][id], b=$(key==='done'?'svDone':'svSave');   // update in place so a brainstorm in progress is kept
+  if (b){ b.setAttribute('aria-pressed',on); b.innerHTML = key==='done' ? ICON_DONE+(on?'Practised':'Mark as practised') : ICON_SAVE+(on?'Bookmarked':'Bookmark'); }
+}
+$('svList').addEventListener('click', e => { const b=e.target.closest('[data-i]'); if (!b) return; goV(+b.dataset.i); $('sv').classList.add('detail'); });
+$('svDetail').addEventListener('click', e => {
+  if (e.target.closest('#svBs')) return bsToggle();
+  if (e.target.closest('#svDone')) return toggleV('done');
+  if (e.target.closest('#svSave')) return toggleV('saved');
+  if (e.target.closest('#svPrev')) return goV(V.i-1);
+  if (e.target.closest('#svNext')) return goV(V.i+1);
+  if (e.target.closest('#svRet')) return goV(V.i);
+  const r=e.target.closest('[data-rel]');
+  if (r){ const j=V.ids.indexOf(r.dataset.rel); if (j>=0) goV(j); else { extra=r.dataset.rel; renderList(); renderDetail(); } }
 });
 
-let tmr; $('q').addEventListener('input', e => { clearTimeout(tmr); tmr=setTimeout(()=>{ S.q=e.target.value.trim(); S.limit=60; renderFilters(); renderResults(); },140); });
+/* ---------- brainstorm mode ---------- */
+const BRAIN_API = "";
+const BS_ENABLED = false;
+const RUB = window.RUB || {};
+const ICON_MIC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let bsStore = { drafts:{}, hist:{}, lang:'en-IN' };
+try { bsStore = Object.assign(bsStore, JSON.parse(localStorage.getItem('pyq-brain')||'{}')); } catch(e){}
+const bsSave = () => { try { localStorage.setItem('pyq-brain', JSON.stringify(bsStore)); } catch(e){} };
+const BS = { on: (()=>{ try { return localStorage.getItem('pyq-brain-on')==='1'; } catch(e){ return false; } })(), id:null, rec:null, want:false, t0:0, secs:0, tick:null, busy:false };
+const escS = v => esc(String(v==null?'':v));
+const words = t => (t.trim().match(/\S+/g)||[]).length;
+const fmtT = s => `${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;
+const DIRECTIVE_TIPS = [
+  [/critically (examine|analy[sz]e|evaluate)/i, 'Critically examine: cover both sides, then give your own reasoned judgement.'],
+  [/\btrace\b/i, 'Trace: show the development step by step, in order.'],
+  [/\b(justify|comment|opinion|do you (agree|think))/i, 'Opinion: take a clear stand and back it with reasons and examples.'],
+  [/\belucidate\b/i, 'Elucidate: explain and clarify with examples.'],
+  [/\bexamine\b/i, 'Examine: probe the issue in depth, looking at its main aspects.'],
+  [/\bdiscuss\b/i, 'Discuss: cover the issue broadly, from several angles.'],
+  [/\bexplain\b/i, 'Explain: give causes, mechanism and effects, with examples.']];
+
+function bsToggle(){
+  BS.on = !BS.on; try { localStorage.setItem('pyq-brain-on', BS.on?'1':'0'); } catch(e){}
+  if (!BS.on) bsStop();
+  const b=$('svBs'); if (b){ b.setAttribute('aria-pressed',BS.on); b.innerHTML=ICON_MIC+(BS.on?'Brainstorming':'Brainstorm'); }
+  bsRender(extra ? BYID[extra] : BYID[V.ids[V.i]]);
+  if (BS.on) $('bsWrap').scrollIntoView({block:'nearest', behavior:'smooth'});
+}
+function bsRender(x){
+  const w=$('bsWrap'); if (!w) return; BS.id=x.id;
+  if (!BS.on || !BS_ENABLED){ w.innerHTML=''; return; }
+  const r=RUB[x.id], tip=(DIRECTIVE_TIPS.find(([re])=>re.test(x.q))||[])[1];
+  w.innerHTML = `<div class="bs">
+    <div class="bs-head"><b>Brainstorm</b><p>Think aloud: say every point you would put in your answer, in any order. Then check how well you hit the demand.${r?` This question asks you to <b>${escS(r.d.toLowerCase())}</b>.`:tip?` ${escS(tip)}`:''}</p></div>
+    <div class="bs-rec">
+      <button class="mic" id="bsMic" aria-pressed="false" aria-label="Start speaking" ${SR?'':'disabled'}>${ICON_MIC}</button>
+      <div><div class="bs-status" id="bsStatus">${SR?'Tap the mic and start speaking':'Voice input needs Chrome or Edge. You can type your points below.'}</div>
+      <div class="bs-meta"><span id="bsTime">${fmtT(0)}</span>·<span id="bsWords">0 words</span>${SR?`·<select id="bsLang" aria-label="Language"><option value="en-IN">English (India)</option><option value="hi-IN">Hindi</option><option value="en-US">English (US)</option></select>`:''}</div></div>
+    </div>
+    <textarea id="bsText" placeholder="Your spoken points appear here. You can also type, or fix words the mic got wrong." aria-label="Your brainstorm"></textarea>
+    <div class="bs-interim" id="bsInterim"></div>
+    <div class="bs-btns"><button class="lbtn go" id="bsCheck">Check my brainstorm</button><button class="lbtn" id="bsClear">Clear</button>
+      <span class="bs-note">${BRAIN_API?'Marked by AI against the question’s demand.':r?'Quick check: matches your points against a marking checklist.':'No checklist for this question yet.'}</span></div>
+    <div id="bsOut"></div>
+    <div class="bs-hist" id="bsHist"></div>
+  </div>`;
+  const ta=$('bsText'); ta.value = bsStore.drafts[x.id] || ''; bsCount();
+  if ($('bsLang')){ $('bsLang').value = bsStore.lang; $('bsLang').onchange = e => { bsStore.lang=e.target.value; bsSave(); if (BS.want){ bsStop(); bsStart(); } }; }
+  ta.oninput = () => { bsStore.drafts[x.id]=ta.value; bsSave(); bsCount(); };
+  $('bsMic').onclick = () => BS.want ? bsStop() : bsStart();
+  $('bsClear').onclick = () => { if (ta.value && !confirm('Clear this brainstorm?')) return; ta.value=''; delete bsStore.drafts[x.id]; bsSave(); bsCount(); $('bsOut').innerHTML=''; BS.secs=0; $('bsTime').textContent=fmtT(0); };
+  $('bsCheck').onclick = () => bsCheck(x);
+  BS.secs = 0; bsHist(x.id);
+  const last=(bsStore.hist[x.id]||[]).slice(-1)[0]; if (last && last.res && last.text===ta.value) bsShow(x, last.res, last.kind);
+}
+function bsCount(){ const t=$('bsText'); if (t) $('bsWords').textContent = `${words(t.value)} word${words(t.value)===1?'':'s'}`; }
+function bsStart(){
+  if (!SR) return;
+  const rec = new SR(); BS.rec=rec; BS.want=true;
+  rec.lang = bsStore.lang || 'en-IN'; rec.continuous = true; rec.interimResults = true;
+  rec.onresult = e => {
+    let interim='';
+    for (let i=e.resultIndex;i<e.results.length;i++){
+      const r=e.results[i], t=r[0].transcript;
+      if (r.isFinal){ const ta=$('bsText'); if (!ta) continue; ta.value = (ta.value.trim() ? ta.value.replace(/\s*$/,'')+' ' : '') + t.trim(); bsStore.drafts[BS.id]=ta.value; bsSave(); bsCount(); ta.scrollTop=ta.scrollHeight; }
+      else interim += t;
+    }
+    const iv=$('bsInterim'); if (iv) iv.textContent = interim;
+  };
+  rec.onerror = e => {
+    if (e.error==='not-allowed' || e.error==='service-not-allowed'){ BS.want=false; bsUi(false, 'Microphone access is blocked. Allow it in your browser’s site settings, or type instead.'); }
+    else if (e.error==='no-speech'){ /* keeps listening */ }
+    else if (e.error==='network'){ BS.want=false; bsUi(false, 'Voice input needs an internet connection. You can type instead.'); }
+  };
+  rec.onend = () => { if (BS.want && BS.rec===rec){ try { rec.start(); } catch(e){ BS.want=false; bsUi(false); } } else bsUi(false); };
+  try { rec.start(); } catch(e){ BS.want=false; return; }
+  BS.t0 = Date.now(); clearInterval(BS.tick);
+  BS.tick = setInterval(() => { const el=$('bsTime'); if (el) el.textContent = fmtT(BS.secs + (Date.now()-BS.t0)/1000); }, 500);
+  bsUi(true);
+}
+function bsStop(){
+  BS.want=false; if (BS.rec){ try { BS.rec.stop(); } catch(e){} BS.rec=null; }
+  if (BS.t0){ BS.secs += (Date.now()-BS.t0)/1000; BS.t0=0; }
+  clearInterval(BS.tick); bsUi(false);
+  const iv=$('bsInterim'); if (iv) iv.textContent='';
+}
+function bsUi(on, msg){
+  const m=$('bsMic'), st=$('bsStatus'); if (!m) return;
+  m.setAttribute('aria-pressed', on); m.setAttribute('aria-label', on?'Stop':'Start speaking');
+  st.textContent = msg || (on ? 'Listening… tap again to pause' : (words($('bsText').value) ? 'Paused. Tap the mic to add more, or check your brainstorm.' : 'Tap the mic and start speaking'));
+}
+function quickCheck(x, text){
+  const r=RUB[x.id]; const t=' '+text.toLowerCase().replace(/[^a-z0-9ऀ-ॿ:.\- ]+/g,' ').replace(/\s+/g,' ')+' ';
+  const hit=[], miss=[];
+  r.p.forEach(([pt,kw]) => { const f=kw.find(k=>t.includes(' '+k)); (f?hit:miss).push(f?{point:pt, evidence:`You mentioned “${f}”`}:{point:pt, tip:'Add this: '+kw.slice(0,3).join(', ')}); });
+  const score = Math.round(20*hit.length/r.p.length)/2;
+  return { score, band: score>=8?'Excellent':score>=6.5?'Good':score>=5?'Fair':score>=3?'Weak':'Off target',
+    directive:{ followed:null, note:`${r.d}: ${r.n}` }, covered:hit, missed:miss, extras:[],
+    feedback: `You touched ${hit.length} of the ${r.p.length} points on the checklist. This quick check only looks for key words, so it cannot judge how well you argued a point.`, outline:null };
+}
+async function bsCheck(x){
+  const text=($('bsText').value||'').trim(), out=$('bsOut');
+  if (words(text) < 8){ out.innerHTML = `<div class="bs-err">Say or type a few more points first (at least 8 words).</div>`; return; }
+  if (BS.busy) return; bsStop();
+  if (!BRAIN_API){
+    if (!RUB[x.id]){ out.innerHTML = `<div class="bs-err">There is no marking checklist for this question yet, and AI marking isn’t switched on for this site.</div>`; return; }
+    const res=quickCheck(x,text); bsRecord(x,text,res,'quick'); bsShow(x,res,'quick'); return;
+  }
+  BS.busy=true; const b=$('bsCheck'); b.disabled=true; b.textContent='Checking…';
+  try {
+    const r = await fetch(BRAIN_API, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ id:x.id, text }) });
+    const res = await r.json().catch(()=>({ ok:false, error:'Unexpected reply from the marker.' }));
+    if (!res.ok) throw new Error(res.error || 'The marker could not check this.');
+    bsRecord(x,text,res,'ai'); if (BS.id===x.id) bsShow(x,res,'ai');
+  } catch(e){
+    if (BS.id!==x.id) return;
+    out.innerHTML = `<div class="bs-err">${escS(e.message==='Failed to fetch'?'Could not reach the marker. Check your connection.':e.message)}</div>` + (RUB[x.id]?`<div class="bs-btns"><button class="lbtn" id="bsQuick">Use the quick check instead</button></div>`:'');
+    const q=$('bsQuick'); if (q) q.onclick=()=>{ const res=quickCheck(x,text); bsRecord(x,text,res,'quick'); bsShow(x,res,'quick'); };
+  } finally { BS.busy=false; const b2=$('bsCheck'); if (b2){ b2.disabled=false; b2.textContent='Check my brainstorm'; } }
+}
+function bsRecord(x,text,res,kind){ (bsStore.hist[x.id] = bsStore.hist[x.id]||[]).push({ at:Date.now(), score:res.score, kind, text, res }); bsStore.hist[x.id]=bsStore.hist[x.id].slice(-10); bsSave(); bsHist(x.id); }
+function bsHist(id){
+  const h=bsStore.hist[id]||[], el=$('bsHist'); if (!el) return;
+  el.innerHTML = h.length ? 'Your attempts: ' + h.slice(-6).map(a=>`<span title="${a.kind==='ai'?'AI marking':'Quick check'}">${new Date(a.at).toLocaleDateString('en-IN',{day:'numeric',month:'short'})} · ${a.score}/10${a.kind==='quick'?'*':''}</span>`).join('') + (h.some(a=>a.kind==='quick')?' <em style="font-size:12px">* quick check</em>':'') : '';
+}
+function bsShow(x,res,kind){
+  const r=RUB[x.id], o=res.outline, d=res.directive||{};
+  const li=(arr,f)=>arr.map(f).join('');
+  $('bsOut').innerHTML = `<div class="bs-res">
+    <div class="bs-top"><div class="bs-score" style="--v:${res.score*10}"><b>${res.score}</b><span>out of 10</span></div>
+      <div><div class="bs-band">${escS(res.band)}</div><div class="bs-kind">${kind==='ai'?'AI marking against the question’s demand. A practice guide, not a UPSC score.':'Quick check by key words. An estimate only.'}${res.remaining!=null?` · ${res.remaining} checks left today`:''}</div></div></div>
+    ${d.note?`<div class="bs-dir ${d.followed===false?'no':d.followed?'ok':''}">${d.followed===true?'<b>✓ Directive handled.</b> ':d.followed===false?'<b>✗ Directive missed.</b> ':'<b>What it asks:</b> '}${escS(d.note)}</div>`:''}
+    ${res.covered&&res.covered.length?`<div class="bs-sec ok"><h4>You covered</h4><ul>${li(res.covered,c=>`<li>${escS(c.point)}${c.evidence?`<small>${escS(c.evidence)}</small>`:''}</li>`)}</ul></div>`:''}
+    ${res.missed&&res.missed.length?`<div class="bs-sec no"><h4>You missed</h4><ul>${li(res.missed,c=>`<li>${escS(c.point)}${c.tip?`<small>${escS(c.tip)}</small>`:''}</li>`)}</ul></div>`:''}
+    ${res.extras&&res.extras.length?`<div class="bs-sec ex"><h4>Good extra ideas</h4><ul>${li(res.extras,c=>`<li>${escS(c)}</li>`)}</ul></div>`:''}
+    ${res.feedback?`<p class="bs-fb">${escS(res.feedback)}</p>`:''}
+    ${o&&(o.intro||(o.body||[]).length)?`<div class="bs-ol"><b>Suggested outline</b><div><b>Intro:</b> ${escS(o.intro)}</div><ol>${li(o.body||[],b=>`<li>${escS(b)}</li>`)}</ol><div><b>Conclusion:</b> ${escS(o.conclusion)}</div></div>`:''}
+    ${r&&kind==='ai'?`<details><summary>See the full marking checklist</summary><p style="margin:8px 0 4px"><b>${escS(r.d)}:</b> ${escS(r.n)}</p><ol style="padding-left:20px">${li(r.p,p=>`<li>${escS(p[0])}</li>`)}</ol></details>`:''}
+  </div>`;
+}
+
+$('svBack').onclick = () => $('sv').classList.remove('detail');
+$('svExit').onclick = closeView;
+document.addEventListener('keydown', e => {
+  if ($('sv').hidden || e.ctrlKey || e.metaKey || e.altKey || /^(SELECT|INPUT|TEXTAREA)$/.test(e.target.tagName)) return;
+  const k=e.key.toLowerCase();
+  if (e.key==='ArrowDown' || k==='j'){ e.preventDefault(); goV(V.i+1); }
+  else if (e.key==='ArrowUp' || k==='k'){ e.preventDefault(); goV(V.i-1); }
+  else if (k==='p'){ e.preventDefault(); toggleV('done'); }
+  else if (k==='s'){ e.preventDefault(); toggleV('saved'); }
+  else if (e.key==='Escape'){ closeView(); }
+});
+$('start').onclick = () => { const list=currentList(); if (list.length) openView(list.map(x=>x.id), scopeText()); };
+$('resume').onclick = () => openView();
+
+let tmr; $('q').addEventListener('input', e => { clearTimeout(tmr); tmr=setTimeout(()=>{ S.q=e.target.value.trim(); renderFilters(); renderResults(); },140); });
 document.querySelectorAll('.scope button').forEach(b => b.onclick = () => { S.scope=b.dataset.scope; S.limit=60; renderFilters(); renderResults(); });
 $('fYear').onchange = e => setFilter({year: e.target.value==='all'?'all':+e.target.value});
 $('fTopic').onchange = e => setFilter({topic: e.target.value});
