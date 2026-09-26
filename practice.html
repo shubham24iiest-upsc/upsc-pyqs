@@ -178,6 +178,36 @@ button{ font:inherit; color:inherit; background:none; border:none; cursor:pointe
   .qright .reveal{ margin-top:16px; }
   .opts{ max-width:none; }
 }
+
+/* result card */
+.rs-back{ position:fixed; inset:0; z-index:50; background:rgba(22,21,29,.45); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; padding:20px; opacity:0; pointer-events:none; transition:opacity .2s; }
+.rs-back.open{ opacity:1; pointer-events:auto; }
+.rs{ background:var(--surface); border:1px solid var(--rule); border-radius:20px; box-shadow:0 30px 80px -20px rgba(22,21,29,.45); width:100%; max-width:520px; padding:28px 28px 22px; transform:translateY(12px) scale(.98); transition:transform .25s; max-height:calc(100vh - 40px); overflow:auto; }
+.rs-back.open .rs{ transform:none; }
+.rs-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
+.rs-top h2{ font-family:var(--display); font-weight:400; font-size:22px; }
+.rs-top p{ color:var(--muted); font-size:14px; margin-top:2px; }
+.rs-x{ width:34px; height:34px; border-radius:50%; border:1px solid var(--rule); color:var(--muted); font-size:18px; line-height:1; flex-shrink:0; }
+.rs-x:hover{ color:var(--marigold); border-color:var(--marigold); }
+.rs-score{ margin:20px 0 18px; padding:18px; border-radius:14px; background:var(--marigold-soft); text-align:center; }
+.rs-score b{ display:block; font-family:var(--display); font-size:40px; font-weight:400; color:var(--marigold); line-height:1.1; }
+.rs-score span{ color:var(--muted); font-size:14px; }
+.rs-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+.rs-cell{ border:1px solid var(--rule); border-radius:12px; padding:12px 14px; display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+.rs-cell span{ color:var(--muted); font-size:14px; }
+.rs-cell b{ font-size:18px; }
+.rs-cell.ok b{ color:var(--mint); } .rs-cell.no b{ color:var(--pink); }
+.rs-bar{ display:flex; height:10px; border-radius:6px; overflow:hidden; background:var(--surface-2); margin:18px 0 6px; }
+.rs-bar i{ display:block; height:100%; } .rs-bar .g{ background:var(--mint); } .rs-bar .r{ background:var(--pink); }
+.rs-legend{ display:flex; gap:14px; font-size:12.5px; color:var(--faint); flex-wrap:wrap; }
+.rs-legend i{ display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:5px; vertical-align:-1px; }
+.rs-acts{ display:flex; gap:8px; margin-top:22px; flex-wrap:wrap; }
+.rs-acts button{ white-space:nowrap; font-size:13.5px; padding-left:12px; padding-right:12px; flex:1; min-width:130px; padding:11px 14px; border-radius:999px; border:1px solid var(--rule); font-weight:700; font-size:14px; }
+.rs-acts .pri{ background:var(--marigold); border-color:var(--marigold); color:var(--on-accent); }
+.rs-acts button:not(.pri):hover{ border-color:var(--marigold); color:var(--marigold); }
+.sb-tools .see{ background:var(--marigold); border-color:var(--marigold); color:var(--on-accent); font-weight:700; }
+.sb-tools .see:hover{ color:var(--on-accent); filter:brightness(1.06); }
+@media (max-width:520px){ .rs{ padding:22px 18px 18px; } .rs-grid{ grid-template-columns:1fr; } }
 @media (max-width:860px){ .an-grid{ grid-template-columns:1fr; } }
 @media (max-width:640px){
   .scorebar{ position:static; }
@@ -238,6 +268,7 @@ button{ font:inherit; color:inherit; background:none; border:none; cursor:pointe
         <select id="show" aria-label="Show">
           <option value="all">All questions</option><option value="new">Not attempted</option>
           <option value="wrong">Answered wrong</option><option value="saved">Bookmarked</option></select>
+        <button id="seeResult" class="see">See result</button>
         <button id="reset">Reset answers for this set</button>
       </div>
     </div>
@@ -245,6 +276,17 @@ button{ font:inherit; color:inherit; background:none; border:none; cursor:pointe
   <div id="list"></div>
 </main>
 
+
+<div class="rs-back" id="rsBack" aria-hidden="true">
+  <div class="rs" role="dialog" aria-modal="true" aria-labelledby="rsTitle">
+    <div class="rs-top"><div><h2 id="rsTitle">Practice result</h2><p id="rsScope"></p></div><button class="rs-x" id="rsClose" aria-label="Close">×</button></div>
+    <div class="rs-score"><b id="rsNet"></b><span id="rsOutOf"></span></div>
+    <div class="rs-grid" id="rsGrid"></div>
+    <div class="rs-bar" id="rsBar"></div>
+    <div class="rs-legend"><span><i style="background:var(--mint)"></i>Correct</span><span><i style="background:var(--pink)"></i>Wrong</span><span><i style="background:var(--surface-2);border:1px solid var(--rule)"></i>Not attempted</span></div>
+    <div class="rs-acts"><button id="rsWrong">Review wrong</button><button id="rsRetry">Reset and retry</button><button id="rsDone" class="pri">Close</button></div>
+  </div>
+</div>
 <footer class="wrap site-foot"><span>Answers follow UPSC's official answer keys. Explanations and notes are written by PYQ Ledger, not UPSC.</span><span>Your answers and bookmarks are saved in this browser only.</span></footer>
 
 <script>
@@ -3403,11 +3445,48 @@ function renderList(){
 $('list').addEventListener('click', e => {
   const art=e.target.closest('.qc'); if (!art) return; const id=art.dataset.id;
   const o=e.target.closest('.opt');
-  if (o && !o.disabled){ store.ans[id]=o.dataset.l; persist(); art.outerHTML = card(ALL.find(q=>q.id===id)); renderScore(); return; }
+  if (o && !o.disabled){ const was=result(); store.ans[id]=o.dataset.l; persist(); art.outerHTML = card(ALL.find(q=>q.id===id)); renderScore(); const now=result(); if (now.total && now.skip===0 && was.skip>0) setTimeout(openResult, 700); return; }
   if (e.target.closest('[data-rev]')){ store.reveal=store.reveal||{}; store.reveal[id]=1; persist(); art.outerHTML = card(ALL.find(q=>q.id===id)); return; }
   const s=e.target.closest('.save');
   if (s){ store.saved[id] ? delete store.saved[id] : store.saved[id]=1; persist(); s.setAttribute('aria-pressed', !!store.saved[id]); }
 });
+
+/* result card */
+function result(){
+  const qs=selected(), sc=qs.filter(q=>q.a!=='x'), s=score(qs);
+  return { total:sc.length, att:s.att, ok:s.ok, no:s.no, skip:sc.length-s.att, full:sc.length*2, plus:s.ok*2, minus:s.no*0.66, net:s.net, dropped:qs.length-sc.length };
+}
+const fmt = n => (Math.round(n*100)/100).toLocaleString('en-IN',{minimumFractionDigits:n%1?2:0, maximumFractionDigits:2});
+function openResult(){
+  const r=result(), yrs=YEARS.filter(y=>S.years.has(y));
+  $('rsScope').textContent = `${S.subject==='__all'?'All subjects':S.subject}${S.topics.size?` · ${S.topics.size} topic${S.topics.size>1?'s':''}`:''} · ${yrs.length===1?yrs[0]:yrs.length+' years'}`;
+  $('rsNet').textContent = fmt(r.net);
+  $('rsOutOf').textContent = `marks scored out of ${r.full}`;
+  const acc = r.att ? Math.round(100*r.ok/r.att) : 0;
+  $('rsGrid').innerHTML = `
+    <div class="rs-cell"><span>Questions</span><b>${r.total}</b></div>
+    <div class="rs-cell"><span>Attempted</span><b>${r.att}</b></div>
+    <div class="rs-cell ok"><span>Correct</span><b>${r.ok}</b></div>
+    <div class="rs-cell no"><span>Wrong</span><b>${r.no}</b></div>
+    <div class="rs-cell"><span>Not attempted</span><b>${r.skip}</b></div>
+    <div class="rs-cell"><span>Accuracy</span><b>${acc}%</b></div>
+    <div class="rs-cell"><span>Total marks</span><b>${r.full}</b></div>
+    <div class="rs-cell ok"><span>Marks for correct</span><b>+${fmt(r.plus)}</b></div>
+    <div class="rs-cell no"><span>Negative marks</span><b>−${fmt(r.minus)}</b></div>
+    <div class="rs-cell"><span>Final score</span><b>${fmt(r.net)}</b></div>` + (r.dropped?`<div class="rs-cell" style="grid-column:1/-1"><span>Dropped by UPSC (not scored)</span><b>${r.dropped}</b></div>`:'');
+  const w = n => r.total ? (100*n/r.total) : 0;
+  $('rsBar').innerHTML = `<i class="g" style="width:${w(r.ok)}%"></i><i class="r" style="width:${w(r.no)}%"></i>`;
+  $('rsWrong').disabled = !r.no; $('rsWrong').style.opacity = r.no ? 1 : .4;
+  $('rsBack').classList.add('open'); $('rsBack').setAttribute('aria-hidden','false'); $('rsDone').focus();
+}
+function closeResult(){ $('rsBack').classList.remove('open'); $('rsBack').setAttribute('aria-hidden','true'); }
+$('seeResult').onclick = openResult;
+$('rsClose').onclick = $('rsDone').onclick = closeResult;
+$('rsBack').addEventListener('click', e => { if (e.target.id==='rsBack') closeResult(); });
+document.addEventListener('keydown', e => { if (e.key==='Escape') closeResult(); });
+$('rsWrong').onclick = () => { closeResult(); S.show='wrong'; $('show').value='wrong'; S.limit=25; renderList(); $('scorebar').scrollIntoView({behavior:'smooth'}); };
+$('rsRetry').onclick = () => { selected().forEach(q => { delete store.ans[q.id]; if (store.reveal) delete store.reveal[q.id]; }); persist(); closeResult(); S.show='all'; $('show').value='all'; renderList(); $('scorebar').scrollIntoView({behavior:'smooth'}); };
+
 $('show').onchange = e => { S.show=e.target.value; S.limit=25; renderList(); };
 $('reset').onclick = () => { if (!confirm('Clear your answers for the questions in this selection?')) return; selected().forEach(q => { delete store.ans[q.id]; if (store.reveal) delete store.reveal[q.id]; }); persist(); renderList(); };
 $('yAll').onclick = () => { S.years=new Set(YEARS); renderAll(); };
