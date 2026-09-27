@@ -133,7 +133,7 @@ html{ scroll-padding-top:96px; }
 
 /* analysis */
 .analysis{ background:var(--surface); border:1px solid var(--rule); border-radius:14px; box-shadow:var(--shadow); padding:22px; margin-bottom:28px; }
-.an-grid{ display:grid; grid-template-columns:1fr 1fr; gap:28px; }
+.an-grid{ display:grid; grid-template-columns:minmax(0,1fr); gap:36px; }
 .an-h{ font-family:var(--display); font-weight:400; font-size:19px; color:var(--text); margin-bottom:4px; }
 .an-sub{ color:var(--muted); font-size:14px; margin-bottom:16px; }
 .stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:18px; }
@@ -150,7 +150,7 @@ html{ scroll-padding-top:96px; }
 .hm{ display:grid; gap:4px; }
 .hm .rl{ font-size:12.5px; color:var(--text); display:flex; align-items:center; padding-right:8px; line-height:1.2; }
 .hm .cl{ font-size:12px; color:var(--muted); text-align:center; font-weight:700; }
-.hm .c{ height:28px; border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; }
+.hm .c{ height:32px; border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; }
 .empty-an{ color:var(--faint); font-size:14px; padding:12px 0; }
 
 /* launch bar: sits between the filters and the analysis */
@@ -325,23 +325,7 @@ kbd{ font:600 11px var(--body); border:1px solid var(--rule); border-bottom-widt
   <div class="intro">
     <h1 class="display">Prelims practice, subject by subject</h1>
     <p class="lede" id="lede">Pick a subject, choose the years and topics you want, see how often UPSC asks them, then start a test marked against the official answer key.</p>
-    <p class="keynote" id="keynote"></p>
   </div>
-
-  <section class="step">
-    <div class="step-h"><h2>1. Subject</h2><span class="hint">GS Paper I</span></div>
-    <div class="subjects" id="subjects"></div>
-  </section>
-
-  <section class="step">
-    <div class="step-h"><h2>2. Years</h2><div class="quick"><button id="yAll">Select all</button><button id="yNone">Clear</button></div></div>
-    <div class="chips" id="years"></div>
-  </section>
-
-  <section class="step">
-    <div class="step-h"><h2>3. Topics</h2><span class="hint">Leave all unselected to include every topic</span><div class="quick"><button id="tAll">Select all</button><button id="tNone">Clear</button></div></div>
-    <div class="chips" id="topics"></div>
-  </section>
 
   <div class="scorebar" id="scorebar">
     <div class="sb-row">
@@ -359,6 +343,21 @@ kbd{ font:600 11px var(--body); border:1px solid var(--rule); border-bottom-widt
       </div>
     </div>
   </div>
+
+  <section class="step">
+    <div class="step-h"><h2>1. Subject</h2><span class="hint">GS Paper I</span></div>
+    <div class="subjects" id="subjects"></div>
+  </section>
+
+  <section class="step">
+    <div class="step-h"><h2>2. Years</h2><div class="quick"><button id="yAll">Select all</button><button id="yNone">Clear</button></div></div>
+    <div class="chips" id="years"></div>
+  </section>
+
+  <section class="step">
+    <div class="step-h"><h2>3. Topics</h2><span class="hint">Leave all unselected to include every topic</span><div class="quick"><button id="tAll">Select all</button><button id="tNone">Clear</button></div></div>
+    <div class="chips" id="topics"></div>
+  </section>
 
   <section class="analysis" aria-labelledby="anH">
     <div class="an-grid">
@@ -19009,7 +19008,7 @@ function renderAnalysis(){
   if (!rows.length){ hm.innerHTML=''; return; }
   const cy = [...yrs].reverse(), cell={}; let m=1;
   qs.forEach(q => { const k=key(q)+'|'+q.y; cell[k]=(cell[k]||0)+1; m=Math.max(m,cell[k]); });
-  hm.style.gridTemplateColumns = `minmax(130px,1.6fr) repeat(${cy.length}, minmax(40px,1fr))`;
+  hm.style.gridTemplateColumns = `minmax(130px,2.4fr) repeat(${cy.length}, minmax(40px,1fr))`;
   hm.innerHTML = `<div></div>` + cy.map(y=>`<div class="cl">${y}</div>`).join('') + rows.map(([k]) => `<div class="rl">${esc(k)}</div>` + cy.map(y => { const n=cell[k+'|'+y]||0; if(!n) return `<div class="c" style="background:var(--surface-2)"></div>`; const c=rgb(n,m); return `<div class="c" style="background:rgb(${c});color:${ink(c)}">${n}</div>`; }).join('')).join('');
 }
 
@@ -19219,7 +19218,6 @@ $('tNone').onclick = () => { S.topics=new Set(); renderTopics(); renderAnalysis(
 function renderAll(){ renderSubjects(); renderYears(); renderTopics(); renderAnalysis(); renderList(); }
 const total=ALL.length, ny=YEARS.length;
 $('lede').textContent = `${total} questions from GS Paper I (${ny===1?YEARS[0]:`${YEARS[ny-1]}–${YEARS[0]}`}), tagged by subject and topic. Pick a subject, choose the years and topics you want, see how often UPSC asks them, then start a test: one question at a time, marked instantly against the official answer key.`;
-$('keynote').textContent = 'Answer keys used: ' + YEARS.map(y => `${y} Series ${D.years[y].series}, ${D.years[y].keyType.toLowerCase()}`).join('; ') + '.';
 renderAll();
 </script>
 <script>(function(){var b=document.getElementById('themeToggle');if(!b)return;function lab(){var d=document.documentElement.getAttribute('data-theme')==='dark';b.setAttribute('aria-label',d?'Switch to light theme':'Switch to dark theme');b.title=d?'Light theme':'Dark theme';}lab();b.onclick=function(){var d=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',d);try{localStorage.setItem('pyq-theme',d)}catch(e){}lab();if(window.onThemeChange)window.onThemeChange();};})();</script>

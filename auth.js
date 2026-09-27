@@ -252,7 +252,7 @@ function start(){
     { sel: 'a[href$=".pdf"], a[download]', why: 'download' },
     // Practice page only (it has the #fx test overlay); on Mains, #start just opens questions to read
     { sel: document.getElementById('fx') ? '#start, .opt:not([disabled])' : '.opt:not([disabled])', why: 'solve' },
-    { sel: '#svDone, #svSave, #svBs', why: 'track' },
+    { sel: '#svDone, #svSave, #svBs, .sv-act', why: 'track' },
   ];
   const WHY = {
     download: ['Sign up free to download papers', 'Download every UPSC Prelims and Mains paper and answer key as a PDF.'],

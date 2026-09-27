@@ -318,6 +318,57 @@ kbd{ font:600 11px var(--body); border:1px solid var(--rule); border-bottom-widt
   .pcard .pname{ font-size:20px; }
   .sel-wrap{ flex:1 1 45%; } .sel-wrap select{ width:100%; max-width:none; }
 }
+
+/* single full-width question list (no detail pane) */
+.sv-body{ grid-template-columns:minmax(0,1fr) !important; }
+.sv-detail, .sv-back{ display:none !important; }
+.sv .sv-list{ display:block !important; border-right:none; background:var(--ink); }
+.sv-yh, .sv-item{ padding-left:max(16px, calc((100% - 900px) / 2)); padding-right:max(16px, calc((100% - 900px) / 2)); }
+.sv-yh{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding-top:10px; padding-bottom:10px; background:var(--glass); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); }
+.sv-dl{ display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:999px; background:var(--marigold); color:var(--on-accent); font-size:12.5px; font-weight:700; letter-spacing:0; text-transform:none; white-space:nowrap; }
+.sv-dl svg{ width:14px; height:14px; }
+.sv-dl:hover{ filter:brightness(1.06); }
+.sv-item{ padding-top:20px; padding-bottom:18px; background:transparent; }
+.sv-item:hover{ background:transparent; }
+.sv-item.cur{ background:var(--surface); box-shadow:none; }
+.sv-item .m{ flex-wrap:wrap; font-size:12.5px; color:var(--muted); }
+.sv-item .m .dot{ color:var(--faint); }
+.sv-item .x{ display:block; -webkit-line-clamp:unset; overflow:visible; font-family:var(--display); font-size:18px; line-height:1.55; margin-top:8px; }
+.sv-item.is-done .x{ color:var(--muted); }
+.sv-row-acts{ display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+.sv-act{ display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:999px; border:1px solid var(--rule); font-size:13px; font-weight:600; color:var(--muted); }
+.sv-act svg{ width:14px; height:14px; }
+.sv-act:hover{ border-color:var(--marigold); color:var(--marigold); }
+.sv-act.dn[aria-pressed="true"]{ background:var(--mint-soft); border-color:var(--mint); color:var(--mint); }
+.sv-act.sa[aria-pressed="true"]{ background:var(--pink-soft); border-color:var(--pink); color:var(--pink); }
+@media (max-width:560px){ .sv-dl{ font-size:0; gap:0; padding:7px; } .sv-dl svg{ width:16px; height:16px; } .sv-item .x{ font-size:16.5px; } }
+
+/* list row: Q number | question | actions */
+.sv-item{ display:grid; grid-template-columns:52px minmax(0,1fr) 172px; column-gap:18px; align-items:start; }
+.sv-no{ font-family:var(--display); font-size:20px; font-weight:600; color:var(--marigold); line-height:1.3; padding-top:1px; }
+.sv-main{ min-width:0; }
+.sv-item .m{ gap:8px; align-items:center; }
+.sv-topic{ display:inline-block; padding:3px 10px; border-radius:999px; background:var(--marigold-soft); color:var(--marigold); font-size:13px; font-weight:700; }
+.sv-item .x{ margin-top:10px; }
+.sv-row-acts{ margin-top:0; flex-direction:column; align-items:stretch; }
+.sv-act{ justify-content:flex-start; }
+.sv-yt{ display:flex; align-items:baseline; gap:12px; }
+.sv-yt b{ font-family:var(--display); font-size:26px; font-weight:600; color:var(--text); letter-spacing:-.01em; text-transform:none; }
+.sv-yt span{ font-size:15px; font-weight:700; color:var(--marigold); letter-spacing:.02em; text-transform:none; }
+.sv-yh{ padding-top:14px; padding-bottom:14px; }
+@media (max-width:640px){
+  .sv-item{ grid-template-columns:38px minmax(0,1fr); }
+  .sv-no{ font-size:17px; }
+  .sv-row-acts{ grid-column:2; flex-direction:row; margin-top:12px; }
+  .sv-yt b{ font-size:22px; } .sv-yt span{ font-size:13.5px; }
+}
+
+/* edge-to-edge rows: question from the left edge, buttons at the right edge on one line */
+.sv-yh, .sv-item{ padding-left:24px; padding-right:24px; }
+.sv-item{ grid-template-columns:44px minmax(0,1fr) auto; }
+.sv-row-acts{ flex-direction:row; flex-wrap:nowrap; align-items:center; }
+.sv-act{ white-space:nowrap; }
+@media (max-width:640px){ .sv-yh, .sv-item{ padding-left:14px; padding-right:14px; } .sv-item{ grid-template-columns:34px minmax(0,1fr); } .sv-row-acts{ flex-wrap:wrap; } }
 </style>
 </head>
 <body>
@@ -1818,6 +1869,7 @@ function hl(text){
 }
 
 const ICON_DONE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+const ICON_DL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 10.5l5 5 5-5"/><path d="M5 20h14"/></svg>';
 const ICON_SAVE='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3.2l2.6 5.5 6 .8-4.4 4.2 1.1 6-5.3-2.9-5.3 2.9 1.1-6L3.4 9.5l6-.8z"/></svg>';
 
 function currentList(){
@@ -1859,14 +1911,21 @@ function renderList(){
   $('svTitle').textContent = V.label;
   let h='', g='';
   V.ids.forEach((id,i) => { const x=BYID[id]; const gg=x.k+x.y;
-    if (gg!==g){ g=gg; h+=`<div class="sv-yh">${x.y} · ${label(x.k)}</div>`; }
-    h+=`<button class="sv-item${i===V.i&&!extra?' cur':''}${prog.done[id]?' is-done':''}" data-i="${i}"${i===V.i&&!extra?' aria-current="true"':''}><span class="m"><span class="n">Q${esc(x.n)}</span>${esc(x.t)}<span class="f">${prog.done[id]?'<i class="d">✓ done</i>':''}${prog.saved[id]?'<i class="s">★</i>':''}</span></span><span class="x">${hlq(x.q)}</span></button>`;
+    if (gg!==g){ g=gg; h+=`<div class="sv-yh"><span class="sv-yt"><b>${x.y}</b><span>${P[x.k].name.replace('General Studies','GS Paper')}</span></span><a class="sv-dl" href="${pdfOf(x.k,x.y)}" download>${ICON_DL}Download ${x.y} ${label(x.k)} paper</a></div>`; }
+    const fmt=(P[x.k].data[x.y]||{}).fmt||'', w=((fmt.split('·').find(f=>f.includes(x.m+' marks'))||'').match(/\d+\s*words/)||[])[0];
+    const d=!!prog.done[id], sv=!!prog.saved[id], cur=i===V.i;
+    h+=`<div class="sv-item${cur?' cur':''}${d?' is-done':''}" data-i="${i}"${cur?' aria-current="true"':''}>
+      <div class="sv-no">Q${esc(x.n)}</div>
+      <div class="sv-main"><div class="m"><span class="sv-topic">${esc(x.t)}</span><span>${esc(x.m)} marks</span>${w?`<span class="dot">·</span><span>${w}</span>`:''}</div>
+      <div class="x">${hlq(x.q)}</div></div>
+      <div class="sv-row-acts"><button class="sv-act dn" data-act="done" data-id="${id}" aria-pressed="${d}">${ICON_DONE}${d?'Practised':'Mark as practised'}</button><button class="sv-act sa" data-act="saved" data-id="${id}" aria-pressed="${sv}">${ICON_SAVE}${sv?'Bookmarked':'Bookmark'}</button></div>
+    </div>`;
   });
-  $('svList').innerHTML=h;
+  const sc=$('svList').scrollTop; $('svList').innerHTML=h; $('svList').scrollTop=sc;
 }
 function renderDetail(){
   const x = extra ? BYID[extra] : BYID[V.ids[V.i]], d=!!prog.done[x.id], s=!!prog.saved[x.id];
-  $('svSub').textContent = extra ? 'Related question' : `Question ${V.i+1} of ${V.ids.length}`;
+  $('svSub').textContent = `${V.ids.length} question${V.ids.length===1?'':'s'}`;
   const fmt=(P[x.k].data[x.y]||{}).fmt||'';
   const rel = ALL.filter(o=>o.k===x.k && o.t===x.t && o.id!==x.id).sort((a,b)=>b.y-a.y).slice(0,6);
   $('svDetail').innerHTML = `<div class="sv-in">
@@ -1892,7 +1951,13 @@ function toggleV(key){
   const on=!!prog[key][id], b=$(key==='done'?'svDone':'svSave');   // update in place so a brainstorm in progress is kept
   if (b){ b.setAttribute('aria-pressed',on); b.innerHTML = key==='done' ? ICON_DONE+(on?'Practised':'Mark as practised') : ICON_SAVE+(on?'Bookmarked':'Bookmark'); }
 }
-$('svList').addEventListener('click', e => { const b=e.target.closest('[data-i]'); if (!b) return; goV(+b.dataset.i); $('sv').classList.add('detail'); });
+$('svList').addEventListener('click', e => {
+  const a=e.target.closest('[data-act]');
+  if (a){ const id=a.dataset.id, key=a.dataset.act; if (prog[key][id]) delete prog[key][id]; else prog[key][id]=Date.now(); saveProg(); const j=V.ids.indexOf(id); if (j>=0){ V.i=j; saveV(); } renderList(); return; }
+  if (e.target.closest('a')) return;
+  const b=e.target.closest('[data-i]'); if (!b || +b.dataset.i===V.i) return;
+  V.i=+b.dataset.i; saveV(); renderList();
+});
 $('svDetail').addEventListener('click', e => {
   if (e.target.closest('#svBs')) return bsToggle();
   if (e.target.closest('#svDone')) return toggleV('done');
