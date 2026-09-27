@@ -18926,6 +18926,13 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':
 let store = { ans:{}, saved:{} };
 try { store = Object.assign(store, JSON.parse(localStorage.getItem('pyq-prelims')||'{}')); } catch(e){}
 const persist = () => { try { localStorage.setItem('pyq-prelims', JSON.stringify(store)); } catch(e){} };
+// Detailed numbers for the signed-in progress panel (auth.js)
+window.PK_STATS = st => {
+  const ans = (st && st.ans) || {}, by = {}; let correct=0, wrong=0;
+  for (const q of ALL){ if (q.a==='x') continue; const b = by[q.s] = by[q.s] || { att:0, ok:0, total:0 }; b.total++;
+    const a = ans[q.id]; if (!a) continue; b.att++; if (a===q.a){ b.ok++; correct++; } else wrong++; }
+  return { correct, wrong, bySubject: by };
+};
 
 const S = { subject:'__all', years:new Set(YEARS), topics:new Set(), show:'all', limit:25 };
 { const m = location.hash.match(/^#year=(\d{4})$/); if (m && YEARS.includes(+m[1])) S.years = new Set([+m[1]]); }
@@ -19197,5 +19204,7 @@ $('keynote').textContent = 'Answer keys used: ' + YEARS.map(y => `${y} Series ${
 renderAll();
 </script>
 <script>(function(){var b=document.getElementById('themeToggle');if(!b)return;function lab(){var d=document.documentElement.getAttribute('data-theme')==='dark';b.setAttribute('aria-label',d?'Switch to light theme':'Switch to dark theme');b.title=d?'Light theme':'Dark theme';}lab();b.onclick=function(){var d=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',d);try{localStorage.setItem('pyq-theme',d)}catch(e){}lab();if(window.onThemeChange)window.onThemeChange();};})();</script>
+<script src="firebase-config.js"></script>
+<script type="module" src="auth.js"></script>
 </body>
 </html>
