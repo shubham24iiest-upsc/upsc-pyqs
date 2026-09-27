@@ -7,7 +7,7 @@
 <link rel="canonical" href="https://pyqastra.com/mains.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="theme-color" content="#6C63D9">
+<meta name="theme-color" content="#C9432B">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="PYQ Astra">
 <meta property="og:title" content="UPSC Mains previous year questions by topic — PYQ Astra">
@@ -370,6 +370,7 @@ kbd{ font:600 11px var(--body); border:1px solid var(--rule); border-bottom-widt
 .sv-act{ white-space:nowrap; }
 @media (max-width:640px){ .sv-yh, .sv-item{ padding-left:14px; padding-right:14px; } .sv-item{ grid-template-columns:34px minmax(0,1fr); } .sv-row-acts{ flex-wrap:wrap; } }
 </style>
+<link rel="stylesheet" href="theme.css">
 </head>
 <body>
 <header class="site-head"><div class="wrap head-row">
@@ -1806,7 +1807,7 @@ function selectPaper(k){
   renderAll(true);
 }
 
-const RAMP=[[253,232,214],[249,201,196],[228,181,224],[183,166,236],[127,116,214],[79,68,158]];   // pastel: peach → rose → orchid → lavender → periwinkle → indigo (fewer → more)   // fewer = light cream → yellow → orange → red → plum = more
+const RAMP=[[255,240,212],[255,208,192],[247,154,126],[217,80,95],[160,79,216],[85,48,196]];   // theme E: cream → peach → coral → rose → violet → deep violet (fewer → more)
 function heatRGB(n,max){
   const f=(max<=1?1:Math.sqrt((n-1)/(max-1)))*(RAMP.length-1), i=Math.min(RAMP.length-2,Math.floor(f)), t=f-i;
   return RAMP[i].map((c,j)=>Math.round(c+(RAMP[i+1][j]-c)*t));

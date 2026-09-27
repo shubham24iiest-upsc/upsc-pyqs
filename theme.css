@@ -1,0 +1,115 @@
+/* PYQ Astra colour theme E — "Sunrise × Candy, coral-led"
+   Loaded after each page's own styles, so it only re-colours; layout is untouched.
+   Coral leads, violet is second, pink and amber are accents. */
+
+:root, :root[data-theme="light"]{
+  --ink:#FFF6F3; --surface:#FFFFFF; --surface-2:#FDEBE6; --rule:#F4DDD8;
+  --text:#2A1A24; --muted:#6B5566; --faint:#86707F;
+  --marigold:#C9432B; --on-accent:#FFFFFF; --marigold-soft:#FFE3DA;
+  --violet:#6D3FE0; --violet-soft:#EEE7FF;
+  --pink:#C22E6C; --pink-soft:#FFE1EE;
+  --amber:#9A5B00; --amber-soft:#FFF0D4; --amber-line:#F0A030;
+  --mint:#1E8A62; --mint-soft:#DDF3E8;
+  --peach:#F0A030; --glass:rgba(255,246,243,.88);
+  --accent-glow:rgba(201,67,43,.28);
+  --shadow:0 1px 2px rgba(42,26,36,.04), 0 10px 30px -18px rgba(120,40,30,.22);
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --ink:#1A1418; --surface:#251C22; --surface-2:#30252C; --rule:#3E3038;
+  --text:#F6ECEF; --muted:#C3B0BA; --faint:#97828D;
+  --marigold:#FF8A6E; --on-accent:#1A1418; --marigold-soft:rgba(255,138,110,.14);
+  --violet:#B79CFF; --violet-soft:rgba(183,156,255,.14);
+  --pink:#FF8FB8; --pink-soft:rgba(255,143,184,.13);
+  --amber:#FFC46B; --amber-soft:rgba(255,196,107,.13); --amber-line:#FFC46B;
+  --mint:#7FDDB5; --mint-soft:rgba(127,221,181,.12);
+  --peach:#FFC46B; --glass:rgba(26,20,24,.88);
+  --accent-glow:rgba(255,138,110,.22);
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 12px 30px -18px rgba(0,0,0,.6);
+  color-scheme:dark;
+}
+
+/* brand + headline */
+.brand-dot{ background:var(--pink) !important; box-shadow:0 0 0 4px var(--pink-soft) !important; }
+.display em{ color:var(--violet); }
+
+/* home page */
+.hero .kicker{ color:var(--pink); background:var(--pink-soft); }
+.cta .btn:not(.primary){ background:var(--violet-soft); color:var(--violet); border-color:transparent; }
+.cta .btn:not(.primary):hover{ border-color:var(--violet); color:var(--violet); }
+.features .feat{ border-top:4px solid var(--marigold); }
+.features .feat:nth-child(4n+2){ border-top-color:var(--violet); }
+.features .feat:nth-child(4n+3){ border-top-color:var(--pink); }
+.features .feat:nth-child(4n+4){ border-top-color:var(--amber-line); }
+.features .feat:hover{ border-color:var(--rule); transform:translateY(-3px); }
+.c1{ background:var(--marigold-soft) !important; color:var(--marigold) !important; }
+.c2{ background:var(--violet-soft) !important; color:var(--violet) !important; }
+.c3{ background:var(--pink-soft) !important; color:var(--pink) !important; }
+.c4{ background:var(--amber-soft) !important; color:var(--amber) !important; }
+.c5{ background:var(--violet-soft) !important; color:var(--violet) !important; }
+.c6{ background:var(--marigold-soft) !important; color:var(--marigold) !important; }
+
+/* Practice: subject cards take turns in the four colours */
+.subj{ border-top:3px solid var(--marigold); }
+.subj:nth-child(4n+2){ border-top-color:var(--violet); } .subj:nth-child(4n+2) .sc{ color:var(--violet); }
+.subj:nth-child(4n+3){ border-top-color:var(--pink); }   .subj:nth-child(4n+3) .sc{ color:var(--pink); }
+.subj:nth-child(4n+4){ border-top-color:var(--amber-line); } .subj:nth-child(4n+4) .sc{ color:var(--amber); }
+.subj.on{ background:var(--marigold) !important; border-color:var(--marigold) !important; }
+.subj.on .sc{ color:var(--on-accent) !important; }
+
+/* Mains: one colour per GS paper */
+.pcard{ border-top:4px solid var(--marigold); }
+.pcard:nth-child(2){ border-top-color:var(--violet); } .pcard:nth-child(2) .pname{ color:var(--violet); }
+.pcard:nth-child(3){ border-top-color:var(--pink); }   .pcard:nth-child(3) .pname{ color:var(--pink); }
+.pcard:nth-child(4){ border-top-color:var(--amber-line); } .pcard:nth-child(4) .pname{ color:var(--amber); }
+.sv-topic{ background:var(--violet-soft) !important; color:var(--violet) !important; }
+.sv-no{ color:var(--marigold) !important; }
+.sv-dl{ background:var(--marigold) !important; }
+.pcard.on:nth-child(2){ background:var(--violet); border-color:var(--violet); }
+.pcard.on:nth-child(3){ background:var(--pink); border-color:var(--pink); }
+.pcard.on:nth-child(4){ background:var(--amber); border-color:var(--amber); }
+.pcard.on .pname{ color:var(--on-accent) !important; }
+
+/* ---------- more colour on every page ---------- */
+/* Home: each feature card's link and the "Jump to a paper" tiles follow the card's colour */
+.features .feat:nth-child(4n+2) .go{ color:var(--violet); }
+.features .feat:nth-child(4n+3) .go{ color:var(--pink); }
+.features .feat:nth-child(4n+4) .go{ color:var(--amber); }
+.qk{ border-top:3px solid var(--marigold); }
+.qk:nth-child(4n+2){ border-top-color:var(--violet); } .qk:nth-child(4n+2) b{ color:var(--violet); }
+.qk:nth-child(4n+3){ border-top-color:var(--pink); }   .qk:nth-child(4n+3) b{ color:var(--pink); }
+.qk:nth-child(4n+4){ border-top-color:var(--amber-line); } .qk:nth-child(4n+4) b{ color:var(--amber); }
+.qk:hover{ border-color:var(--rule); transform:translateY(-2px); }
+
+/* Prelims: CSAT tab in violet, answer key in violet, "practise online" in pink, bars take turns */
+#tabs button:nth-child(2).on{ background:var(--violet) !important; color:var(--on-accent) !important; }
+.dl.key{ color:var(--violet); border-color:var(--violet); }
+.dl.key:hover{ background:var(--violet); color:var(--on-accent); }
+.dl.go{ background:var(--pink-soft); border-color:transparent; color:var(--pink); }
+.dl.go:hover{ border-color:var(--pink); color:var(--pink); }
+.pb:nth-child(4n+2) .t i{ background:var(--marigold) !important; }
+.pb:nth-child(4n+3) .t i{ background:var(--violet) !important; }
+.pb:nth-child(4n+4) .t i{ background:var(--pink) !important; }
+.pb:nth-child(4n+5) .t i{ background:var(--amber-line) !important; }
+.pb:nth-child(4n+2) b{ color:var(--marigold); } .pb:nth-child(4n+3) b{ color:var(--violet); }
+.pb:nth-child(4n+4) b{ color:var(--pink); }     .pb:nth-child(4n+5) b{ color:var(--amber); }
+
+/* Practice: year and topic chips take turns in the four colours; stat tiles tinted */
+.chip-t.on:nth-child(4n+2){ background:var(--violet); border-color:var(--violet); }
+.chip-t.on:nth-child(4n+3){ background:var(--pink); border-color:var(--pink); }
+.chip-t.on:nth-child(4n+4){ background:var(--amber); border-color:var(--amber); }
+.stat:nth-child(1){ background:var(--marigold-soft); } .stat:nth-child(1) b{ color:var(--marigold); }
+.stat:nth-child(2){ background:var(--violet-soft); }   .stat:nth-child(2) b{ color:var(--violet); }
+.stat:nth-child(3){ background:var(--pink-soft); }     .stat:nth-child(3) b{ color:var(--pink); }
+/* test view: subject tag coral, topic tag violet */
+.tag{ background:var(--marigold-soft); color:var(--marigold); font-weight:600; }
+.tag + .tag{ background:var(--violet-soft); color:var(--violet); }
+
+/* Privacy and 404 */
+.doc h2{ color:var(--violet); }
+.doc h2:nth-of-type(3n+2){ color:var(--marigold); }
+.doc h2:nth-of-type(3n+3){ color:var(--pink); }
+.nf .code{ color:var(--marigold); }
+.nf .btns a:nth-child(2){ background:var(--violet-soft); color:var(--violet); border-color:transparent; }
+.nf .btns a:nth-child(3){ background:var(--pink-soft); color:var(--pink); border-color:transparent; }
+.nf .btns a:nth-child(4){ background:var(--amber-soft); color:var(--amber); border-color:transparent; }
