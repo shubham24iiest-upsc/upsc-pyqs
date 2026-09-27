@@ -1,10 +1,10 @@
-// PrashnaKosh sign-in + cloud progress (Firebase Auth with Google, Firestore).
+// PYQ Astra sign-in + cloud progress (Firebase Auth with Google, Firestore).
 // Progress still lives in localStorage ('pyq-prelims', 'pyq-progress'); when signed in,
 // it is merged with the cloud copy on sign-in and uploaded after every change.
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signInWithRedirect, getRedirectResult, signOut }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, serverTimestamp }
+import { getFirestore, doc, getDoc, setDoc, deleteDoc, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const cfg = window.PK_FIREBASE || {};
@@ -55,7 +55,7 @@ function start(){
     const data = { prelims: read(KEYS.prelims), mains: read(KEYS.mains), stats: stats(),
       name: user.displayName || '', updatedAt: serverTimestamp() };
     cloud = { ...(cloud || {}), ...data };
-    try { await setDoc(doc(db, 'users', user.uid), data); } catch (e) { console.warn('PrashnaKosh sync failed', e); }
+    try { await setDoc(doc(db, 'users', user.uid), data); } catch (e) { console.warn('PYQ Astra sync failed', e); }
   }
 
   // Union of two progress objects ({ans:{}, saved:{}, ...}); local answers win on conflict.
@@ -72,7 +72,7 @@ function start(){
     try {
       const snap = await getDoc(doc(db, 'users', user.uid));
       cloud = snap.exists() ? snap.data() : {};
-    } catch (e) { cloud = {}; console.warn('PrashnaKosh could not load progress', e); }
+    } catch (e) { cloud = {}; console.warn('PYQ Astra could not load progress', e); }
     let changed = false;
     for (const [f, k] of Object.entries(KEYS)) {
       const local = read(k), merged = merge(local, cloud[f] || {});
@@ -132,6 +132,8 @@ function start(){
 .pk-sub em{ font-style:normal; color:var(--muted); }
 .pk-foot{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:18px; padding-top:14px; border-top:1px solid var(--rule); font-size:13px; color:var(--faint); }
 .pk-out{ padding:7px 14px; border-radius:999px; border:1px solid var(--rule); font-weight:600; font-size:13.5px; color:var(--text); }
+.pk-del{ font-size:13px; color:var(--faint); text-decoration:underline; padding:4px 0; }
+.pk-del:hover{ color:var(--pink); }
 .pk-out:hover{ border-color:var(--pink); color:var(--pink); }
 .pk-go{ display:inline-block; margin-top:4px; padding:9px 16px; border-radius:999px; background:var(--marigold); color:var(--on-accent); font-weight:600; font-size:14px; }
 .pk-note{ color:var(--muted); font-size:13.5px; line-height:1.55; }
@@ -155,7 +157,8 @@ function start(){
   document.body.appendChild(back);
   const card = back.firstChild;
   const close = () => { back.classList.remove('open'); back.setAttribute('aria-hidden', 'true'); };
-  back.addEventListener('click', e => { if (e.target === back || e.target.closest('.pk-x')) close(); if (e.target.closest('.pk-out')) { close(); doSignOut(); } });
+  back.addEventListener('click', e => { if (e.target === back || e.target.closest('.pk-x')) close(); if (e.target.closest('.pk-out')) { close(); doSignOut(); }
+    if (e.target.closest('.pk-del')) doDelete(); });
   addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
 
   function render(){
@@ -190,7 +193,7 @@ function start(){
       ${subs.length ? `<div class="pk-h">By subject</div>` + subs.map(([n, v]) => `
         <div class="pk-sub"><span>${esc(n)}</span><em>${v.att}/${v.total} · ${v.ok} correct</em><i><s style="width:${Math.min(100, Math.round(100 * v.att / (v.total || 1)))}%"></s></i></div>`).join('') : ''}
       ${!s.attempted ? `<p class="pk-note">You haven't answered any questions yet. Your answers will be saved to your account as you practise.</p><a class="pk-go" href="practice.html">Start practising</a>` : ''}
-      <div class="pk-foot"><span>Synced to your account</span><button class="pk-out" type="button">Sign out</button></div>`;
+      <div class="pk-foot"><button class="pk-del" type="button">Delete my data</button><button class="pk-out" type="button">Sign out</button></div>`;
     back.classList.add('open'); back.setAttribute('aria-hidden', 'false');
     card.querySelector('.pk-x').focus();
   }
@@ -206,8 +209,17 @@ function start(){
     }
   }
 
-  async function doSignOut(){
-    if (timer) { clearTimeout(timer); await upload(); }
+  async function doDelete(){
+    if (!confirm('Permanently delete all your saved progress from PYQ Astra? This cannot be undone.')) return;
+    clearTimeout(timer); timer = null; ready = false;
+    try { await deleteDoc(doc(db, 'users', user.uid)); }
+    catch (e) { console.warn(e); alert('Could not delete your data. Please try again.'); ready = true; return; }
+    close(); await doSignOut(true);
+  }
+
+  async function doSignOut(skipUpload){
+    if (timer && !skipUpload) { clearTimeout(timer); await upload(); }
+    user = null;
     await signOut(auth);
     // Progress is safe in the account; clear this browser so the next person starts fresh.
     for (const k of Object.values(KEYS)) { try { localStorage.removeItem(k); } catch (e) {} }
