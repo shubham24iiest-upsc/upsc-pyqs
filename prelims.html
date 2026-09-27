@@ -196,17 +196,27 @@ let checked = false;
 async function exists(path){
   if (location.protocol === 'file:') return true;   // local preview: can't check, assume present
   try {
-    const r = await fetch(path, { method: 'HEAD', cache: 'no-store' });
+    const r = await fetch(path, { method: 'HEAD', cache: 'no-cache' });
     return r.ok;
   } catch (e) { return false; }
 }
 
-async function checkFiles(){
-  await Promise.all(KEYS.flatMap(k => YEARS.map(async y => {
-    const [paper, key] = await Promise.all([exists(url(PAPERS[k], y, false)), exists(url(PAPERS[k], y, true))]);
-    (found[k] = found[k] || {})[y] = { paper, key };
-  })));
+// Papers already in the papers/ folder (1 = paper, 2 = key, 3 = both), so the list shows instantly.
+// Anything not listed here is still looked for in the background, so a newly uploaded PDF shows up on its own.
+const KNOWN = {"gs1":{"2014":3,"2015":3,"2016":3,"2017":3,"2018":3,"2019":3,"2020":3,"2021":3,"2022":3,"2023":3,"2024":3,"2025":3,"2026":3},"csat":{"2014":3,"2015":3,"2016":3,"2017":3,"2018":3,"2019":3,"2020":3,"2021":3,"2022":3,"2023":3,"2024":3,"2025":3,"2026":3}};
+function checkFiles(){
+  for (const k of KEYS) for (const y of YEARS) { const v = (KNOWN[k]||{})[y] || 0; (found[k] = found[k] || {})[y] = { paper: !!(v & 1), key: !!(v & 2) }; }
   checked = true;
+  return Promise.resolve();
+}
+async function discoverNew(){
+  let added = false;
+  await Promise.all(KEYS.flatMap(k => YEARS.flatMap(y => [false, true].map(async key => {
+    const f = found[k][y], has = key ? f.key : f.paper;
+    if (has) return;
+    if (await exists(url(PAPERS[k], y, key))) { if (key) f.key = true; else f.paper = true; added = true; }
+  }))));
+  if (added) { renderTabs(); renderYears(); }
 }
 
 const shownYears = k => YEARS.filter(y => { const f = found[k] && found[k][y]; return f && (f.paper || f.key); });
@@ -270,7 +280,7 @@ document.addEventListener('keydown', e => {
   if (j<0 || j>=ys.length) return; e.preventDefault(); curYear = ys[j]; renderYears(); $('yearList').querySelector('.cur')?.scrollIntoView({block:'nearest'});
 });
 renderTabs(); renderYears();
-checkFiles().then(() => { renderTabs(); renderYears(); });
+checkFiles().then(() => { renderTabs(); renderYears(); setTimeout(discoverNew, 1500); });
 </script>
 <script>(function(){var b=document.getElementById('themeToggle');if(!b)return;function lab(){var d=document.documentElement.getAttribute('data-theme')==='dark';b.setAttribute('aria-label',d?'Switch to light theme':'Switch to dark theme');b.title=d?'Light theme':'Dark theme';}lab();b.onclick=function(){var d=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',d);try{localStorage.setItem('pyq-theme',d)}catch(e){}lab();if(window.onThemeChange)window.onThemeChange();};})();</script>
 <script src="firebase-config.js"></script>
