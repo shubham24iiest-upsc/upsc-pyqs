@@ -157,6 +157,7 @@ body{ display:flex; flex-direction:column; }
 .ps{ flex-shrink:0; border-bottom:1px solid var(--rule); background:var(--ink); }
 .ps .wrap{ max-width:none; padding-top:14px; padding-bottom:14px; display:grid; grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(0,1fr)); gap:10px; }
 .ps-q{ position:relative; }
+.ps .wrap > *{ min-width:0; }
 .ps-q svg{ position:absolute; left:16px; top:50%; transform:translateY(-50%); width:18px; height:18px; color:var(--muted); pointer-events:none; }
 .ps input, .ps select{ width:100%; height:46px; border-radius:999px; border:1px solid var(--rule); background:var(--surface); color:var(--text); font:inherit; font-size:15px; }
 .ps input{ padding:0 40px 0 44px; }
@@ -345,7 +346,12 @@ checkFiles().then(() => { renderTabs(); renderYears(); setTimeout(discoverNew, 1
 (function(){
   const $=id=>document.getElementById(id), esc=v=>String(v==null?'':v).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   let DATA=null, loading=null, shown=30, lastKey='';
-  const load=()=>loading||(loading=new Promise((res,rej)=>{ if(window.PRE_SEARCH){DATA=window.PRE_SEARCH;return res();} const sc=document.createElement('script'); sc.src='data/prelims-gs1.js'; sc.onload=()=>{DATA=window.PRE_SEARCH; fill(); res();}; sc.onerror=rej; document.head.appendChild(sc); }));
+  // the question file sits next to this page (prelims-gs1.js); data/prelims-gs1.js also works
+  const tryLoad=src=>new Promise((res,rej)=>{ const sc=document.createElement('script'); sc.src=src; sc.onload=()=>window.PRE_SEARCH?res():rej(); sc.onerror=rej; document.head.appendChild(sc); });
+  const load=()=>loading||(loading=(window.PRE_SEARCH?Promise.resolve():tryLoad('prelims-gs1.js').catch(()=>tryLoad('data/prelims-gs1.js')))
+    .then(()=>{ DATA=window.PRE_SEARCH; fill(); })
+    .catch(e=>{ loading=null; failed=true; throw e; }));
+  let failed=false;
   function fill(){
     if(!DATA || $('psY').options.length>1) return;
     Object.keys(DATA.years).sort((a,b)=>b-a).forEach(y=>$('psY').add(new Option(y,y)));
@@ -372,7 +378,8 @@ checkFiles().then(() => { renderTabs(); renderYears(); setTimeout(discoverNew, 1
     $('ps').classList.toggle('has-q', !!$('psQ').value);
     if(!active()){ if(document.body.classList.contains('searching')){ document.body.classList.remove('searching'); $('pv').classList.remove('detail'); origRender(); } return; }
     document.body.classList.add('searching'); $('pv').classList.add('detail');
-    if(!DATA){ $('detail').innerHTML='<div class="pv-in"><p class="sr-empty">Loading questions…</p></div>'; load().then(run); return; }
+    if(!DATA){ $('detail').innerHTML='<div class="pv-in"><p class="sr-empty">Loading questions…</p></div>';
+      load().then(run).catch(()=>{ $('detail').innerHTML='<div class="pv-in"><p class="sr-empty">The question list could not be loaded. Check your connection and try again.</p></div>'; }); return; }
     const q=$('psQ').value.trim(), terms=norm(q).split(/\s+/).filter(t=>t.length>1), y=$('psY').value, sub=$('psS').value, tp=$('psT').value;
     const key=[q,y,sub,tp].join('|'); if(key!==lastKey){ shown=30; lastKey=key; }
     const res=DATA.qs.filter(r=>{ const id=r[0]+'-'+r[1];
@@ -402,7 +409,8 @@ checkFiles().then(() => { renderTabs(); renderYears(); setTimeout(discoverNew, 1
   // picking a topic while "All subjects" is set also selects its subject
   $('psT').addEventListener('change',()=>{ if(!DATA||!$('psT').value||$('psS').value) return; const r=DATA.qs.find(r=>r[3]===$('psT').value); if(r){ $('psS').value=r[2]; const t=$('psT').value; fillTopics(); $('psT').value=t; } });
   $('psX').onclick=()=>{ $('psQ').value=''; run(); $('psQ').focus(); };
-  $('psQ').addEventListener('focus',load,{once:true});
+  $('psQ').addEventListener('focus',()=>load().catch(()=>{}));
+  ['psY','psS','psT'].forEach(id=>$(id).addEventListener('focus',()=>load().catch(()=>{})));
   setTimeout(()=>load().catch(()=>{}),1200);
 })();
 </script>
