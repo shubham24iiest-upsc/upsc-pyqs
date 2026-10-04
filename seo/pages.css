@@ -1,0 +1,63 @@
+/* Layout for the generated PYQ pages (seo/build_pages.py). Colours come from /theme.css. */
+:root{
+  --ink:#FFF6F3; --surface:#FFFFFF; --surface-2:#FDEBE6; --rule:#F4DDD8;
+  --text:#2A1A24; --muted:#6B5566; --faint:#86707F;
+  --marigold:#C9432B; --on-accent:#FFFFFF; --marigold-soft:#FFE3DA;
+  --glass:rgba(255,246,243,.88);
+  --shadow:0 1px 2px rgba(37,34,47,.04), 0 10px 30px -18px rgba(37,34,47,.18);
+  --display:'IBM Plex Serif', Georgia, 'Times New Roman', serif;
+  --body:'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --radius:14px;
+}
+*{ box-sizing:border-box; margin:0; padding:0; }
+html{ -webkit-text-size-adjust:100%; }
+body{ background:var(--ink); color:var(--text); font-family:var(--body); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; min-height:100vh; }
+a{ color:inherit; text-decoration:none; }
+.wrap{ max-width:980px; margin:0 auto; padding:0 24px; }
+
+.site-head{ position:sticky; top:0; z-index:30; background:var(--glass); -webkit-backdrop-filter:saturate(1.3) blur(12px); backdrop-filter:saturate(1.3) blur(12px); border-bottom:1px solid var(--rule); }
+.head-row{ display:flex; align-items:center; justify-content:space-between; gap:16px; padding:16px 24px; }
+.brand{ display:flex; align-items:baseline; gap:10px; font-family:var(--display); font-weight:700; font-size:20px; white-space:nowrap; }
+.brand-dot{ width:12px; height:12px; border-radius:50%; background:var(--marigold); display:inline-block; transform:translateY(1px); box-shadow:0 0 0 4px var(--marigold-soft); }
+.brand small{ font-family:var(--body); font-weight:500; font-size:13px; color:var(--muted); }
+.top-nav{ display:flex; gap:4px; background:var(--surface); border:1px solid var(--rule); border-radius:999px; padding:4px; box-shadow:var(--shadow); }
+.top-nav a{ padding:7px 16px; border-radius:999px; font-weight:600; font-size:14px; color:var(--muted); }
+.top-nav a:hover{ color:var(--text); }
+.top-nav a.on{ background:var(--marigold); color:var(--on-accent); }
+
+main{ padding:20px 0 48px; }
+.crumbs{ font-size:13.5px; color:var(--muted); margin-bottom:18px; }
+.crumbs a{ text-decoration:underline; text-underline-offset:2px; }
+h1{ font-family:var(--display); font-size:clamp(26px,4vw,38px); line-height:1.2; letter-spacing:-.01em; margin-bottom:14px; }
+h2{ font-family:var(--display); font-size:22px; margin:36px 0 14px; }
+h2 a{ text-decoration:underline; text-underline-offset:3px; }
+.lede{ color:var(--muted); font-size:17px; max-width:72ch; margin-bottom:18px; }
+.lede a, .cta a, .year-links a, .q-meta a{ color:var(--marigold); font-weight:600; }
+.cta{ background:var(--marigold-soft); border-radius:var(--radius); padding:12px 16px; margin:18px 0 26px; }
+
+.tiles{ display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:10px; }
+.tile{ display:flex; flex-direction:column; gap:2px; background:var(--surface); border:1px solid var(--rule); border-radius:var(--radius); padding:12px 14px; box-shadow:var(--shadow); }
+.tile:hover{ border-color:var(--marigold); }
+.tile span{ font-size:13px; color:var(--muted); }
+
+.q{ background:var(--surface); border:1px solid var(--rule); border-radius:var(--radius); padding:16px 18px; margin-bottom:12px; box-shadow:var(--shadow); }
+.q-meta{ font-size:13px; color:var(--muted); margin-bottom:6px; }
+.q-no{ display:inline-block; font-weight:700; color:var(--text); background:var(--surface-2); border-radius:6px; padding:1px 7px; margin-right:6px; }
+.q-text{ font-size:16px; }
+.opts{ list-style:none; margin:10px 0 6px; display:grid; gap:4px; }
+.opts b{ color:var(--muted); margin-right:4px; }
+details{ margin-top:8px; font-size:15px; }
+summary{ cursor:pointer; color:var(--marigold); font-weight:600; }
+details p{ margin-top:6px; font-weight:600; }
+.year-links{ display:flex; flex-wrap:wrap; gap:8px 14px; }
+
+.site-foot{ border-top:1px solid var(--rule); padding:24px; display:flex; flex-direction:column; gap:10px; font-size:13.5px; color:var(--muted); }
+.site-foot nav{ display:flex; flex-wrap:wrap; gap:6px 16px; }
+.site-foot nav a{ text-decoration:underline; text-underline-offset:2px; }
+
+@media (max-width:640px){
+  .wrap{ padding:0 16px; } .head-row{ padding:12px 16px; } .site-foot{ padding:20px 16px; }
+  .brand small{ display:none; } .brand{ font-size:18px; }
+  .top-nav a{ padding:6px 10px; font-size:13px; }
+  .q{ padding:14px; }
+}
