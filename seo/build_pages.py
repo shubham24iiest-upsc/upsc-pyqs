@@ -213,7 +213,8 @@ def build_prelims(pre):
         sr = sorted((r for r in rows if r[2] == s), key=lambda r: (-r[0], r[1]))
         topics = {}
         for r in sr:
-            topics[r[3]] = topics.get(r[3], 0) + 1
+            for t in r[3].split(", "):  # several topics are stored as "Topic A, Topic B"
+                topics[t] = topics.get(t, 0) + 1
         topic_line = ", ".join(f"{esc(t)} ({n})" for t, n in sorted(topics.items(), key=lambda x: -x[1])[:12])
         body = f"""<h1>UPSC Prelims PYQ: {esc(s)} ({span})</h1>
 <p class="lede">Every {esc(s)} question asked in UPSC Prelims GS Paper 1 from {span}, {len(sr)} in all, newest first, with options and UPSC's answer. Most asked topics: {topic_line}.</p>
