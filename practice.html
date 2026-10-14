@@ -229,6 +229,11 @@ kbd{ font:600 11px var(--body); border:1px solid var(--rule); border-bottom-widt
 .qmeta .save svg{ width:16px; height:16px; }
 .qmeta .save[aria-pressed="true"]{ background:var(--pink); border-color:var(--pink); color:var(--on-accent); }
 .stem{ font-size:17px; line-height:1.65; max-width:80ch; }
+.psg{ margin-bottom:14px; padding:12px 16px; background:var(--surface-2); border-radius:12px; font-size:15.5px; }
+.psg .eh{ font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--marigold); margin-bottom:6px; }
+.paper-seg{ display:inline-flex; gap:3px; background:var(--surface-2); border-radius:999px; padding:3px; margin-bottom:14px; }
+.paper-seg a{ padding:7px 16px; border-radius:999px; font-size:14px; font-weight:700; color:var(--muted); text-decoration:none; }
+.paper-seg a.on{ background:var(--marigold); color:var(--on-accent); }
 .stem p{ margin-bottom:6px; }
 .stem .st{ padding-left:28px; text-indent:-28px; margin:4px 0; }
 .stem table{ border-collapse:collapse; margin:10px 0; font-size:15px; width:100%; max-width:760px; }
@@ -324,7 +329,8 @@ kbd{ font:600 11px var(--body); border:1px solid var(--rule); border-bottom-widt
 
 <main class="wrap">
   <div class="intro">
-    <h1 class="display">Prelims practice, subject by subject</h1>
+    <nav class="paper-seg" aria-label="Prelims paper"><a href="practice.html#paper=gs1" data-p="gs1">GS Paper I</a><a href="practice.html#paper=csat" data-p="csat">CSAT (Paper II)</a></nav>
+    <h1 class="display" id="pTitle">Prelims practice, subject by subject</h1>
     <p class="lede" id="lede">Pick a subject, choose the years and topics you want, see how often UPSC asks them, then start a test marked against the official answer key.</p>
   </div>
 
@@ -346,7 +352,7 @@ kbd{ font:600 11px var(--body); border:1px solid var(--rule); border-bottom-widt
   </div>
 
   <section class="step">
-    <div class="step-h"><h2>1. Subject</h2><span class="hint">GS Paper I</span></div>
+    <div class="step-h"><h2 id="subjH">1. Subject</h2><span class="hint" id="paperHint">GS Paper I</span></div>
     <div class="subjects" id="subjects"></div>
   </section>
 
@@ -18942,10 +18948,25 @@ window.PRE = {
  }
 };
 </script>
+<script src="prelims-csat.js"></script>
 <script>
-const D = window.PRE;
+// Two papers share this page: GS Paper I (window.PRE, above) and CSAT (window.CSAT_SEARCH, prelims-csat.js).
+// practice.html#paper=csat opens CSAT. CSAT answers live in the same progress store with ids prefixed "csat-".
+const PAPER = /(?:^#|&)paper=csat\b/.test(location.hash) ? 'csat' : 'gs1';
+const CS = PAPER==='csat';
+const MARK = CS ? 2.5 : 2, NEG = CS ? 0.83 : 0.66;   // CSAT: 80 questions × 2.5 marks; one-third negative marking in both
+function fromRows(X){
+  const years = {};
+  for (const r of X.qs) (years[r[0]] = years[r[0]] || { questions:[] }).questions.push({ n:r[1], s:r[2], t:r[3], q:r[4], o:r[5], a:r[6], p:r[7] ? X.passages[r[7]] : '' });
+  return { topics:X.topics, years, keys:X.years };
+}
+const D = CS ? fromRows(window.CSAT_SEARCH || { topics:{}, qs:[], passages:{}, years:{} }) : window.PRE;
+const PFX = CS ? 'csat-' : '';
 const ALL = [];
-for (const [y, yd] of Object.entries(D.years)) for (const q of yd.questions) ALL.push({ ...q, y:+y, id:`${y}-${q.n}` });
+for (const [y, yd] of Object.entries(D.years)) for (const q of yd.questions) ALL.push({ ...q, y:+y, id:`${PFX}${y}-${q.n}` });
+const GS_ALL = [];
+for (const [y, yd] of Object.entries(window.PRE.years)) for (const q of yd.questions) GS_ALL.push({ ...q, y:+y, id:`${y}-${q.n}` });
+addEventListener('hashchange', () => { if ((/(?:^#|&)paper=csat\b/.test(location.hash) ? 'csat' : 'gs1') !== PAPER) location.reload(); });
 const SUBJECTS = Object.keys(D.topics);
 const YEARS = Object.keys(D.years).map(Number).sort((a,b)=>b-a);
 const $ = id => document.getElementById(id);
@@ -18957,13 +18978,13 @@ const persist = () => { try { localStorage.setItem('pyq-prelims', JSON.stringify
 // Detailed numbers for the signed-in progress panel (auth.js)
 window.PK_STATS = st => {
   const ans = (st && st.ans) || {}, by = {}; let correct=0, wrong=0;
-  for (const q of ALL){ if (q.a==='x') continue; const b = by[q.s] = by[q.s] || { att:0, ok:0, total:0 }; b.total++;
+  for (const q of GS_ALL){ if (q.a==='x') continue; const b = by[q.s] = by[q.s] || { att:0, ok:0, total:0 }; b.total++;
     const a = ans[q.id]; if (!a) continue; b.att++; if (a===q.a){ b.ok++; correct++; } else wrong++; }
   return { correct, wrong, bySubject: by };
 };
 
 const S = { subject:'__all', years:new Set(YEARS), topics:new Set(), show:'all', limit:25 };
-{ const m = location.hash.match(/^#year=(\d{4})$/); if (m && YEARS.includes(+m[1])) S.years = new Set([+m[1]]); }
+{ const m = location.hash.match(/(?:^#|&)year=(\d{4})\b/); if (m && YEARS.includes(+m[1])) S.years = new Set([+m[1]]); }
 
 // a question can carry several topics, stored as "Topic A, Topic B"
 const tops = q => q.t.split(', ');
@@ -18975,7 +18996,7 @@ function renderSubjects(){
   const cnt = s => ALL.filter(q => S.years.has(q.y) && (s==='__all' || q.s===s)).length;
   const list = ['__all', ...SUBJECTS];
   $('subjects').innerHTML = list.map(s => `<button class="subj ${S.subject===s?'on':''}" data-s="${esc(s)}" aria-pressed="${S.subject===s}">
-      <span class="sn">${s==='__all'?'All subjects':esc(s)}</span><span class="sc">${cnt(s)}</span></button>`).join('');
+      <span class="sn">${s==='__all'?(CS?'All sections':'All subjects'):esc(s)}</span><span class="sc">${cnt(s)}</span></button>`).join('');
   $('subjects').querySelectorAll('.subj').forEach(b => b.onclick = () => { S.subject=b.dataset.s; S.topics=new Set(); S.limit=25; renderAll(); });
 }
 function renderYears(){
@@ -18987,7 +19008,7 @@ function renderYears(){
 }
 function renderTopics(){
   const el=$('topics');
-  if (S.subject==='__all'){ el.innerHTML = `<span class="hint" style="color:var(--faint);font-size:14px">Pick a subject above to filter by its topics.</span>`; return; }
+  if (S.subject==='__all'){ el.innerHTML = `<span class="hint" style="color:var(--faint);font-size:14px">Pick a ${CS?'section':'subject'} above to filter by its topics.</span>`; return; }
   const ts = topicList(S.subject);
   el.innerHTML = ts.map(t => {
     const n = ALL.filter(q => inScope(q) && tops(q).includes(t)).length;
@@ -19002,7 +19023,7 @@ const ink = c => (0.299*c[0]+0.587*c[1]+0.114*c[2])>150 ? '#2A2638' : '#fff';
 
 function renderAnalysis(){
   const qs = selected(), yrs = YEARS.filter(y=>S.years.has(y));
-  const scopeName = S.subject==='__all' ? 'all subjects' : S.subject;
+  const scopeName = S.subject==='__all' ? (CS?'all sections':'all subjects') : S.subject;
   $('anSub').textContent = qs.length ? `${scopeName}, ${yrs.length===1?yrs[0]:`${yrs.length} years (${yrs[yrs.length-1]}–${yrs[0]})`}` : 'Choose at least one year to see the analysis.';
   const perYear = yrs.length ? (qs.length/yrs.length) : 0;
   const share = yrs.length ? Math.round(100*qs.length/ALL.filter(q=>S.years.has(q.y)).length) : 0;
@@ -19038,12 +19059,12 @@ function stemHTML(text){
 function score(qs){
   let att=0, ok=0, no=0;
   qs.forEach(q => { const a=store.ans[q.id]; if (!a || q.a==='x') return; att++; if (a===q.a) ok++; else no++; });
-  return { att, ok, no, net:(ok*2 - no*0.66) };
+  return { att, ok, no, net:(ok*MARK - no*NEG) };
 }
 function renderScore(){
   const qs=selected(), s=score(qs), scorable=qs.filter(q=>q.a!=='x').length;
   $('score').innerHTML = `<span>Attempted <b>${s.att}</b>/${scorable}</span><span class="ok">Correct <b>${s.ok}</b></span><span class="no">Wrong <b>${s.no}</b></span>
-    <span class="net">Score <b>${s.net.toFixed(2)}</b> / ${scorable*2}</span>`;
+    <span class="net">Score <b>${s.net.toFixed(2)}</b> / ${scorable*MARK}</span>`;
 }
 
 const STAR='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3.2l2.6 5.5 6 .8-4.4 4.2 1.1 6-5.3-2.9-5.3 2.9 1.1-6L3.4 9.5l6-.8z"/></svg>';
@@ -19056,16 +19077,17 @@ function card(q){
   let after='';
   if (done){
     if (q.a==='x') after += `<div class="verdict x">UPSC dropped this question; it carries no marks.</div>`;
-    else if (a) after += a===q.a ? `<div class="verdict ok">Correct. +2 marks</div>` : `<div class="verdict no">Wrong. The official answer is (${q.a}). −0.66 marks</div>`;
+    else if (a) after += a===q.a ? `<div class="verdict ok">Correct. +${MARK} marks</div>` : `<div class="verdict no">Wrong. The official answer is (${q.a}). −${NEG} marks</div>`;
     else after += `<div class="verdict x">Official answer: (${q.a})</div>`;
-    after += `<div class="expl"><div class="eh">Explanation (PYQ Astra)</div>${esc(q.e)}</div>`;
+    if (q.e) after += `<div class="expl"><div class="eh">Explanation (PYQ Astra)</div>${esc(q.e)}</div>`;
+    if (CS && D.keys && D.keys[q.y] && /provisional/i.test(D.keys[q.y].key)) after += `<div class="note"><div class="eh">Note on the official answer</div>This answer is from UPSC's provisional key and may change when the final key is released.</div>`;
     if (q.note) after += `<div class="note"><div class="eh">Note on the official answer</div>${esc(q.note)}</div>`;
   } else after = `<button class="reveal" data-rev="1">Show answer without attempting</button>`;
   const sv=!!store.saved[q.id];
   return `<article class="qc" data-id="${q.id}">
     <div class="qmeta"><span class="qno">${q.y} · Q${q.n}</span><span class="tag">${esc(q.s)}</span>${tops(q).filter(t=>t!==q.s).map(t=>`<span class="tag">${esc(t)}</span>`).join('')}${q.a==='x'?'<span class="tag drop">Dropped</span>':''}
       <button class="save" aria-pressed="${sv}" aria-label="Bookmark ${q.y} Q${q.n}" title="Bookmark">${STAR}</button></div>
-    <div class="qbody"><div class="qleft"><div class="stem">${stemHTML(q.q)}</div>
+    <div class="qbody"><div class="qleft"><div class="stem">${q.p ? `<div class="psg"><div class="eh">${/^Directions/.test(q.p) ? 'Directions' : 'Passage'}</div>${stemHTML(q.p)}</div>` : ''}${stemHTML(q.q)}</div>
     <div class="opts">${opts}</div></div><div class="qright">${after}</div></div></article>`;
 }
 
@@ -19082,7 +19104,7 @@ function pool(){   // the questions "Start test" will use
 function scopeLabel(){
   const yrs = YEARS.filter(y=>S.years.has(y));
   const yl = !yrs.length ? 'no years' : yrs.length===1 ? String(yrs[0]) : yrs.length===YEARS.length ? `${yrs[yrs.length-1]}–${yrs[0]}` : `${yrs.length} years`;
-  return `${S.subject==='__all'?'All subjects':S.subject}${S.topics.size?` · ${S.topics.size} topic${S.topics.size>1?'s':''}`:''} · ${yl}`;
+  return `${S.subject==='__all'?(CS?'All sections':'All subjects'):S.subject}${S.topics.size?` · ${S.topics.size} topic${S.topics.size>1?'s':''}`:''} · ${yl}`;
 }
 function renderList(){   // updates the launch bar
   renderScore();
@@ -19096,9 +19118,9 @@ function renderList(){   // updates the launch bar
 
 /* ---------- focus test view ---------- */
 let T = { ids:[], i:0, label:'', spent:0, t0:0 };
-try { const t = JSON.parse(localStorage.getItem('pyq-test')||'null');
+try { const t = JSON.parse(localStorage.getItem(CS ? 'pyq-test-csat' : 'pyq-test')||'null');
   if (t && Array.isArray(t.ids)) { const ids=t.ids.filter(id=>BYID[id]); if (ids.length) T = { ids, i:Math.min(t.i||0, ids.length-1), label:t.label||'Test', spent:t.spent||0, t0:0 }; } } catch(e){}
-const saveT = () => { try { localStorage.setItem('pyq-test', JSON.stringify({ ids:T.ids, i:T.i, label:T.label, spent:T.spent })); } catch(e){} };
+const saveT = () => { try { localStorage.setItem(CS ? 'pyq-test-csat' : 'pyq-test', JSON.stringify({ ids:T.ids, i:T.i, label:T.label, spent:T.spent })); } catch(e){} };
 const testQs = () => T.ids.map(id=>BYID[id]);
 const inTest = () => !$('fx').hidden;
 let tick = null;
@@ -19176,7 +19198,7 @@ $('resume').onclick = openTest;
 let RS = { test:false };
 function result(qs){
   qs = qs || selected(); const sc=qs.filter(q=>q.a!=='x'), s=score(qs);
-  return { total:sc.length, att:s.att, ok:s.ok, no:s.no, skip:sc.length-s.att, full:sc.length*2, plus:s.ok*2, minus:s.no*0.66, net:s.net, dropped:qs.length-sc.length };
+  return { total:sc.length, att:s.att, ok:s.ok, no:s.no, skip:sc.length-s.att, full:sc.length*MARK, plus:s.ok*MARK, minus:s.no*NEG, net:s.net, dropped:qs.length-sc.length };
 }
 const fmt = n => (Math.round(n*100)/100).toLocaleString('en-IN',{minimumFractionDigits:n%1?2:0, maximumFractionDigits:2});
 const rsList = () => RS.test ? testQs() : selected();
@@ -19229,7 +19251,15 @@ $('tNone').onclick = () => { S.topics=new Set(); renderTopics(); renderAnalysis(
 
 function renderAll(){ renderSubjects(); renderYears(); renderTopics(); renderAnalysis(); renderList(); }
 const total=ALL.length, ny=YEARS.length;
-$('lede').textContent = `${total} questions from GS Paper I (${ny===1?YEARS[0]:`${YEARS[ny-1]}–${YEARS[0]}`}), tagged by subject and topic. Pick a subject, choose the years and topics you want, see how often UPSC asks them, then start a test: one question at a time, marked instantly against the official answer key.`;
+const span = ny===1 ? YEARS[0] : `${YEARS[ny-1]}–${YEARS[0]}`;
+document.querySelectorAll('.paper-seg a').forEach(a => { const on = a.dataset.p===PAPER; a.classList.toggle('on', on); if (on) a.setAttribute('aria-current','page'); });
+if (CS){
+  document.title = 'UPSC CSAT PYQ Practice Test Online with Answers | PYQ Astra';
+  $('pTitle').textContent = 'CSAT practice, section by section';
+  $('subjH').textContent = '1. Section'; $('paperHint').textContent = 'CSAT · Paper II';
+  $('lede').textContent = `${total} questions from CSAT, Paper II (${span}), tagged by section and topic: comprehension, quantitative aptitude, reasoning and more. Pick a section, choose the years and topics you want, then start a test marked instantly against the official answer key, with 2.5 marks per question and one-third negative marking.`;
+} else
+$('lede').textContent = `${total} questions from GS Paper I (${span}), tagged by subject and topic. Pick a subject, choose the years and topics you want, see how often UPSC asks them, then start a test: one question at a time, marked instantly against the official answer key.`;
 renderAll();
 </script>
 <script>(function(){var b=document.getElementById('themeToggle');if(!b)return;function lab(){var d=document.documentElement.getAttribute('data-theme')==='dark';b.setAttribute('aria-label',d?'Switch to light theme':'Switch to dark theme');b.title=d?'Light theme':'Dark theme';}lab();b.onclick=function(){var d=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',d);try{localStorage.setItem('pyq-theme',d)}catch(e){}lab();if(window.onThemeChange)window.onThemeChange();};})();</script>
