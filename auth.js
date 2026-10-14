@@ -241,7 +241,7 @@ function start(){
     await signOut(auth);
     // Progress is safe in the account; clear this browser so the next person starts fresh.
     for (const k of Object.values(KEYS)) { try { localStorage.removeItem(k); } catch (e) {} }
-    try { localStorage.removeItem('pyq-test'); } catch (e) {}
+    try { localStorage.removeItem('pyq-test'); localStorage.removeItem('pyq-test-csat'); } catch (e) {}
     location.reload();
   }
 

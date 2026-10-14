@@ -176,6 +176,10 @@ body{ display:flex; flex-direction:column; }
 .sr-meta{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; font-size:12.5px; margin-bottom:10px; }
 .sr-meta .yq{ font-family:var(--display); font-weight:700; font-size:16px; color:var(--marigold); margin-right:4px; }
 .sr-meta .tg{ padding:3px 10px; border-radius:999px; background:var(--surface-2); color:var(--muted); font-weight:600; }
+.sr-psg{ margin-bottom:10px; border:1px solid var(--rule); border-radius:10px; background:var(--surface-2); }
+.sr-psg summary{ cursor:pointer; padding:8px 12px; font-weight:700; font-size:13.5px; color:var(--muted); }
+.sr-psg div{ padding:0 12px 12px; font-size:14.5px; line-height:1.6; white-space:pre-line; }
+.sr-psg mark{ background:var(--marigold-soft); color:inherit; border-radius:3px; padding:0 2px; }
 .sr-q{ font-size:15.5px; line-height:1.6; white-space:pre-line; color:var(--text); }
 .sr-q mark, .sr-o mark{ background:var(--marigold-soft); color:inherit; border-radius:3px; padding:0 2px; }
 .sr-opts{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-top:12px; }
@@ -278,9 +282,11 @@ async function discoverNew(){
 const shownYears = k => YEARS.filter(y => { const f = found[k] && found[k][y]; return f && (f.paper || f.key); });
 
 const PRE_SUBJ = {"2014": {"Agriculture": 7, "Environment and Ecology": 20, "Geography": 9, "Science and Technology": 14, "Art and Culture": 12, "International Relations": 6, "Modern Indian History": 5, "Indian Polity and Governance": 10, "Medieval Indian History": 3, "Ancient Indian History": 1, "Economy": 12, "Miscellaneous": 1}, "2015": {"Economy": 17, "International Relations": 10, "Geography": 13, "Indian Polity and Governance": 13, "Environment and Ecology": 16, "Science and Technology": 8, "Agriculture": 5, "Modern Indian History": 8, "Medieval Indian History": 4, "Ancient Indian History": 1, "Art and Culture": 5}, "2016": {"Indian Polity and Governance": 6, "Economy": 24, "Science and Technology": 13, "Environment and Ecology": 18, "Medieval Indian History": 3, "Art and Culture": 4, "Miscellaneous": 2, "International Relations": 11, "Agriculture": 6, "Geography": 4, "Ancient Indian History": 3, "Modern Indian History": 6}, "2017": {"Indian Polity and Governance": 25, "Ancient Indian History": 2, "Economy": 20, "Environment and Ecology": 13, "Miscellaneous": 1, "Art and Culture": 4, "Modern Indian History": 7, "International Relations": 8, "Geography": 8, "Science and Technology": 8, "Agriculture": 3, "Medieval Indian History": 1}, "2018": {"Indian Polity and Governance": 13, "Science and Technology": 13, "Agriculture": 7, "Environment and Ecology": 11, "Economy": 16, "International Relations": 10, "Modern Indian History": 13, "Art and Culture": 6, "Geography": 7, "Ancient Indian History": 2, "Medieval Indian History": 1, "Miscellaneous": 1}, "2019": {"Medieval Indian History": 3, "Agriculture": 5, "Miscellaneous": 6, "Modern Indian History": 6, "Ancient Indian History": 4, "Art and Culture": 3, "Environment and Ecology": 20, "Geography": 11, "Economy": 16, "Science and Technology": 12, "Indian Polity and Governance": 12, "International Relations": 2}, "2020": {"Miscellaneous": 1, "Indian Polity and Governance": 16, "Economy": 17, "International Relations": 3, "Modern Indian History": 9, "Ancient Indian History": 6, "Medieval Indian History": 3, "Art and Culture": 1, "Science and Technology": 12, "Environment and Ecology": 14, "Agriculture": 12, "Geography": 6}, "2021": {"Economy": 15, "Environment and Ecology": 16, "Art and Culture": 5, "Ancient Indian History": 3, "Modern Indian History": 8, "Medieval Indian History": 4, "Miscellaneous": 4, "International Relations": 2, "Agriculture": 5, "Geography": 10, "Science and Technology": 12, "Indian Polity and Governance": 16}, "2022": {"Economy": 16, "Indian Polity and Governance": 11, "Miscellaneous": 2, "Environment and Ecology": 17, "Agriculture": 2, "International Relations": 14, "Geography": 9, "Science and Technology": 13, "Modern Indian History": 4, "Art and Culture": 4, "Ancient Indian History": 4, "Medieval Indian History": 4}, "2023": {"Geography": 15, "Economy": 13, "Agriculture": 3, "International Relations": 13, "Environment and Ecology": 15, "Science and Technology": 9, "Indian Polity and Governance": 15, "Ancient Indian History": 5, "Art and Culture": 4, "Medieval Indian History": 2, "Modern Indian History": 3, "Miscellaneous": 3}, "2024": {"Geography": 17, "International Relations": 10, "Economy": 15, "Environment and Ecology": 16, "Agriculture": 2, "Science and Technology": 7, "Ancient Indian History": 4, "Medieval Indian History": 1, "Modern Indian History": 2, "Art and Culture": 3, "Indian Polity and Governance": 18, "Miscellaneous": 5}, "2025": {"Economy": 15, "Indian Polity and Governance": 17, "Geography": 12, "Environment and Ecology": 17, "Modern Indian History": 8, "Art and Culture": 3, "Ancient Indian History": 6, "International Relations": 6, "Agriculture": 2, "Science and Technology": 12, "Miscellaneous": 2}, "2026": {"Art and Culture": 12, "Modern Indian History": 5, "Ancient Indian History": 7, "Environment and Ecology": 10, "Economy": 18, "Geography": 5, "Agriculture": 1, "International Relations": 12, "Science and Technology": 15, "Miscellaneous": 6, "Indian Polity and Governance": 9}};   // GS I: questions per subject in each year (filled in by build_site.py)
+const CSAT_SUBJ = {"2026": {"Quantitative Aptitude": 35, "Reading Comprehension": 23, "Logical Reasoning": 15, "Data Interpretation": 1, "Interpersonal and Communication Skills": 6}};   // filled in by tools/build_csat.py
 let curYear = null;
 { const m = location.hash.match(/^#(gs1|csat)(?:-(\d{4}))?$/); if (m){ current=m[1]; if (m[2]) curYear=+m[2]; } }
 const $ = id => document.getElementById(id);
+const SUBJ = () => current==='csat' ? CSAT_SUBJ : PRE_SUBJ;
 
 function renderTabs(){
   $('tabs').innerHTML = KEYS.map(k => `<button class="${k===current?'on':''}" role="tab" aria-selected="${k===current}" data-k="${k}">${PAPERS[k].code}</button>`).join('');
@@ -293,7 +299,7 @@ function renderYears(){
   if (!checked){ list.innerHTML = `<div class="pv-msg">Checking which papers are available…</div>`; $('detail').innerHTML=''; return; }
   const ys = shownYears(current);
   if (!ys.length){ list.innerHTML = `<div class="pv-msg">No papers uploaded yet for this paper.</div>`; $('detail').innerHTML=''; return; }
-  if (!ys.includes(curYear)) curYear = (current==='gs1' && ys.find(y => PRE_SUBJ[y] && found[current][y].paper && found[current][y].key)) || ys.find(y => found[current][y].paper && found[current][y].key) || ys[0];
+  if (!ys.includes(curYear)) curYear = (ys.find(y => SUBJ()[y] && found[current][y].paper && found[current][y].key)) || ys.find(y => found[current][y].paper && found[current][y].key) || ys[0];
   list.innerHTML = ys.map(y => { const f=found[current][y];
     return `<button class="yi ${y===curYear?'cur':''}" data-y="${y}" ${y===curYear?'aria-current="true"':''}><b>${y}</b><span>${f.paper && f.key ? 'paper + key' : f.paper ? 'paper, key awaited' : 'key only'}</span></button>`; }).join('');
   list.querySelectorAll('.yi').forEach(b => b.onclick = () => { curYear=+b.dataset.y; history.replaceState(null,'','#'+current+'-'+curYear); renderYears(); $('pv').classList.add('detail'); $('detail').scrollTop=0; });
@@ -307,7 +313,7 @@ function btn(cls, href, label, ok, offLabel){
 }
 function renderDetail(){
   const p = PAPERS[current], y = curYear, f = found[current][y];
-  const subj = current==='gs1' ? PRE_SUBJ[y] : null;
+  const subj = SUBJ()[y] || null;
   let card = '';
   if (subj){
     const rows = Object.entries(subj).sort((a,b)=>b[1]-a[1]), max = rows[0][1];
@@ -321,10 +327,10 @@ function renderDetail(){
     <div class="pv-acts">
       ${btn('paper', url(p, y, false), 'Question paper', f.paper, 'Paper coming soon')}
       ${btn('key', url(p, y, true), 'Answer key', f.key, 'Key not yet released')}
-      ${subj ? `<a class="dl go" href="practice.html#year=${y}">Practise ${y} online →</a>` : ''}
+      ${subj ? `<a class="dl go" href="practice.html#${current==='csat'?'paper=csat&':''}year=${y}">Practise ${y} online →</a>` : ''}
     </div>
     ${card}
-    <p class="pv-foot">${subj ? 'Subject counts use the tags on the Practice page.' : current==='gs1' ? 'This year is not on the Practice page yet.' : 'CSAT is qualifying, so it is not part of the Practice page.'} Keys cover every booklet series; match the key to the series printed on your paper.</p>
+    <p class="pv-foot">${subj ? (current==='csat' ? 'Section counts use the tags on the Practice page.' : 'Subject counts use the tags on the Practice page.') : 'This year is not on the Practice page yet.'} Keys cover every booklet series; match the key to the series printed on your paper.</p>
   </div>`;
   const b=$('back'); if (b) b.onclick = () => $('pv').classList.remove('detail');
 }
@@ -343,18 +349,24 @@ checkFiles().then(() => { renderTabs(); renderYears(); setTimeout(discoverNew, 1
 <script type="module" src="auth.js"></script>
 <script>(function(){var h=document.querySelector('.site-head');if(!h)return;var f=function(){h.classList.toggle('scrolled',window.scrollY>4)};addEventListener('scroll',f,{passive:true});f();})();</script>
 <script>
-/* ---------- question search (GS I questions + official answers) ---------- */
+/* ---------- question search (GS I or CSAT, following the tab above the year list) ---------- */
 (function(){
   const $=id=>document.getElementById(id), esc=v=>String(v==null?'':v).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  let DATA=null, loading=null, shown=30, lastKey='';
-  // the question file sits next to this page (prelims-gs1.js); data/prelims-gs1.js also works
-  const tryLoad=src=>new Promise((res,rej)=>{ const sc=document.createElement('script'); sc.src=src; sc.onload=()=>window.PRE_SEARCH?res():rej(); sc.onerror=rej; document.head.appendChild(sc); });
-  const load=()=>loading||(loading=(window.PRE_SEARCH?Promise.resolve():tryLoad('prelims-gs1.js').catch(()=>tryLoad('data/prelims-gs1.js')))
-    .then(()=>{ DATA=window.PRE_SEARCH; fill(); })
-    .catch(e=>{ loading=null; failed=true; throw e; }));
-  let failed=false;
+  // each question file sits next to this page; data/<file> also works
+  const SRC={ gs1:{ file:'prelims-gs1.js', global:'PRE_SEARCH', name:'GS I', hint:'biosphere, Harappa, repo rate' },
+              csat:{ file:'prelims-csat.js', global:'CSAT_SEARCH', name:'CSAT', hint:'train, ratio, passage, seating' } };
+  const loading={}, failed={};
+  let DATA=null, shown=30, lastKey='', filled='';
+  const paper=()=>SRC[current]?current:'gs1';
+  const tryLoad=(src,g)=>new Promise((res,rej)=>{ const sc=document.createElement('script'); sc.src=src; sc.onload=()=>window[g]?res():rej(); sc.onerror=rej; document.head.appendChild(sc); });
+  const load=(k=paper())=>loading[k]||(loading[k]=(window[SRC[k].global]?Promise.resolve():tryLoad(SRC[k].file,SRC[k].global).catch(()=>tryLoad('data/'+SRC[k].file,SRC[k].global)))
+    .then(()=>{ if(k===paper()){ DATA=window[SRC[k].global]; fill(); } })
+    .catch(e=>{ loading[k]=null; failed[k]=true; throw e; }));
+  function placeholder(){ const s=SRC[paper()]; $('psQ').placeholder=`Search ${s.name} questions, e.g. ${s.hint}`; }
   function fill(){
-    if(!DATA || $('psY').options.length>1) return;
+    if(!DATA || filled===paper()) return;
+    filled=paper();
+    $('psY').length=1; $('psS').length=1; $('psS').options[0].text=paper()==='csat'?'All sections':'All subjects';
     Object.keys(DATA.years).sort((a,b)=>b-a).forEach(y=>$('psY').add(new Option(y,y)));
     DATA.subjects.forEach(s=>$('psS').add(new Option(s,s)));
     fillTopics();
@@ -372,7 +384,7 @@ checkFiles().then(() => { renderTabs(); renderYears(); setTimeout(discoverNew, 1
   }
   // a question can carry several topics, stored as "Topic A, Topic B"
   const tops=r=>r[3]?r[3].split(', '):[];
-  const store=()=>{ try{ return JSON.parse(localStorage.getItem('pyq-prelims')||'{}'); }catch(e){ return {}; } };
+  const passage=r=>(r[7] && DATA.passages && DATA.passages[r[7]])||'';
   const norm=t=>t.toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g,'');
   const active=()=> $('psQ').value.trim().length>=2 || $('psY').value || $('psS').value || $('psT').value;
   function hl(text,terms){ let h=esc(text); if(!terms.length) return h;
@@ -381,20 +393,21 @@ checkFiles().then(() => { renderTabs(); renderYears(); setTimeout(discoverNew, 1
     $('ps').classList.toggle('has-q', !!$('psQ').value);
     if(!active()){ if(document.body.classList.contains('searching')){ document.body.classList.remove('searching'); $('pv').classList.remove('detail'); origRender(); } return; }
     document.body.classList.add('searching'); $('pv').classList.add('detail');
-    if(!DATA){ $('detail').innerHTML='<div class="pv-in"><p class="sr-empty">Loading questions…</p></div>';
+    if(!DATA || filled!==paper()){ DATA=null; $('detail').innerHTML='<div class="pv-in"><p class="sr-empty">Loading questions…</p></div>';
       load().then(run).catch(()=>{ $('detail').innerHTML='<div class="pv-in"><p class="sr-empty">The question list could not be loaded. Check your connection and try again.</p></div>'; }); return; }
-    const q=$('psQ').value.trim(), terms=norm(q).split(/\s+/).filter(t=>t.length>1), y=$('psY').value, sub=$('psS').value, tp=$('psT').value;
-    const key=[q,y,sub,tp].join('|'); if(key!==lastKey){ shown=30; lastKey=key; }
-    const res=DATA.qs.filter(r=>{ const id=r[0]+'-'+r[1];
+    const name=SRC[paper()].name, q=$('psQ').value.trim(), terms=norm(q).split(/\s+/).filter(t=>t.length>1), y=$('psY').value, sub=$('psS').value, tp=$('psT').value;
+    const key=[paper(),q,y,sub,tp].join('|'); if(key!==lastKey){ shown=30; lastKey=key; }
+    const res=DATA.qs.filter(r=>{
       if(y && r[0]!=y) return false; if(sub && r[2]!==sub) return false;
       if(tp && !tops(r).includes(tp)) return false;
-      if(terms.length){ const hay=norm(r[4]+' '+r[5].join(' ')+' '+r[2]+' '+r[3]); return terms.every(t=>hay.includes(t)); }
+      if(terms.length){ const hay=norm(r[4]+' '+r[5].join(' ')+' '+r[2]+' '+r[3]+' '+passage(r)); return terms.every(t=>hay.includes(t)); }
       return true; });
-    const what=[q?`“${esc(q)}”`:'', y?esc(y):'', tp?esc(tp):(sub?esc(sub):'')].filter(Boolean).join(' · ');
+    const what=[name, q?`“${esc(q)}”`:'', y?esc(y):'', tp?esc(tp):(sub?esc(sub):'')].filter(Boolean).join(' · ');
     let h=`<div class="pv-in"><button class="pv-back" id="srBack">‹ Papers</button><div class="sr-head"><h2><b>${res.length.toLocaleString('en-IN')}</b> question${res.length===1?'':'s'}${what?' · '+what:''}</h2><button class="sr-clear" id="srClear" type="button">Clear search</button></div>`;
-    if(!res.length) h+=`<p class="sr-empty">No GS I question matches that. Try a shorter word, a different spelling, or clear the year and subject filters.</p>`;
-    res.slice(0,shown).forEach(r=>{ const [yy,n,s,t,qt,o,a]=r, kt=(DATA.years[yy]||{}).key||'Official answer key';
+    if(!res.length) h+=`<p class="sr-empty">No ${name} question matches that. Try a shorter word, a different spelling, or clear the year and subject filters.</p>`;
+    res.slice(0,shown).forEach(r=>{ const [yy,n,s,t,qt,o,a]=r, kt=(DATA.years[yy]||{}).key||'Official answer key', ps=passage(r);
       h+=`<article class="sr"><div class="sr-meta"><span class="yq">${yy} · Q${n}</span><span class="tg">${esc(s)}</span>${tops(r).filter(x=>x!==s).map(x=>`<span class="tg">${esc(x)}</span>`).join('')}</div>
+      ${ps?`<details class="sr-psg"${terms.length&&terms.some(t=>norm(ps).includes(t))?' open':''}><summary>${/^Directions/.test(ps)?'Directions':'Passage'}</summary><div>${hl(ps,terms)}</div></details>`:''}
       <div class="sr-q">${hl(qt,terms)}</div>
       <div class="sr-opts">${o.map((x,i)=>{ const l='abcd'[i]; return `<div class="sr-o${l===a?' ok':''}"><b>(${l})</b><span>${hl(x,terms)}</span></div>`; }).join('')}</div>
       <div class="sr-ans">${a==='x'?`<span class="drop">Dropped by UPSC</span><span>No answer counted in the ${esc(kt.toLowerCase())}</span>`:`<strong>Answer (${a})</strong><span>${esc(kt)}${/provisional/i.test(kt)?' · may change when the final key is released':''}</span>`}</div></article>`; });
@@ -403,9 +416,15 @@ checkFiles().then(() => { renderTabs(); renderYears(); setTimeout(discoverNew, 1
     const m=$('srMore'); if(m) m.onclick=()=>{ shown+=30; run(); };
     $('srClear').onclick=clear; $('srBack').onclick=clear;
   }
-  function clear(){ $('psQ').value=''; $('psY').value=''; $('psS').value=''; $('psT').value=''; run(); $('detail').scrollTop=0; }
+  function reset(){ $('psQ').value=''; $('psY').value=''; $('psS').value=''; $('psT').value=''; }
+  function clear(){ reset(); run(); $('detail').scrollTop=0; }
   const origRender=renderDetail;
-  renderDetail=function(){ if(document.body.classList.contains('searching')){ $('psQ').value=''; $('psY').value=''; $('psS').value=''; $('psT').value=''; $('ps').classList.remove('has-q'); document.body.classList.remove('searching'); } return origRender.apply(this,arguments); };
+  renderDetail=function(){ if(document.body.classList.contains('searching')){ reset(); $('ps').classList.remove('has-q'); document.body.classList.remove('searching'); } return origRender.apply(this,arguments); };
+  // switching between GS I and CSAT switches what the search box looks through
+  const origTabs=renderTabs;
+  renderTabs=function(){ const r=origTabs.apply(this,arguments); placeholder();
+    if(filled && filled!==paper()){ DATA=null; filled=''; reset(); $('psY').length=1; $('psS').length=1; $('psT').length=1; load().catch(()=>{}); }
+    return r; };
   let tmr; $('psQ').addEventListener('input',()=>{ clearTimeout(tmr); tmr=setTimeout(()=>{ $('detail').scrollTop=0; run(); },180); });
   ['psY','psT'].forEach(id=>$(id).addEventListener('change',()=>{ $('detail').scrollTop=0; run(); }));
   $('psS').addEventListener('change',()=>{ fillTopics(); $('detail').scrollTop=0; run(); });
@@ -414,6 +433,7 @@ checkFiles().then(() => { renderTabs(); renderYears(); setTimeout(discoverNew, 1
   $('psX').onclick=()=>{ $('psQ').value=''; run(); $('psQ').focus(); };
   $('psQ').addEventListener('focus',()=>load().catch(()=>{}));
   ['psY','psS','psT'].forEach(id=>$(id).addEventListener('focus',()=>load().catch(()=>{})));
+  placeholder();
   setTimeout(()=>load().catch(()=>{}),1200);
 })();
 </script>
