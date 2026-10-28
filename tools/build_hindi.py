@@ -39,6 +39,21 @@ MACROS = {
         "कथन I सही है किन्तु कथन II सही नहीं है",
         "कथन I सही नहीं है किन्तु कथन II सही है",
     ],
+    "@D12N": ["केवल 1", "केवल 2", "1 और 2 दोनों", "न तो 1, न ही 2"],
+    "@C123N": ["केवल 1 और 2", "केवल 2 और 3", "केवल 1 और 3", "1, 2 और 3"],
+    # 2024 prints the statement labels with a hyphen ("कथन-I")
+    "@KS2H": [
+        "कथन-I और कथन-II दोनों सही हैं तथा कथन-II, कथन-I की व्याख्या करता है",
+        "कथन-I और कथन-II दोनों सही हैं, किंतु कथन-II, कथन-I की व्याख्या नहीं करता है",
+        "कथन-I सही है, किंतु कथन-II सही नहीं है",
+        "कथन-I सही नहीं है, किंतु कथन-II सही है",
+    ],
+    "@KS3H": [
+        "कथन-II और कथन-III दोनों सही हैं तथा दोनों, कथन-I की व्याख्या करते हैं",
+        "कथन-II और कथन-III दोनों सही हैं, किंतु उनमें से केवल एक, कथन-I की व्याख्या करता है",
+        "कथन-II और कथन-III में से केवल एक सही है और वह कथन-I की व्याख्या करता है",
+        "न तो कथन-II, न ही कथन-III सही है",
+    ],
     "@KS3": [
         "कथन II और कथन III दोनों सही हैं तथा वे दोनों कथन I की व्याख्या करते हैं",
         "कथन II और कथन III दोनों सही हैं किन्तु उनमें से केवल एक, कथन I की व्याख्या करता है",
@@ -47,6 +62,7 @@ MACROS = {
     ],
 }
 ROMAN = re.compile(r"^\|? ?(I|II|III|IV|V|VI|VII|VIII)\. ", re.M)
+NUMBERED = re.compile(r"^\|? ?\d+\. ", re.M)
 
 
 def parse(path):
@@ -91,6 +107,8 @@ def main():
                 continue
             if len(opts) != 4:
                 problems.append(f"{year} Q{k}: {len(opts)} options")
+            if len(NUMBERED.findall(q)) != len(NUMBERED.findall(row[4])):
+                problems.append(f"{year} Q{k}: {len(NUMBERED.findall(q))} numbered (1. 2.) items, English has {len(NUMBERED.findall(row[4]))}")
             if len(ROMAN.findall(q)) != len(ROMAN.findall(row[4])):
                 problems.append(f"{year} Q{k}: {len(ROMAN.findall(q))} numbered items, English has {len(ROMAN.findall(row[4]))}")
         missing = sorted(n for (y, n) in en if y == year and str(n) not in qs)
