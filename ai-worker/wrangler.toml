@@ -1,0 +1,20 @@
+# PYQ Astra AI research Worker. Deploy steps: README.md
+name = "pyqastra-ai"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+
+[vars]
+FIREBASE_PROJECT_ID = "pyqastra"
+ALLOWED_ORIGINS = "https://pyqastra.com,https://www.pyqastra.com,http://localhost:8000"
+PROVIDER = "gemini"            # "gemini" or "anthropic"
+MODEL = "gemini-2.5-flash"     # for anthropic use e.g. "claude-haiku-5-5"
+GROUNDING = "0"                # "1" = Gemini answers with Google Search sources (smaller free quota)
+THINKING_BUDGET = "0"          # Gemini 2.5: 0 turns off thinking (faster, cheaper). Leave empty for other models.
+MAX_OUTPUT_TOKENS = "1400"
+DAILY_LIMIT = "20"             # AI searches per student per day (cached answers are free)
+DAILY_TOTAL = "450"            # site-wide AI searches per day; keeps KV writes inside Cloudflare's free plan
+
+# Create with:  npx wrangler kv namespace create AI_KV   and paste the id here
+[[kv_namespaces]]
+binding = "AI_KV"
+id = "PASTE_KV_NAMESPACE_ID"

@@ -1,10 +1,12 @@
 // PYQ Astra sign-in + cloud progress (Firebase Auth with Google, Firestore).
 // Progress still lives in localStorage ('pyq-prelims', 'pyq-progress'); when signed in,
 // it is merged with the cloud copy on sign-in and uploaded after every change.
+// Revision notebook notes (astra.js, localStorage 'pyq-notebook') sync one document per note
+// to users/{uid}/notes/{id}; the newer copy of a note wins.
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signInWithRedirect, getRedirectResult, signOut }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, deleteDoc, serverTimestamp }
+import { getFirestore, doc, getDoc, setDoc, deleteDoc, serverTimestamp, collection, getDocs, writeBatch }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const cfg = window.PK_FIREBASE || {};
@@ -67,6 +69,35 @@ function start(){
     return out;
   }
 
+  /* ---------- revision notebook sync ---------- */
+  const NB = () => window.PK_NOTEBOOK;
+  let nbQueue = new Set(), nbTimer = null;
+  async function nbUpload(ids){
+    if (!user || !NB() || !ids.length) return;
+    const all = NB().all();
+    for (let i = 0; i < ids.length; i += 400) {     // Firestore batches hold up to 500 writes
+      const b = writeBatch(db);
+      for (const id of ids.slice(i, i + 400)) { const n = all[id]; if (n) b.set(doc(db, 'users', user.uid, 'notes', id), n); }
+      try { await b.commit(); } catch (e) { console.warn('PYQ Astra notebook sync failed', e); }
+    }
+  }
+  addEventListener('pk-notes-change', e => {
+    if (!user || !ready) return;
+    for (const id of (e.detail && e.detail.ids) || []) nbQueue.add(id);
+    clearTimeout(nbTimer); nbTimer = setTimeout(() => { const ids = [...nbQueue]; nbQueue.clear(); nbTimer = null; nbUpload(ids); }, 1200);
+  });
+  addEventListener('pagehide', () => { if (nbTimer) { clearTimeout(nbTimer); const ids = [...nbQueue]; nbQueue.clear(); nbUpload(ids); } });
+  async function nbSyncOnSignIn(){
+    if (!NB()) return;
+    try {
+      const snap = await getDocs(collection(db, 'users', user.uid, 'notes'));
+      const remote = {}; snap.forEach(d => { remote[d.id] = d.data(); });
+      const up = NB().merge(remote);
+      await nbUpload(up);
+      dispatchEvent(new Event('pk-notes-sync'));
+    } catch (e) { console.warn('PYQ Astra could not load notebook', e); }
+  }
+
   async function onSignIn(){
     ready = false;
     try {
@@ -78,6 +109,7 @@ function start(){
       const local = read(k), merged = merge(local, cloud[f] || {});
       if (JSON.stringify(merged) !== JSON.stringify(local)) { write(k, merged); changed = true; }
     }
+    await nbSyncOnSignIn();
     ready = true;
     await upload();
     // The page read the old local copy at load; reload once so it shows the merged progress.
@@ -228,9 +260,13 @@ function start(){
   }
 
   async function doDelete(){
-    if (!confirm('Permanently delete all your saved progress from PYQ Astra? This cannot be undone.')) return;
+    if (!confirm('Permanently delete all your saved progress and notebook notes from PYQ Astra? This cannot be undone.')) return;
     clearTimeout(timer); timer = null; ready = false;
-    try { await deleteDoc(doc(db, 'users', user.uid)); }
+    try {
+      const notes = await getDocs(collection(db, 'users', user.uid, 'notes'));
+      for (let i = 0; i < notes.docs.length; i += 400) { const b = writeBatch(db); notes.docs.slice(i, i + 400).forEach(d => b.delete(d.ref)); await b.commit(); }
+      await deleteDoc(doc(db, 'users', user.uid));
+    }
     catch (e) { console.warn(e); alert('Could not delete your data. Please try again.'); ready = true; return; }
     close(); await doSignOut(true);
   }
@@ -241,7 +277,7 @@ function start(){
     await signOut(auth);
     // Progress is safe in the account; clear this browser so the next person starts fresh.
     for (const k of Object.values(KEYS)) { try { localStorage.removeItem(k); } catch (e) {} }
-    try { localStorage.removeItem('pyq-test'); localStorage.removeItem('pyq-test-csat'); } catch (e) {}
+    try { localStorage.removeItem('pyq-test'); localStorage.removeItem('pyq-test-csat'); localStorage.removeItem('pyq-notebook'); localStorage.removeItem('pyq-nb-last'); } catch (e) {}
     location.reload();
   }
 
@@ -258,6 +294,7 @@ function start(){
     download: ['Sign up free to download papers', 'Download every UPSC Prelims and Mains paper and answer key as a PDF.'],
     solve:    ['Sign up free to solve questions', 'Practise 1,300 Prelims questions with instant marking, explanations and a score card.'],
     track:    ['Sign up free to track your practice', 'Mark questions as practised, bookmark tough ones and see your progress on any device.'],
+    ai:       ['Sign up free to research with AI', 'Ask AI about any question or topic and save the answers to your revision notebook.'],
   };
   const gateOf = el => { for (const g of GATES) { const m = el.closest && el.closest(g.sel); if (m) return { el: m, why: g.why }; } return null; };
   const inTest = () => { const fx = document.getElementById('fx'); return fx && getComputedStyle(fx).display !== 'none' && !fx.hidden; };
@@ -329,6 +366,8 @@ function start(){
   });
 
   btn.addEventListener('click', () => user ? openPanel() : doSignIn());
+  // for astra.js (AI research + notebook)
+  window.PK_AUTH = { user: () => user, token: () => user ? user.getIdToken() : null, wall: why => openWall(why), signIn: doSignIn };
   getRedirectResult(auth).catch(() => {});
   onAuthStateChanged(auth, u => {
     const was = user && user.uid;
