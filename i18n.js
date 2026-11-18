@@ -202,6 +202,9 @@
     "You can keep browsing every question without an account.":"आप बिना खाते के भी सभी प्रश्न देख सकते हैं।",
     "Sign-in failed. Please try again.":"साइन इन नहीं हो सका। कृपया फिर कोशिश करें।", "Could not delete your data. Please try again.":"आपका डेटा नहीं मिटाया जा सका। कृपया फिर कोशिश करें।",
     "Permanently delete all your saved progress from PYQ Astra? This cannot be undone.":"PYQ Astra से अपनी सारी सहेजी गई प्रगति हमेशा के लिए मिटा दें? इसे वापस नहीं किया जा सकता।",
+    "Permanently delete all your saved progress and notebook notes from PYQ Astra? This cannot be undone.":"PYQ Astra से अपनी सारी सहेजी गई प्रगति और नोटबुक के नोट्स हमेशा के लिए मिटा दें? इसे वापस नहीं किया जा सकता।",
+    "Sign up free to research with AI":"AI से रिसर्च करने के लिए मुफ़्त साइन अप करें",
+    "Ask AI about any question or topic and save the answers to your revision notebook.":"किसी भी प्रश्न या टॉपिक के बारे में AI से पूछें और उत्तर अपनी रिवीज़न नोटबुक में सहेजें।",
 
     // privacy
     "Privacy policy":"गोपनीयता नीति", "Last updated: 27 September 2026":"अंतिम अपडेट: 27 सितंबर 2026",
